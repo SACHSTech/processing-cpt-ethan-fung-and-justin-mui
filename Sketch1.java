@@ -14,9 +14,9 @@ public class Sketch1 extends PApplet {
     {"dog", "cat", "fish", "bird"},
     {"car", "bus", "bike", "train"},
     {"red", "blue", "green", "yellow"}
-  }
+  };
 
-  selectedWords = new String [4];
+  String[] selectedWords = new String [4];
   int intNumSelected = 0;
 
   /*
