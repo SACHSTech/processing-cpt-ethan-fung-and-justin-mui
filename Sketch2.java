@@ -4,7 +4,7 @@ public class Sketch2 extends PApplet {
   
   int intGridSizeX = 5;
   int intGridSizeY = 6;
-  String[] strWordList = {"stark", "reese", "crack", "nosey", "hitch"}; // Sample word list
+  String[] strWordList = {"stark", "reese", "crack", "nosey", "hitch", "rural", "craic", "ergot", "ouija"}; // Sample word list
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
@@ -38,7 +38,9 @@ public class Sketch2 extends PApplet {
       drawWordleGrid();
       if (isGame1Over && !isGame1Victory) {
         fill(0);
-        text("You lose! Press 'R' to restart", width / 2 - 150, height - 50);
+        // Change y and set padding later
+        text("You lose! The word was " + strTargetWord + "!", 65, 35);
+        text(" Press 'R' to restart", 150, 75);
       }
       if (isGame1Over && isGame1Victory) {
         fill(0);
