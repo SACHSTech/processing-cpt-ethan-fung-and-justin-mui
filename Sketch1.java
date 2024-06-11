@@ -3,10 +3,10 @@ import processing.core.PApplet;
 public class Sketch1 extends PApplet {
 	
 	String[][] incorrectGroups = {
-    {"apple", "orange", "banana", "grape"},
-    {"dog", "cat", "fish", "bird"},
-    {"car", "bus", "bike", "train"},
-    {"red", "blue", "green", "yellow"}
+    {"bus", "orange", "blue", "bird"},
+    {"green", "car", "apple", "dog"},
+    {"banana", "train", "cat", "red"},
+    {"fish", "bike", "grape", "yellow"}
   };
 
   String[][] correctGroups = {
@@ -50,10 +50,24 @@ public class Sketch1 extends PApplet {
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
+
+  //40 + 100 + 40 + 100 + 40 + 100 + 40 + 100 + 40
+  
   public void draw() {
-	  
-	// sample code, delete this stuff
-    
+    int intWordColumn = 0;
+    for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
+      int intWordRow = 0;
+      for (int rectRow = 40; rectRow < 600; rectRow += 140) {
+        fill(255);
+        rect(rectRow, rectColumn, 100, 100);
+        textSize(20);
+        fill(0);
+        text(incorrectGroups[intWordColumn][intWordRow], 10 + rectRow, 50 + rectColumn);
+        intWordRow++;
+      }
+      intWordColumn++;
+  }
+
   }
   
   // define other methods down here.
