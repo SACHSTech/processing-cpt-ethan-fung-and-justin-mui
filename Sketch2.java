@@ -39,7 +39,7 @@ public class Sketch2 extends PApplet {
 
   Button startButton, settingsButton, gearButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
-  boolean showPopup = false;
+  boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
   boolean showLosePopup = false;
 
