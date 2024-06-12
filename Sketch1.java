@@ -43,17 +43,17 @@ public class Sketch1 extends PApplet {
     background(255);
     if (random(1) < 0.5) {
       incorrectGroups = new String[][] {
-        {"BUS", "ORANGE", "BLUE", "BIRD"},
-        {"GREEN", "CAR", "APPLE", "DOG"},
-        {"BANANA", "TRAIN", "CAT", "RED"},
-        {"FISH", "BIKE", "GRAPE", "YELLOW"}
+        {"TAPE", "GOOD", "RIVET", "PETALS"},
+        {"PLEATS", "FILM", "ENGROSS", "WOMAN"},
+        {"RECORD", "STAPLE", "SHOOT", "PENNY"},
+        {"HOLD", "ABSORB", "PLEASE", "PASTEL"}
       };
     
       correctGroups = new String[][] {
-          {"APPLE", "ORANGE", "BANANA", "GRAPE", "Fruits"},
-          {"DOG", "CAT", "FISH", "BIRD", "Animals"},
-          {"CAR", "BUS", "BIKE", "TRAIN", "Vehicles"},
-          {"RED", "BLUE", "GREEN", "YELLOW", "Colours"}
+        {"ABSORB", "ENGROSS", "HOLD", "RIVET", "Grab one’s attention (EASY)"},
+        {"FILM", "RECORD", "SHOOT", "TAPE", "Document with video (MODERATE)"},
+        {"PASTEL", "PETALS", "PLEATS", "STAPLE", "Anagrams (HARD)"},
+        {"GOOD", "PENNY", "PLEASE", "WOMAN", "Pretty ____ (EXTREMELY HARD)"}
       };
   } else {
       incorrectGroups = new String[][] {
@@ -63,10 +63,10 @@ public class Sketch1 extends PApplet {
           {"MESSAGE", "TYPE", "STICK", "IDEA"}
       };
       correctGroups = new String[][] {
-          {"COOL", "NICE", "SICK", "SWEET", "Awesome!"},
-          {"KIND", "SORT", "STYLE", "TYPE", "Variety"},
-          {"DRIFT", "IDEA", "MESSAGE", "POINT", "Gist"},
-          {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally"}
+          {"COOL", "NICE", "SICK", "SWEET", "Awesome! (EASY)"},
+          {"KIND", "SORT", "STYLE", "TYPE", "Variety (MODERATE)"},
+          {"DRIFT", "IDEA", "MESSAGE", "POINT", "Gist (HARD)"},
+          {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally (EXTREMELY HARD)"}
       };
   }
   }
