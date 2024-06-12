@@ -2,38 +2,68 @@ import java.util.Arrays;
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/**
+* The program Sketch2.java creates the basic skeleton of the game.
+* The program organizes the various screens in the game and establishes
+* the proper flow and communication, typically through buttons. This includes
+* changing maps based on if the user wins or loses mini-games, and typical in-game
+* objects that guide the flow of the game (exclamation marks, open/closed doors, etc.) 
+* Furthermore, the program includes the first of 3 mini-games, which is a game very 
+* similar to the New York Time's WORDLE game. Player movement between stages is also 
+* established in this program, including with collision.
+* @author: E. Fung
+*
+*/
+
 public class Sketch2 extends PApplet {
 
   // Define button class
   class Button {
     float x, y, w, h;
     String label;
-    int baseColor, highlightColor;
-    boolean over = false;
+    
+    boolean isOver = false;
 
+    /**
+     * Computes input x, y, w, h, and label values and localizes in terms of the class
+     * Inputs assigned to class local variables for future use
+     * 
+     * @param x x-coordinate of the button
+     * @param y y-coordinate of the button
+     * @param w Width of the button
+     * @param h Height of the button
+     * @param label Text displayed on the button
+     */
     Button(float x, float y, float w, float h, String label) {
       this.x = x;
       this.y = y;
       this.w = w;
       this.h = h;
       this.label = label;
-      baseColor = color(0, 102, 153); // Default color
-      highlightColor = color(50, 150, 200); // Hover color
+      
     }
 
     void display() {
-      if (over) {
-        fill(highlightColor); // Change to hover color
+      // Checks if button is still active
+      if (isOver) {
+        fill(50, 150, 200); // Change to hover color
       } else {
-        fill(baseColor); // Default color
+        fill(0, 102, 153); // Default color
       }
+      // Drawing button rectangle
       rect(x, y, w, h);
       fill(255);
+
+      // Writing button text
       textAlign(CENTER, CENTER);
       text(label, x + w / 2, y + h / 2);
     }
 
-    boolean isOver() {
+    /**
+     * Detects if the user has clicked the button
+     * @return returns true if the cursor clicks the button. Else, it remains false
+     */
+    public boolean isOver() {
       return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
   }
@@ -105,13 +135,13 @@ public class Sketch2 extends PApplet {
     }
   }
   
-
+  
   public void introScreen() {
     textAlign(CENTER);
     fill(255);
     textSize(32);
     text("Intro Screen", width / 2, height / 3);
-    startButton.over = startButton.isOver();
+    startButton.isOver = startButton.isOver();
     startButton.display();
     
   }
@@ -119,7 +149,7 @@ public class Sketch2 extends PApplet {
   public void gameScreen1() {
     background(210, 255, 173);
     drawWordleGrid();
-    gearButton.over = gearButton.isOver();
+    gearButton.isOver = gearButton.isOver();
     gearButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
@@ -141,7 +171,7 @@ public class Sketch2 extends PApplet {
   public void gameScreen2() {
     background(173, 210, 255);
     //drawWordleGrid();
-    gearButton.over = gearButton.isOver();
+    gearButton.isOver = gearButton.isOver();
     gearButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
@@ -163,7 +193,7 @@ public class Sketch2 extends PApplet {
   public void gameScreen3() {
     background(255, 210, 173);
     //drawWordleGrid();
-    gearButton.over = gearButton.isOver();
+    gearButton.isOver = gearButton.isOver();
     gearButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
@@ -190,7 +220,7 @@ public class Sketch2 extends PApplet {
     textSize(24);
     text("Information Popup", width / 2, height / 2 - 50);
     text("This is some information for the user.", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
@@ -202,10 +232,12 @@ public class Sketch2 extends PApplet {
     textSize(24);
     text("You Win!", width / 2, height / 2 - 50);
     text("Congratulations!", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
-
+  /**
+   * 
+   */
   public void drawLosePopup() {
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
@@ -214,7 +246,7 @@ public class Sketch2 extends PApplet {
     textSize(24);
     text("You Lose!", width / 2, height / 2 - 50);
     text("Better luck next time!", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
@@ -228,7 +260,7 @@ public class Sketch2 extends PApplet {
     text("Settings Screen 1", width / 2, height / 2);
 
     playerMovement();
-    gameButton.over = gameButton.isOver();
+    gameButton.isOver = gameButton.isOver();
     gameButton.display();
   }
 
@@ -238,7 +270,7 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 2", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
@@ -248,7 +280,7 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 3", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
@@ -268,7 +300,7 @@ public class Sketch2 extends PApplet {
     textSize(24);
     text("Information Screen", width / 2, height / 2 - 50);
     text("This is the information screen.", width / 2, height / 2);
-    backButton.over = backButton.isOver();
+    backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
