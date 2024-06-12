@@ -49,9 +49,16 @@ public class Sketch2 extends PApplet {
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
-  boolean isGame1Over;
-  boolean isGame1Victory = false;
+  boolean isGameOver;
+  boolean isGameVictory = false;
   boolean isSettingGameChanged = false;
+
+  int intPlayerX, intPlayerY;
+  
+  boolean isUpPressed = false;
+  boolean isDownPressed = false;
+  boolean isLeftPressed = false;
+  boolean isRightPressed = false;
 
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -108,10 +115,10 @@ public class Sketch2 extends PApplet {
     drawWordleGrid();
     gearButton.over = gearButton.isOver();
     gearButton.display();
-    if (isGame1Over && !isGame1Victory) {
+    if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
-    if (isGame1Over && isGame1Victory) {
+    if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
     if (showPopup) {
@@ -130,10 +137,10 @@ public class Sketch2 extends PApplet {
     //drawWordleGrid();
     gearButton.over = gearButton.isOver();
     gearButton.display();
-    if (isGame1Over && !isGame1Victory) {
+    if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
-    if (isGame1Over && isGame1Victory) {
+    if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
     if (showPopup) {
@@ -152,10 +159,10 @@ public class Sketch2 extends PApplet {
     //drawWordleGrid();
     gearButton.over = gearButton.isOver();
     gearButton.display();
-    if (isGame1Over && !isGame1Victory) {
+    if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
-    if (isGame1Over && isGame1Victory) {
+    if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
     if (showPopup) {
@@ -211,6 +218,8 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 1", width / 2, height / 2);
+
+    playerMovement();
     gameButton.over = gameButton.isOver();
     gameButton.display();
   }
@@ -285,6 +294,7 @@ public class Sketch2 extends PApplet {
     // Toggling Intro, Setting1, Game1 screens
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
+        resetPlayer();
         intScreenNumber = 1; // Change to Setting1
       } 
     } 
@@ -295,10 +305,17 @@ public class Sketch2 extends PApplet {
       } 
     } 
     if (intScreenNumber == 2) {
-      if (backButton.isOver()) {
-        intScreenNumber = 1; // Change to Setting1
+      if (backButton.isOver() && showWinPopup) {
+        // Upon game1 win, the user is directed back to the setting 1 screen
+        intScreenNumber = 1; // Change to Game1
+        showWinPopup = false;
       } 
-    } 
+      else if (backButton.isOver() && showLosePopup) {
+        // Upon game1 loss, the user is directed to play the game again!
+        initializeGame1();
+        showLosePopup = false;
+      } 
+    }
     // if (intScreenNumber == 1) {
     //   if (gameButton.isOver()) {
     //     // initializeGame();
@@ -324,9 +341,22 @@ public class Sketch2 extends PApplet {
     //   }
     // }
   }
-
+  public void keyReleased(){
+    if (keyCode == UP) {
+      isUpPressed = false;
+    }
+    else if (keyCode == DOWN) {
+      isDownPressed = false;
+    }
+    else if (keyCode == LEFT) {
+      isLeftPressed = false;
+    }
+    else if (keyCode == RIGHT) {
+      isRightPressed = false;
+    }
+  }
   public void keyPressed() {
-    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGame1Over) {
+    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver) {
       if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX)) {
         if (strGuesses[intCurrentRow] == null) {
           strGuesses[intCurrentRow] = "";
@@ -338,29 +368,67 @@ public class Sketch2 extends PApplet {
         checkGuess();
         intCurrentRow++;
       }
-    } else if ((intScreenNumber >= 2 && intScreenNumber <= 6) && isGame1Over && (key == 'r' || key == 'R')) {
+    } else if ((intScreenNumber >= 2 && intScreenNumber <= 6) && isGameOver && (key == 'r' || key == 'R')) {
       initializeGame1();
+    }
+
+    if (keyCode == UP) {
+      isUpPressed = true;
+    }
+    else if (keyCode == DOWN) {
+      isDownPressed = true;
+    }
+    else if (keyCode == LEFT) {
+      isLeftPressed = true;
+    }
+    else if (keyCode == RIGHT) {
+      isRightPressed = true;
     }
   }
 
   public void checkGuess() {
     if (strGuesses[intCurrentRow].equals(strTargetWord)) {
-      isGame1Over = true;
-      isGame1Victory = true;
+      isGameOver = true;
+      isGameVictory = true;
     } else if (intCurrentRow == intGridSizeY - 1) {
-      isGame1Over = true;
-      isGame1Victory = false;
+      isGameOver = true;
+      isGameVictory = false;
     }
   }
 
   public void initializeGame1() {
-    isGame1Over = false;
-    isGame1Victory = false;
+    isGameOver = false;
+    isGameVictory = false;
     strGuesses = new String[intGridSizeY];
     intCurrentRow = 0;
     strTargetWord = strWordList[(int) (random(strWordList.length))]; // Randomly choose a target word
-    println("Target Word: " + strTargetWord); // For debugging
-    println("Current Guesses: " + Arrays.deepToString(strGuesses)); // Print the current guesses as a readable string
+    // println("Target Word: " + strTargetWord); // For debugging
+    // println("Current Guesses: " + Arrays.deepToString(strGuesses)); // Print the current guesses as a readable string
+    showLosePopup = false;
+    showWinPopup = false;
+    showPopup = false;
+  }
+
+  public void playerMovement(){
+    if (isUpPressed && intPlayerY >= 0 + 25){
+      intPlayerY--;
+    }
+    if (isDownPressed && intPlayerY <= height - 25){
+      intPlayerY++;
+    }
+    if (isLeftPressed && intPlayerX >= 0 + 25){
+      intPlayerX--;
+    }
+    if (isRightPressed && intPlayerX <= width - 25){
+      intPlayerX++;
+    }
+    fill(50, 50, 0);
+    ellipse(intPlayerX, intPlayerY, 50, 50);
+  }
+  public void resetPlayer(){
+    // Resets player to initial position on the setting screen upon switching of setting screens
+    intPlayerX = 300;
+    intPlayerY = 300;
   }
 }
 
