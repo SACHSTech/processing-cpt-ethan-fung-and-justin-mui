@@ -37,7 +37,7 @@ public class Sketch2 extends PApplet {
     }
   }
 
-  Button startButton, settingsButton, gearButton, backButton;
+  Button startButton, gameButton, gearButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
@@ -51,6 +51,7 @@ public class Sketch2 extends PApplet {
   int intCurrentRow;
   boolean isGame1Over;
   boolean isGame1Victory = false;
+  boolean isSettingGameChanged = false;
 
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -63,7 +64,7 @@ public class Sketch2 extends PApplet {
   public void setup() {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
-    settingsButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
+    gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
     gearButton = new Button(width - 60, 10, 50, 50, "Gear");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
   }
@@ -99,8 +100,7 @@ public class Sketch2 extends PApplet {
     text("Intro Screen", width / 2, height / 3);
     startButton.over = startButton.isOver();
     startButton.display();
-    settingsButton.over = settingsButton.isOver();
-    settingsButton.display();
+    
   }
 
   public void gameScreen1() {
@@ -127,7 +127,7 @@ public class Sketch2 extends PApplet {
 
   public void gameScreen2() {
     background(173, 210, 255);
-    drawWordleGrid();
+    //drawWordleGrid();
     gearButton.over = gearButton.isOver();
     gearButton.display();
     if (isGame1Over && !isGame1Victory) {
@@ -149,7 +149,7 @@ public class Sketch2 extends PApplet {
 
   public void gameScreen3() {
     background(255, 210, 173);
-    drawWordleGrid();
+    //drawWordleGrid();
     gearButton.over = gearButton.isOver();
     gearButton.display();
     if (isGame1Over && !isGame1Victory) {
@@ -211,8 +211,8 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 1", width / 2, height / 2);
-    backButton.over = backButton.isOver();
-    backButton.display();
+    gameButton.over = gameButton.isOver();
+    gameButton.display();
   }
 
   public void settingsScreen2() {
@@ -281,30 +281,48 @@ public class Sketch2 extends PApplet {
   }
 
   public void mousePressed() {
+
+    // Toggling Intro, Setting1, Game1 screens
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
-        intScreenNumber = 2; // Change to Game1
-        initializeGame();
-      } else if (settingsButton.isOver()) {
         intScreenNumber = 1; // Change to Setting1
-      }
-    } else if (intScreenNumber >= 2 && intScreenNumber <= 6) {
-      if (gearButton.isOver()) {
-        showPopup = true;
-      } else if (showPopup && backButton.isOver()) {
-        showPopup = false;
-      }
-      if ((showWinPopup || showLosePopup) && backButton.isOver()) {
-        intScreenNumber = 0; // Change to Intro Screen
-        initializeGame();
-        showWinPopup = false;
-        showLosePopup = false;
-      }
-    } else if (intScreenNumber == 1 || intScreenNumber == 7 || intScreenNumber == 8) {
+      } 
+    } 
+    if (intScreenNumber == 1) {
+      if (gameButton.isOver()) {
+        initializeGame1();
+        intScreenNumber = 2; // Change to Setting1
+      } 
+    } 
+    if (intScreenNumber == 2) {
       if (backButton.isOver()) {
-        intScreenNumber = 0; // Change to Intro Screen
-      }
-    }
+        intScreenNumber = 1; // Change to Setting1
+      } 
+    } 
+    // if (intScreenNumber == 1) {
+    //   if (gameButton.isOver()) {
+    //     // initializeGame();
+    //     intScreenNumber = 2; // Change to Setting1
+    //   } 
+    // } 
+    // else if (intScreenNumber >= 2 && intScreenNumber <= 6) {
+    //   if (gearButton.isOver()) {
+    //     showPopup = true;
+    //   } else if (showPopup && backButton.isOver()) {
+    //     showPopup = false;
+    //   }
+    //   if ((showWinPopup || showLosePopup) && backButton.isOver()) {
+    //     intScreenNumber = 0; // Change to Intro Screen
+    //     initializeGame();
+    //     showWinPopup = false;
+    //     showLosePopup = false;
+    //   }
+    // } 
+    // else if (intScreenNumber == 1 || intScreenNumber == 7 || intScreenNumber == 8) {
+    //   if (backButton.isOver()) {
+    //     intScreenNumber = 0; // Change to Intro Screen
+    //   }
+    // }
   }
 
   public void keyPressed() {
@@ -321,7 +339,7 @@ public class Sketch2 extends PApplet {
         intCurrentRow++;
       }
     } else if ((intScreenNumber >= 2 && intScreenNumber <= 6) && isGame1Over && (key == 'r' || key == 'R')) {
-      initializeGame();
+      initializeGame1();
     }
   }
 
@@ -335,7 +353,7 @@ public class Sketch2 extends PApplet {
     }
   }
 
-  public void initializeGame() {
+  public void initializeGame1() {
     isGame1Over = false;
     isGame1Victory = false;
     strGuesses = new String[intGridSizeY];
