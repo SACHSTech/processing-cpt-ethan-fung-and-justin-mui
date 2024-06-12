@@ -26,6 +26,8 @@ public class Sketch1 extends PApplet {
   int lives = 4;
   boolean gameOver = false;
   boolean showRestartButton = false;
+  boolean gameWon = false;
+  boolean showWinButton = false;
 
   /*
    * Start game
@@ -42,7 +44,7 @@ public class Sketch1 extends PApplet {
    */
   public void settings() {
 	// put your size call here
-    size(600, 600);
+    size(800, 600);
   }
 
   /** 
@@ -94,14 +96,29 @@ public class Sketch1 extends PApplet {
       fill(255);
       rect(0, 0, width, height);
       fill(0);
-      textSize(32);
-      text("Game Over", width / 2 - textWidth("Game Over") / 2, height / 2 - 40);
+      textSize(24);
+      text("You lose!", width / 2 - textWidth("You lose!") / 2, height / 2 - 40);
+      text("Better luck next time!", width / 2 - textWidth("Better luck next time!") / 2, height / 2 - 10);
       fill(100);
       rect(width / 2 - 50, height / 2, 100, 50);
       fill(255);
       textSize(20);
       text("Restart", width / 2 - textWidth("Restart") / 2, height / 2 + 30);
       showRestartButton = true;
+    
+    } else if (gameWon) {
+      // Show you won screen and next game button
+      fill(255);
+      rect(0, 0, width, height);
+      fill(0);
+      textSize(32);
+      text("You Won!", width / 2 - textWidth("You Won!") / 2, height / 2 - 40);
+      fill(100);
+      rect(width / 2 - 50, height / 2, 100, 50);
+      fill(255);
+      textSize(20);
+      text("Next", width / 2 - textWidth("Next") / 2, height / 2 + 30);
+      showWinButton = true;
     }
   }
 
@@ -110,6 +127,14 @@ public class Sketch1 extends PApplet {
       // Check if restart button is clicked
       if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
         resetGame();
+      }
+      return;
+
+    }
+    if (showWinButton) {
+      // Check if next game button is clicked
+      if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
+        println("Next game placeholder");
       }
       return;
     }
@@ -168,6 +193,9 @@ public class Sketch1 extends PApplet {
         }
         message = "You solved the group: " + correctGroups[i][4];
         selectedWords.clear();
+        if (checkIfGameWon()) {
+          gameWon = true;
+        }
         return;
       }
     }
@@ -177,6 +205,17 @@ public class Sketch1 extends PApplet {
     if (lives <= 0) {
       gameOver = true;
     }
+  }
+
+  public boolean checkIfGameWon() {
+    for (int i = 0; i < solvedGroups.length; i++) {
+      for (int j = 0; j < solvedGroups[i].length; j++) {
+        if (!solvedGroups[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   public int findWordIndex(String word) {
@@ -197,6 +236,8 @@ public class Sketch1 extends PApplet {
     message = "";
     lives = 4;
     gameOver = false;
+    gameWon = false;
     showRestartButton = false;
+    showWinButton = false;
   }
 }
