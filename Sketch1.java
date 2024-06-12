@@ -2,21 +2,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import processing.core.PApplet;
 
+  /*
+   * Start game
+   * All boxes are drawn onto screen from incorrectGroups
+   * Only a max of 4 boxes can be selected, then the user must press enter
+   * The program then checks to see if the selected matches a row in the correct groups
+   * If not then checks if the user is one away from a correct group
+   * If yes, then turn those boxes grey, etc
+   * Game is complete when all 4 rows are solved
+   */
+
 public class Sketch1 extends PApplet {
 	
-	String[][] incorrectGroups = {
-    {"bus", "orange", "blue", "bird"},
-    {"green", "car", "apple", "dog"},
-    {"banana", "train", "cat", "red"},
-    {"fish", "bike", "grape", "yellow"}
-  };
-
-  String[][] correctGroups = {
-    {"apple", "orange", "banana", "grape", "Fruits"},
-    {"dog", "cat", "fish", "bird", "Animals"},
-    {"car", "bus", "bike", "train", "Vehicles"},
-    {"red", "blue", "green", "yellow", "Colours"}
-  };
+  String[][] incorrectGroups;
+  String[][] correctGroups;
 
   ArrayList<String> selectedWords = new ArrayList<>();
   boolean[][] selectedBoxes = new boolean[4][4];
@@ -27,16 +26,6 @@ public class Sketch1 extends PApplet {
   boolean showRestartButton = false;
   boolean gameWon = false;
   boolean showWinButton = false;
-
-  /*
-   * Start game
-   * All boxes are drawn onto screen from incorrectGroups
-   * 4 boxes can be selected
-   * Only a max of 4 boxes can be selected, then the user must press enter
-   * The program then checks to see if the selected matches a row in the correct groups
-   * If yes, then turn those boxes blank, grey, etc
-   * Game is complete when all 4 rows are solved
-   */
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -52,6 +41,34 @@ public class Sketch1 extends PApplet {
    */
   public void setup() {
     background(255);
+    if (random(1) < 0.5) {
+      incorrectGroups = new String[][] {
+        {"BUS", "ORANGE", "BLUE", "BIRD"},
+        {"GREEN", "CAR", "APPLE", "DOG"},
+        {"BANANA", "TRAIN", "CAT", "RED"},
+        {"FISH", "BIKE", "GRAPE", "YELLOW"}
+      };
+    
+      correctGroups = new String[][] {
+          {"APPLE", "ORANGE", "BANANA", "GRAPE", "Fruits"},
+          {"DOG", "CAT", "FISH", "BIRD", "Animals"},
+          {"CAR", "BUS", "BIKE", "TRAIN", "Vehicles"},
+          {"RED", "BLUE", "GREEN", "YELLOW", "Colours"}
+      };
+  } else {
+      incorrectGroups = new String[][] {
+          {"SICK", "KIND", "DRIFT", "TENDER"},
+          {"STYLE", "RING", "NICE", "SWEET"},
+          {"POINT", "SORT", "COOL", "WING"},
+          {"MESSAGE", "TYPE", "STICK", "IDEA"}
+      };
+      correctGroups = new String[][] {
+          {"COOL", "NICE", "SICK", "SWEET", "Awesome!"},
+          {"KIND", "SORT", "STYLE", "TYPE", "Variety"},
+          {"DRIFT", "IDEA", "MESSAGE", "POINT", "Gist"},
+          {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally"}
+      };
+  }
   }
 
   /**
