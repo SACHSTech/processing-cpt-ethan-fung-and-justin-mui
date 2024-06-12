@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import processing.core.PApplet;
 
 public class Sketch1 extends PApplet {
@@ -12,14 +13,16 @@ public class Sketch1 extends PApplet {
   };
 
   String[][] correctGroups = {
-    {"apple", "orange", "banana", "grape"},
-    {"dog", "cat", "fish", "bird"},
-    {"car", "bus", "bike", "train"},
-    {"red", "blue", "green", "yellow"}
+    {"apple", "orange", "banana", "grape", "Fruits"},
+    {"dog", "cat", "fish", "bird", "Animals"},
+    {"car", "bus", "bike", "train", "Vehicles"},
+    {"red", "blue", "green", "yellow", "Colours"}
   };
 
   ArrayList<String> selectedWords = new ArrayList<>();
   boolean[][] selectedBoxes = new boolean[4][4];
+  boolean[][] solvedGroups = new boolean[4][4];
+  String message = "";
 
   /*
    * Start game
@@ -59,7 +62,9 @@ public class Sketch1 extends PApplet {
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
       for (int rectRow = 40; rectRow < 600; rectRow += 140) {
-        if (selectedBoxes[intWordColumn][intWordRow]) {
+        if (solvedGroups[intWordColumn][intWordRow]) {
+          fill(200); // Grey for solved
+        } else if (selectedBoxes[intWordColumn][intWordRow]) {
           fill(0, 255, 0); // Green for selected
         } else {
           fill(255); // White for unselected
@@ -72,6 +77,9 @@ public class Sketch1 extends PApplet {
       }
       intWordColumn++;
     }
+    textSize(20);
+    fill(0);
+    text(message, 50, 30);
   }
 
   public void mousePressed() {
@@ -81,7 +89,9 @@ public class Sketch1 extends PApplet {
       for (int rectRow = 40; rectRow < 600; rectRow += 140) {
         if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
           String word = incorrectGroups[intWordColumn][intWordRow];
-          if (selectedBoxes[intWordColumn][intWordRow]) {
+          if (solvedGroups[intWordColumn][intWordRow]) {
+            // Do nothing if the group is solved
+          } else if (selectedBoxes[intWordColumn][intWordRow]) {
             // Deselect the box
             selectedBoxes[intWordColumn][intWordRow] = false;
             selectedWords.remove(word);
@@ -101,4 +111,47 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  public void keyPressed() {
+    if (key == ENTER) {
+      checkSelectedWords();
+    }
+  }
+
+  private void checkSelectedWords() {
+    if (selectedWords.size() != 4) {
+      message = "You must select exactly 4 words.";
+      return;
+    }
+
+    for (int i = 0; i < correctGroups.length; i++) {
+      String[] correctGroup = Arrays.copyOfRange(correctGroups[i], 0, 4);
+      if (selectedWords.containsAll(Arrays.asList(correctGroup))) {
+        // Mark the solved group
+        for (int j = 0; j < 4; j++) {
+          int index = findWordIndex(correctGroups[i][j]);
+          if (index != -1) {
+            int row = index / 4;
+            int col = index % 4;
+            solvedGroups[row][col] = true;
+          }
+        }
+        message = "You solved the group: " + correctGroups[i][4];
+        selectedWords.clear();
+        return;
+      }
+    }
+
+    message = "Selected words do not form a valid group.";
+  }
+
+  public int findWordIndex(String word) {
+    for (int i = 0; i < incorrectGroups.length; i++) {
+      for (int j = 0; j < incorrectGroups[i].length; j++) {
+        if (incorrectGroups[i][j].equals(word)) {
+          return i * 4 + j;
+        }
+      }
+    }
+    return -1;
+  }
 }
