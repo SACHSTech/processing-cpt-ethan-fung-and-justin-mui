@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Sketch2 extends PApplet {
 
@@ -60,6 +61,8 @@ public class Sketch2 extends PApplet {
   boolean isLeftPressed = false;
   boolean isRightPressed = false;
 
+  PImage setting1, setting2, setting3;
+
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
@@ -74,9 +77,12 @@ public class Sketch2 extends PApplet {
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
     gearButton = new Button(width - 60, 10, 50, 50, "Gear");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
+    setting1 = loadImage("office.png");
+
   }
 
   public void draw() {
+    
     background(50);
     if (intScreenNumber == 0) {
       introScreen();
@@ -214,6 +220,8 @@ public class Sketch2 extends PApplet {
 
   public void settingsScreen1() {
     background(200, 100, 100);
+    // Setting1 background generation
+    image(setting1, 0, 0);
     fill(255);
     textAlign(CENTER);
     textSize(32);
@@ -407,22 +415,23 @@ public class Sketch2 extends PApplet {
     showLosePopup = false;
     showWinPopup = false;
     showPopup = false;
+    textSize(32);
   }
 
   public void playerMovement(){
     if (isUpPressed && intPlayerY >= 0 + 25){
-      intPlayerY--;
+      intPlayerY -=3;
     }
     if (isDownPressed && intPlayerY <= height - 25){
-      intPlayerY++;
+      intPlayerY += 3;
     }
     if (isLeftPressed && intPlayerX >= 0 + 25){
-      intPlayerX--;
+      intPlayerX -= 4;
     }
     if (isRightPressed && intPlayerX <= width - 25){
-      intPlayerX++;
+      intPlayerX += 4;
     }
-    fill(50, 50, 0);
+    fill(0, 255, 0);
     ellipse(intPlayerX, intPlayerY, 50, 50);
   }
   public void resetPlayer(){
