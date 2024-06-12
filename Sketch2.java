@@ -141,7 +141,9 @@ public class Sketch2 extends PApplet {
     }
   }
   
-  
+  /**
+   * Displays the start home screen
+   */
   public void introScreen() {
     textAlign(CENTER);
     fill(255);
@@ -151,6 +153,10 @@ public class Sketch2 extends PApplet {
     startButton.display();
     
   }
+
+  /**
+   * Displays the first game screen (ORIGINAL WORDLE)
+   */
 
   public void gameScreen1() {
     background(210, 255, 173);
@@ -173,7 +179,9 @@ public class Sketch2 extends PApplet {
       drawLosePopup();
     }
   }
-
+  /**
+   * Displays the second game screen (WORDLE CONNECTIONS)
+   */
   public void gameScreen2() {
     background(173, 210, 255);
     //drawWordleGrid();
@@ -195,7 +203,9 @@ public class Sketch2 extends PApplet {
       drawLosePopup();
     }
   }
-
+  /**
+   * Displays the third game screen
+   */
   public void gameScreen3() {
     background(255, 210, 173);
     //drawWordleGrid();
@@ -218,6 +228,10 @@ public class Sketch2 extends PApplet {
     }
   }
 
+  /**
+   * Draws a popup window with information.
+   */
+
   public void drawPopup() {
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
@@ -229,7 +243,9 @@ public class Sketch2 extends PApplet {
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
-
+  /**
+   * Draws a popup window when the player wins.
+   */
   public void drawWinPopup() {
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
@@ -242,7 +258,7 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
   /**
-   * 
+   * Draws a popup window when the player loses.
    */
   public void drawLosePopup() {
     fill(0, 0, 0, 150);
@@ -256,6 +272,26 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
 
+  /**
+   * Displays the first environment screen (FLOOR 3)
+   */
+  public void settingsScreen0() {
+    background(200, 100, 100);
+    // Setting1 background generation
+    image(setting1, 0, 0);
+    fill(255);
+    textAlign(CENTER);
+    textSize(32);
+    text("Settings Screen 1", width / 2, height / 2);
+
+    playerMovement();
+    gameButton.isOver = gameButton.isOver();
+    gameButton.display();
+  }
+
+  /**
+   * Displays the second environment screen (FLOOR 2)
+   */
   public void settingsScreen1() {
     background(200, 100, 100);
     // Setting1 background generation
@@ -270,6 +306,9 @@ public class Sketch2 extends PApplet {
     gameButton.display();
   }
 
+  /**
+   * Displays the third environment screen (FLOOR 1)
+   */
   public void settingsScreen2() {
     background(100, 200, 100);
     fill(255);
@@ -280,6 +319,9 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
 
+  /**
+   * Displays the fourth environment screen (FLOOR 0)
+   */
   public void settingsScreen3() {
     background(100, 100, 200);
     fill(255);
@@ -290,6 +332,9 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
 
+  /**
+   * Displays the end screen of the game upon completion
+   */
   public void endingScreen() {
     background(50);
     fill(255);
@@ -298,6 +343,9 @@ public class Sketch2 extends PApplet {
     text("Ending Screen", width / 2, height / 2);
   }
 
+  /**
+   * Displays the screen specific info screen to help player throughout gameplay (FLOOR 2)
+   */
   public void informationScreen() {
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
@@ -309,6 +357,9 @@ public class Sketch2 extends PApplet {
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
+  /**
+   * Draws the Wordle-like grid and handles Game1 logic.
+   */
 
   public void drawWordleGrid() {
     for (int i = 0; i < intGridSizeY; i++) {
@@ -334,7 +385,9 @@ public class Sketch2 extends PApplet {
       }
     }
   }
-
+  /**
+   * Handles mouse pressed events.
+   */
   public void mousePressed() {
 
     // Toggling Intro, Setting1, Game1 screens
@@ -387,6 +440,11 @@ public class Sketch2 extends PApplet {
     //   }
     // }
   }
+
+  /**
+   * Handles key release events.
+   */
+
   public void keyReleased(){
     if (keyCode == UP) {
       isUpPressed = false;
@@ -401,6 +459,9 @@ public class Sketch2 extends PApplet {
       isRightPressed = false;
     }
   }
+  /**
+   * Handles key pressed events.
+   */
   public void keyPressed() {
     if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver) {
       if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX)) {
