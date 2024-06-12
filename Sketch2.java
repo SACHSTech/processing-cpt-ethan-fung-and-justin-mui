@@ -92,6 +92,7 @@ public class Sketch2 extends PApplet {
   boolean isRightPressed = false;
 
   PImage setting1, setting2, setting3;
+  PImage playerForward, playerBackward, playerLeft, playerRight;
 
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -107,7 +108,12 @@ public class Sketch2 extends PApplet {
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
     gearButton = new Button(width - 60, 10, 50, 50, "Gear");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
+    playerForward = loadImage("images/NerdFace.png"); 
+    playerBackward = loadImage("images/NerdFaceBack.png"); 
+    playerLeft = loadImage("images/NerdFaceLeft.png"); 
+    playerRight = loadImage("images/NerdFaceRight.png"); 
     setting1 = loadImage("images/office.png");
+
 
   }
 
@@ -453,18 +459,22 @@ public class Sketch2 extends PApplet {
   public void playerMovement(){
     if (isUpPressed && intPlayerY >= 0 + 25){
       intPlayerY -=3;
+      image(playerBackward, intPlayerX, intPlayerY);
     }
     if (isDownPressed && intPlayerY <= height - 25){
       intPlayerY += 3;
+      image(playerForward, intPlayerX, intPlayerY);
     }
     if (isLeftPressed && intPlayerX >= 0 + 25){
       intPlayerX -= 4;
+      image(playerLeft, intPlayerX, intPlayerY);
     }
     if (isRightPressed && intPlayerX <= width - 25){
       intPlayerX += 4;
+      image(playerRight, intPlayerX, intPlayerY);
     }
-    fill(0, 255, 0);
-    ellipse(intPlayerX, intPlayerY, 50, 50);
+    // fill(0, 255, 0);
+    // ellipse(intPlayerX, intPlayerY, 50, 50);
   }
   public void resetPlayer(){
     // Resets player to initial position on the setting screen upon switching of setting screens
