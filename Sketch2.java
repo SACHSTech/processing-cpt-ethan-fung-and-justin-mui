@@ -38,14 +38,14 @@ public class Sketch2 extends PApplet {
   }
 
   Button startButton, settingsButton, gearButton, backButton;
-  String screen = "home";
+  int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false;
   boolean showWinPopup = false;
   boolean showLosePopup = false;
 
   int intGridSizeX = 5;
   int intGridSizeY = 6;
-  String[] strWordList = {"stark", "reese", "crack", "nosey", "hitch", "rural", "craic", "ergot", "ouija"};
+  String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
@@ -53,7 +53,7 @@ public class Sketch2 extends PApplet {
   boolean isGame1Victory = false;
 
   public static void main(String[] args) {
-    PApplet.main("IntegratedGame");
+    PApplet.main("Sketch2");
   }
 
   public void settings() {
@@ -64,44 +64,46 @@ public class Sketch2 extends PApplet {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
     settingsButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
-
     gearButton = new Button(width - 60, 10, 50, 50, "Gear");
-
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
   }
 
   public void draw() {
     background(50);
-    if (screen.equals("home")) {
-      homeScreen();
-    } else if (screen.equals("game")) {
-      gameScreen();
-      if (showPopup) {
-        drawPopup();
-      }
-      if (showWinPopup) {
-        drawWinPopup();
-      }
-      if (showLosePopup) {
-        drawLosePopup();
-      }
-    } else if (screen.equals("settings")) {
-      settingsScreen();
+    if (intScreenNumber == 0) {
+      introScreen();
+    } else if (intScreenNumber == 1) {
+      settingsScreen1();
+    } else if (intScreenNumber == 2) {
+      gameScreen1();
+    } else if (intScreenNumber == 3) {
+      settingsScreen2();
+    } else if (intScreenNumber == 4) {
+      gameScreen2();
+    } else if (intScreenNumber == 5) {
+      settingsScreen3();
+    } else if (intScreenNumber == 6) {
+      gameScreen3();
+    } else if (intScreenNumber == 7) {
+      endingScreen();
+    } else if (intScreenNumber == 8) {
+      informationScreen();
     }
   }
+  
 
-  public void homeScreen() {
+  public void introScreen() {
     textAlign(CENTER);
     fill(255);
     textSize(32);
-    text("Game Title", width / 2, height / 3);
+    text("Intro Screen", width / 2, height / 3);
     startButton.over = startButton.isOver();
     startButton.display();
     settingsButton.over = settingsButton.isOver();
     settingsButton.display();
   }
 
-  public void gameScreen() {
+  public void gameScreen1() {
     background(210, 255, 173);
     drawWordleGrid();
     gearButton.over = gearButton.isOver();
@@ -111,6 +113,59 @@ public class Sketch2 extends PApplet {
     }
     if (isGame1Over && isGame1Victory) {
       showWinPopup = true;
+    }
+    if (showPopup) {
+      drawPopup();
+    }
+    if (showWinPopup) {
+      drawWinPopup();
+    }
+    if (showLosePopup) {
+      drawLosePopup();
+    }
+  }
+
+  public void gameScreen2() {
+    background(173, 210, 255);
+    drawWordleGrid();
+    gearButton.over = gearButton.isOver();
+    gearButton.display();
+    if (isGame1Over && !isGame1Victory) {
+      showLosePopup = true;
+    }
+    if (isGame1Over && isGame1Victory) {
+      showWinPopup = true;
+    }
+    if (showPopup) {
+      drawPopup();
+    }
+    if (showWinPopup) {
+      drawWinPopup();
+    }
+    if (showLosePopup) {
+      drawLosePopup();
+    }
+  }
+
+  public void gameScreen3() {
+    background(255, 210, 173);
+    drawWordleGrid();
+    gearButton.over = gearButton.isOver();
+    gearButton.display();
+    if (isGame1Over && !isGame1Victory) {
+      showLosePopup = true;
+    }
+    if (isGame1Over && isGame1Victory) {
+      showWinPopup = true;
+    }
+    if (showPopup) {
+      drawPopup();
+    }
+    if (showWinPopup) {
+      drawWinPopup();
+    }
+    if (showLosePopup) {
+      drawLosePopup();
     }
   }
 
@@ -150,19 +205,61 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
 
-  public void settingsScreen() {
+  public void settingsScreen1() {
     background(200, 100, 100);
     fill(255);
     textAlign(CENTER);
     textSize(32);
-    text("Settings", width / 2, height / 2);
+    text("Settings Screen 1", width / 2, height / 2);
+    backButton.over = backButton.isOver();
+    backButton.display();
+  }
+
+  public void settingsScreen2() {
+    background(100, 200, 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(32);
+    text("Settings Screen 2", width / 2, height / 2);
+    backButton.over = backButton.isOver();
+    backButton.display();
+  }
+
+  public void settingsScreen3() {
+    background(100, 100, 200);
+    fill(255);
+    textAlign(CENTER);
+    textSize(32);
+    text("Settings Screen 3", width / 2, height / 2);
+    backButton.over = backButton.isOver();
+    backButton.display();
+  }
+
+  public void endingScreen() {
+    background(50);
+    fill(255);
+    textAlign(CENTER);
+    textSize(32);
+    text("Ending Screen", width / 2, height / 2);
+  }
+
+  public void informationScreen() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("Information Screen", width / 2, height / 2 - 50);
+    text("This is the information screen.", width / 2, height / 2);
+    backButton.over = backButton.isOver();
+    backButton.display();
   }
 
   public void drawWordleGrid() {
     for (int i = 0; i < intGridSizeY; i++) {
       for (int j = 0; j < intGridSizeX; j++) {
         fill(200);
-        rect(j * 80 + (width - 380) / 2, i * 80 + 100, 60, 60);
+        rect(j * 80 + (width - 380) /2, i * 80 + 100, 60, 60);
         if (strGuesses[i] != null && j < strGuesses[i].length()) {
           char letter = strGuesses[i].charAt(j);
           fill(0);
@@ -182,35 +279,36 @@ public class Sketch2 extends PApplet {
       }
     }
   }
+
   public void mousePressed() {
-    if (screen.equals("home")) {
+    if (intScreenNumber == 0) {
       if (startButton.isOver()) {
-        screen = "game";
+        intScreenNumber = 2; // Change to Game1
         initializeGame();
       } else if (settingsButton.isOver()) {
-        screen = "settings";
+        intScreenNumber = 1; // Change to Setting1
       }
-    } else if (screen.equals("game")) {
+    } else if (intScreenNumber >= 2 && intScreenNumber <= 6) {
       if (gearButton.isOver()) {
         showPopup = true;
       } else if (showPopup && backButton.isOver()) {
         showPopup = false;
       }
-      if (showWinPopup && backButton.isOver()) {
-        // Change screen to another screen
-        screen = "home";
-        showWinPopup = false;
-      }
-      if (showLosePopup && backButton.isOver()) {
-        // Restart the game
+      if ((showWinPopup || showLosePopup) && backButton.isOver()) {
+        intScreenNumber = 0; // Change to Intro Screen
         initializeGame();
+        showWinPopup = false;
         showLosePopup = false;
+      }
+    } else if (intScreenNumber == 1 || intScreenNumber == 7 || intScreenNumber == 8) {
+      if (backButton.isOver()) {
+        intScreenNumber = 0; // Change to Intro Screen
       }
     }
   }
 
   public void keyPressed() {
-    if (screen.equals("game") && !isGame1Over) {
+    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGame1Over) {
       if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX)) {
         if (strGuesses[intCurrentRow] == null) {
           strGuesses[intCurrentRow] = "";
@@ -222,7 +320,7 @@ public class Sketch2 extends PApplet {
         checkGuess();
         intCurrentRow++;
       }
-    } else if (screen.equals("game") && isGame1Over && (key == 'r' || key == 'R')) {
+    } else if ((intScreenNumber >= 2 && intScreenNumber <= 6) && isGame1Over && (key == 'r' || key == 'R')) {
       initializeGame();
     }
   }
