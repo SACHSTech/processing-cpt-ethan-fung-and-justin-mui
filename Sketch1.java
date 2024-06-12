@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import processing.core.PApplet;
 
 public class Sketch1 extends PApplet {
@@ -179,6 +178,7 @@ public class Sketch1 extends PApplet {
       return;
     }
 
+    boolean correctGroupFound = false;
     for (int i = 0; i < correctGroups.length; i++) {
       String[] correctGroup = Arrays.copyOfRange(correctGroups[i], 0, 4);
       if (selectedWords.containsAll(Arrays.asList(correctGroup))) {
@@ -200,10 +200,20 @@ public class Sketch1 extends PApplet {
       }
     }
 
-    message = "Selected words do not form a valid group.";
-    lives--;
-    if (lives <= 0) {
-      gameOver = true;
+    if (!correctGroupFound) {
+      if (checkIfOneWordAway()) {
+        message = "One word away...";
+        lives--;
+        if (lives <= 0) {
+          gameOver = true;
+        }
+      } else {
+        message = "Selected words do not form a valid group.";
+        lives--;
+        if (lives <= 0) {
+          gameOver = true;
+        }
+      }
     }
   }
 
@@ -227,6 +237,21 @@ public class Sketch1 extends PApplet {
       }
     }
     return -1;
+  }
+
+  public boolean checkIfOneWordAway() {
+    for (int i = 0; i < correctGroups.length; i++) {
+      int matchCount = 0;
+      for (int j = 0; j < 4; j++) {
+        if (selectedWords.contains(correctGroups[i][j])) {
+          matchCount++;
+        }
+      }
+      if (matchCount == 3) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void resetGame() {
