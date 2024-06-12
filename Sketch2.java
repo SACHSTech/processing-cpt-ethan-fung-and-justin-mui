@@ -107,7 +107,7 @@ public class Sketch2 extends PApplet {
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
     gearButton = new Button(width - 60, 10, 50, 50, "Gear");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
-    setting1 = loadImage("office.png");
+    setting1 = loadImage("images/office.png");
 
   }
 
