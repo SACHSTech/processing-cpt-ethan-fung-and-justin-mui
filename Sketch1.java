@@ -55,23 +55,22 @@ public class Sketch1 extends PApplet {
   }
 
   /**
-   * Called repeatedly, anything drawn to the screen goes here
+   * Called repeatedly. Draws the boxes and updates the game state display.
    */
-
-  //40 + 100 + 40 + 100 + 40 + 100 + 40 + 100 + 40
-  
   public void draw() {
-    background(255); // Clear the background each frame
+    background(255); 
     int intWordColumn = 0;
+
+    // Draws out boxes in a 4x4 grid with text in each of them. Depending on the status of the box, completed, selected, unselected, it will have a different colour
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
       for (int rectRow = 40; rectRow < 600; rectRow += 140) {
         if (solvedGroups[intWordColumn][intWordRow]) {
-          fill(200); // Grey for solved
+          fill(200); 
         } else if (selectedBoxes[intWordColumn][intWordRow]) {
-          fill(0, 255, 0); // Green for selected
+          fill(0, 255, 0); 
         } else {
-          fill(255); // White for unselected
+          fill(255); 
         }
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
@@ -81,6 +80,8 @@ public class Sketch1 extends PApplet {
       }
       intWordColumn++;
     }
+
+    //Writes the current message to the top of the screen
     textSize(20);
     fill(0);
     text(message, 50, 30);
@@ -121,23 +122,29 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  /**
+   * Called when the mouse is pressed. Checks words selected and button clicks.
+   */
   public void mousePressed() {
+
+    // Check if restart button is clicked
     if (showRestartButton) {
-      // Check if restart button is clicked
       if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
         resetGame();
       }
       return;
 
     }
+
+    // Check if next game button is clicked
     if (showWinButton) {
-      // Check if next game button is clicked
       if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
         println("Next game placeholder");
       }
       return;
     }
 
+    //Selects and deselects boxes
     int intWordColumn = 0;
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
@@ -157,8 +164,7 @@ public class Sketch1 extends PApplet {
               selectedWords.add(word);
             }
           }
-          println("Selected words: " + selectedWords);
-          return; // Exit once the correct rectangle is found and processed
+          return; 
         }
         intWordRow++;
       }
@@ -166,19 +172,25 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  /**
+   * Checks if a key is pressed. Checks if the Enter key is pressed and then checks the selected words if they are correct.
+   */
   public void keyPressed() {
     if (key == ENTER) {
       checkSelectedWords();
     }
   }
 
+  /**
+   * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
+   */
   public void checkSelectedWords() {
+    //Checks that 4 words are selected
     if (selectedWords.size() != 4) {
       message = "You must select exactly 4 words.";
       return;
     }
 
-    boolean correctGroupFound = false;
     for (int i = 0; i < correctGroups.length; i++) {
       String[] correctGroup = Arrays.copyOfRange(correctGroups[i], 0, 4);
       if (selectedWords.containsAll(Arrays.asList(correctGroup))) {
@@ -200,6 +212,8 @@ public class Sketch1 extends PApplet {
       }
     }
 
+    //If the correctGroup was not found, checks for one word away, and if not then just removes a life
+    boolean correctGroupFound = false;
     if (!correctGroupFound) {
       if (checkIfOneWordAway()) {
         message = "One word away...";
@@ -208,7 +222,7 @@ public class Sketch1 extends PApplet {
           gameOver = true;
         }
       } else {
-        message = "Selected words do not form a valid group.";
+        message = "Selected words are incorrect.";
         lives--;
         if (lives <= 0) {
           gameOver = true;
@@ -217,6 +231,11 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  /**
+   * Checks if all groups are solved and will make the game end if it has
+   *
+   * @return true if the game is won, false otherwise
+   */
   public boolean checkIfGameWon() {
     for (int i = 0; i < solvedGroups.length; i++) {
       for (int j = 0; j < solvedGroups[i].length; j++) {
@@ -228,6 +247,12 @@ public class Sketch1 extends PApplet {
     return true;
   }
 
+  /**
+   * Finds the index of a given word in the incorrectGroups array.
+   *
+   * @param word the word to find
+   * @return the index of the word, or -1 if not found
+   */
   public int findWordIndex(String word) {
     for (int i = 0; i < incorrectGroups.length; i++) {
       for (int j = 0; j < incorrectGroups[i].length; j++) {
@@ -239,6 +264,11 @@ public class Sketch1 extends PApplet {
     return -1;
   }
 
+  /**
+   * Checks if the selected words are one word away from forming a correct group.
+   *
+   * @return true if three out of four words are correct and belong to the same category, false otherwise
+   */
   public boolean checkIfOneWordAway() {
     for (int i = 0; i < correctGroups.length; i++) {
       int matchCount = 0;
@@ -254,6 +284,9 @@ public class Sketch1 extends PApplet {
     return false;
   }
 
+  /**
+   * Resets the game by resetting all variables
+   */
   public void resetGame() {
     selectedWords.clear();
     selectedBoxes = new boolean[4][4];
