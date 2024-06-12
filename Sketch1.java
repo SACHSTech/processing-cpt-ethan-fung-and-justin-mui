@@ -23,6 +23,9 @@ public class Sketch1 extends PApplet {
   boolean[][] selectedBoxes = new boolean[4][4];
   boolean[][] solvedGroups = new boolean[4][4];
   String message = "";
+  int lives = 4;
+  boolean gameOver = false;
+  boolean showRestartButton = false;
 
   /*
    * Start game
@@ -80,9 +83,37 @@ public class Sketch1 extends PApplet {
     textSize(20);
     fill(0);
     text(message, 50, 30);
+
+    //Display lives
+    textSize(20);
+    fill(0);
+    text("Lives left: " + lives, width - 150, 30);
+
+    if (gameOver) {
+      // Show game over screen and restart button
+      fill(255);
+      rect(0, 0, width, height);
+      fill(0);
+      textSize(32);
+      text("Game Over", width / 2 - textWidth("Game Over") / 2, height / 2 - 40);
+      fill(100);
+      rect(width / 2 - 50, height / 2, 100, 50);
+      fill(255);
+      textSize(20);
+      text("Restart", width / 2 - textWidth("Restart") / 2, height / 2 + 30);
+      showRestartButton = true;
+    }
   }
 
   public void mousePressed() {
+    if (showRestartButton) {
+      // Check if restart button is clicked
+      if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
+        resetGame();
+      }
+      return;
+    }
+
     int intWordColumn = 0;
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
@@ -117,7 +148,7 @@ public class Sketch1 extends PApplet {
     }
   }
 
-  private void checkSelectedWords() {
+  public void checkSelectedWords() {
     if (selectedWords.size() != 4) {
       message = "You must select exactly 4 words.";
       return;
@@ -142,6 +173,10 @@ public class Sketch1 extends PApplet {
     }
 
     message = "Selected words do not form a valid group.";
+    lives--;
+    if (lives <= 0) {
+      gameOver = true;
+    }
   }
 
   public int findWordIndex(String word) {
@@ -153,5 +188,15 @@ public class Sketch1 extends PApplet {
       }
     }
     return -1;
+  }
+
+  public void resetGame() {
+    selectedWords.clear();
+    selectedBoxes = new boolean[4][4];
+    solvedGroups = new boolean[4][4];
+    message = "";
+    lives = 4;
+    gameOver = false;
+    showRestartButton = false;
   }
 }
