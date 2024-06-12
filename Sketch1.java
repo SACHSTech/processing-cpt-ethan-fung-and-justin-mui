@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import processing.core.PApplet;
 
 public class Sketch1 extends PApplet {
@@ -16,8 +18,8 @@ public class Sketch1 extends PApplet {
     {"red", "blue", "green", "yellow"}
   };
 
-  String[] selectedWords = new String [4];
-  int intNumSelected = 0;
+  ArrayList<String> selectedWords = new ArrayList<>();
+  boolean[][] selectedBoxes = new boolean[4][4];
 
   /*
    * Start game
@@ -43,8 +45,6 @@ public class Sketch1 extends PApplet {
    */
   public void setup() {
     background(255);
-    System.out.println(correctGroups);
-    System.out.println(incorrectGroups);
   }
 
   /**
@@ -54,11 +54,16 @@ public class Sketch1 extends PApplet {
   //40 + 100 + 40 + 100 + 40 + 100 + 40 + 100 + 40
   
   public void draw() {
+    background(255); // Clear the background each frame
     int intWordColumn = 0;
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
       for (int rectRow = 40; rectRow < 600; rectRow += 140) {
-        fill(255);
+        if (selectedBoxes[intWordColumn][intWordRow]) {
+          fill(0, 255, 0); // Green for selected
+        } else {
+          fill(255); // White for unselected
+        }
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
         fill(0);
@@ -66,9 +71,34 @@ public class Sketch1 extends PApplet {
         intWordRow++;
       }
       intWordColumn++;
+    }
   }
 
+  public void mousePressed() {
+    int intWordColumn = 0;
+    for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
+      int intWordRow = 0;
+      for (int rectRow = 40; rectRow < 600; rectRow += 140) {
+        if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
+          String word = incorrectGroups[intWordColumn][intWordRow];
+          if (selectedBoxes[intWordColumn][intWordRow]) {
+            // Deselect the box
+            selectedBoxes[intWordColumn][intWordRow] = false;
+            selectedWords.remove(word);
+          } else {
+            // Select the box if less than 4 are selected
+            if (selectedWords.size() < 4) {
+              selectedBoxes[intWordColumn][intWordRow] = true;
+              selectedWords.add(word);
+            }
+          }
+          println("Selected words: " + selectedWords);
+          return; // Exit once the correct rectangle is found and processed
+        }
+        intWordRow++;
+      }
+      intWordColumn++;
+    }
   }
-  
-  // define other methods down here.
+
 }
