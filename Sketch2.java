@@ -92,7 +92,7 @@ public class Sketch2 extends PApplet {
   boolean isLeftPressed = false;
   boolean isRightPressed = false;
 
-  PImage setting1, setting2, setting3;
+  
   PImage playerForward, playerBackward, playerLeft, playerRight;
   PImage currentPlayerState;
 
@@ -104,7 +104,8 @@ public class Sketch2 extends PApplet {
   float fltFadeSpeed = 1.5f;
 
   boolean isSwitchButtonDisplayed;
-
+  PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
+  
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
@@ -123,10 +124,20 @@ public class Sketch2 extends PApplet {
     playerBackward = loadImage("images/NerdFaceBack.png"); 
     playerLeft = loadImage("images/NerdFaceLeft.png"); 
     playerRight = loadImage("images/NerdFaceRight.png"); 
-    setting1 = loadImage("images/office.png");
+    
+    setting1 = loadImage("images/BossRoom.png");
+    setting2 = loadImage("images/PlankWalk.png");
+    setting3 = loadImage("images/TopFloor.png");
+    setting4_1 = loadImage("images/Floor2Closed.png");
+    setting4_2 = loadImage("images/Floor2Open.png");
+    setting5_1 = loadImage("images/Floor1Closed.png");
+    setting5_2 = loadImage("images/Floor1Open.png");
+    setting6 = loadImage("images/GroundFloor.png");
 
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
+
+
     
 
   }
@@ -134,26 +145,51 @@ public class Sketch2 extends PApplet {
   public void draw() {
     // print(isCollidingMarker(100, 100));
     background(50);
-    
+    // HOME SCREEN
     if (intScreenNumber == 0) {
       introScreen();
-    } else if (intScreenNumber == 1) {
+    } 
+    // SETTING 1 SCREEN
+    else if (intScreenNumber == 1) {
       settingsScreen1();
-    } else if (intScreenNumber == 2) {
+    } 
+    // GAME 1 SCENE
+    else if (intScreenNumber == 2) {
+      settingsScreen1();
+    } 
+    // TRANSFER 1 SCREEN
+    else if (intScreenNumber == 3) {
       gameScreen1();
-    } else if (intScreenNumber == 3) {
+    } 
+    // SETTING 2 SCREEN
+    else if (intScreenNumber == 4) {
       settingsScreen2();
-    } else if (intScreenNumber == 4) {
+    } 
+    // GAME 2 SCREEN
+    else if (intScreenNumber == 5) {
       gameScreen2();
-    } else if (intScreenNumber == 5) {
+    } 
+    // SETTING 3 SCREEN
+    else if (intScreenNumber == 6) {
       settingsScreen3();
-    } else if (intScreenNumber == 6) {
+    } 
+    // GAME 3 SCREEN
+    else if (intScreenNumber == 7) {
       gameScreen3();
-    } else if (intScreenNumber == 7) {
+    } 
+    // TRANSFER 2 SCREEN
+    else if (intScreenNumber == 8) {
       endingScreen();
-    } else if (intScreenNumber == 8) {
+    } 
+    // END SCREEN
+    else if (intScreenNumber == 9) {
+      endingScreen();
+    } 
+    // INFO SCREEN
+    else if (intScreenNumber == 10) {
       informationScreen();
     }
+    
   }
   
   /**
@@ -174,8 +210,8 @@ public class Sketch2 extends PApplet {
    */
 
   public void gameScreen1() {
-    background(210, 255, 173);
-    drawWordleGrid();
+    background(173, 210, 255);
+    //drawWordleGrid();
     gearButton.isOver = gearButton.isOver();
     gearButton.display();
     if (isGameOver && !isGameVictory) {
@@ -198,8 +234,9 @@ public class Sketch2 extends PApplet {
    * Displays the second game screen (WORDLE CONNECTIONS)
    */
   public void gameScreen2() {
-    background(173, 210, 255);
-    //drawWordleGrid();
+    
+    background(210, 255, 173);
+    drawWordleGrid();
     gearButton.isOver = gearButton.isOver();
     gearButton.display();
     if (isGameOver && !isGameVictory) {
@@ -303,7 +340,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the first environment screen (FLOOR 3)
    */
-  public void settingsScreen0() {
+  public void settingsScreen1() {
     background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
@@ -320,7 +357,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the second environment screen (FLOOR 2)
    */
-  public void settingsScreen1() {
+  public void settingsScreen2() {
     background(200, 100, 100);
     // Setting1 background generation
     intExclamationX = 100;
@@ -349,7 +386,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the third environment screen (FLOOR 1)
    */
-  public void settingsScreen2() {
+  public void settingsScreen3() {
     background(100, 200, 100);
     fill(255);
     textAlign(CENTER);
@@ -362,7 +399,16 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the fourth environment screen (FLOOR 0)
    */
-  public void settingsScreen3() {
+  public void transferScreen1() {
+    background(100, 100, 200);
+    fill(255);
+    textAlign(CENTER);
+    textSize(32);
+    text("Settings Screen 3", width / 2, height / 2);
+    backButton.isOver = backButton.isOver();
+    backButton.display();
+  }
+  public void transferScreen2() {
     background(100, 100, 200);
     fill(255);
     textAlign(CENTER);
@@ -625,4 +671,5 @@ public class Sketch2 extends PApplet {
     }
   }
 }
+
 
