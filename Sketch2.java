@@ -91,7 +91,7 @@ public class Sketch2 extends PApplet {
   boolean isLeftPressed = false;
   boolean isRightPressed = false;
 
-  PImage setting1, setting2, setting3;
+  PImage setting1, setting2, setting3, setting4, setting5, setting6, setting7, setting8;
   PImage playerForward, playerBackward, playerLeft, playerRight;
   PImage currentPlayerState;
 
@@ -120,10 +120,19 @@ public class Sketch2 extends PApplet {
     playerBackward = loadImage("images/NerdFaceBack.png"); 
     playerLeft = loadImage("images/NerdFaceLeft.png"); 
     playerRight = loadImage("images/NerdFaceRight.png"); 
-    setting1 = loadImage("images/office.png");
+    setting1 = loadImage("images/BossRoom.png");
+    setting2 = loadImage("images/PlankWalk.png");
+    setting3 = loadImage("images/TopFloor.png");
+    setting4 = loadImage("images/Floor2Closed.png");
+    setting5 = loadImage("images/Floor2Open.png");
+    setting6 = loadImage("images/Floor1Closed.png");
+    setting7 = loadImage("images/Floor1Open.png");
+    setting8 = loadImage("images/GroundFloor.png");
 
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
+
+
     
 
   }
