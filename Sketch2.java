@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 
 /**
 * The program Sketch2.java creates the basic skeleton of the game.
@@ -82,7 +83,7 @@ public class Sketch2 extends PApplet {
   int intCurrentRow;
   boolean isGameOver;
   boolean isGameVictory = false;
-  boolean isSettingGameChanged = false;
+  // boolean isSettingGameChanged = false;
 
   int intPlayerX, intPlayerY;
   
@@ -96,9 +97,11 @@ public class Sketch2 extends PApplet {
   PImage currentPlayerState;
 
   PImage exclamationMark;
-  int intExclamationY;
+  int intExclamationX, intExclamationY;
+  int intExclamationW = 30;
+  int intExclamationH = 50;
   float fltAlpha;
-  float fltFadeSpeed = 0.5f;
+  float fltFadeSpeed = 1.5f;
 
   boolean isSwitchButtonDisplayed;
 
@@ -129,8 +132,9 @@ public class Sketch2 extends PApplet {
   }
 
   public void draw() {
-    
+    // print(isCollidingMarker(100, 100));
     background(50);
+    
     if (intScreenNumber == 0) {
       introScreen();
     } else if (intScreenNumber == 1) {
@@ -319,15 +323,26 @@ public class Sketch2 extends PApplet {
   public void settingsScreen1() {
     background(200, 100, 100);
     // Setting1 background generation
-    image(setting1, 0, 0);
-    fill(255);
-    textAlign(CENTER);
-    textSize(32);
-    text("Settings Screen 1", width / 2, height / 2);
+    intExclamationX = 100;
+    intExclamationY = 100;
+    if (isGameVictory){
+      image(setting1, 0, 0);
+    }
+    if (!isGameVictory){
+      image(setting1, 0, 0);
+      displayExclamMark(100, 100);
+    }
+    
+    
 
     playerMovement();
-    displayExclamMark(100, 100);
+    if (isCollidingMarker(intExclamationX, intExclamationY)){
+      isSwitchButtonDisplayed = true;
+    }
     //if player hits bush or smt
+    if (isSwitchButtonDisplayed){
+      drawGameInfoPopup();
+    }
     
   }
 
@@ -598,6 +613,16 @@ public class Sketch2 extends PApplet {
     float bobbingY = initialY + 20 * sin((float)(TWO_PI * 0.4 * millis() / 1000.0));
     image(exclamationMark, intX, bobbingY);
     noTint();
+  }
+  public boolean isCollidingMarker(int intMarkerX, int intMarkerY){
+    
+    if (intPlayerX < intMarkerX + 55 && intPlayerX + intExclamationW > intMarkerX && 
+        intPlayerY < intMarkerY + 55 && intPlayerY + intExclamationH > intMarkerY) {
+      return true;
+    } 
+    else {
+      return false;
+    }
   }
 }
 
