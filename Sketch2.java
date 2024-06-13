@@ -93,6 +93,14 @@ public class Sketch2 extends PApplet {
 
   PImage setting1, setting2, setting3;
   PImage playerForward, playerBackward, playerLeft, playerRight;
+  PImage currentPlayerState;
+
+  PImage exclamationMark;
+  int intExclamationY;
+  float fltAlpha;
+  float fltFadeSpeed = 0.5f;
+
+  boolean isSwitchButtonDisplayed;
 
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -114,6 +122,9 @@ public class Sketch2 extends PApplet {
     playerRight = loadImage("images/NerdFaceRight.png"); 
     setting1 = loadImage("images/office.png");
 
+    exclamationMark = loadImage("images/exclamation_mark.png"); 
+    exclamationMark.resize(55, 55);
+    
 
   }
 
@@ -148,7 +159,7 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     fill(255);
     textSize(32);
-    text("Intro Screen", width / 2, height / 3);
+    text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
     startButton.isOver = startButton.isOver();
     startButton.display();
     
@@ -272,6 +283,19 @@ public class Sketch2 extends PApplet {
     backButton.display();
   }
 
+  public void drawGameInfoPopup() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
+    text("It takes one of extreme intellect to join the New York Times", width / 2, height / 2);
+    text("It takes one of extreme optimism to leave the New York Times", width / 2, height / 2 + 50);
+    gameButton.isOver = gameButton.isOver();
+    gameButton.display();
+  }
+
   /**
    * Displays the first environment screen (FLOOR 3)
    */
@@ -302,8 +326,9 @@ public class Sketch2 extends PApplet {
     text("Settings Screen 1", width / 2, height / 2);
 
     playerMovement();
-    gameButton.isOver = gameButton.isOver();
-    gameButton.display();
+    displayExclamMark(100, 100);
+    //if player hits bush or smt
+    
   }
 
   /**
@@ -393,11 +418,11 @@ public class Sketch2 extends PApplet {
     // Toggling Intro, Setting1, Game1 screens
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
-        resetPlayer();
+        resetSetting();
         intScreenNumber = 1; // Change to Setting1
       } 
     } 
-    if (intScreenNumber == 1) {
+    if (intScreenNumber == 1 && isSwitchButtonDisplayed) {
       if (gameButton.isOver()) {
         initializeGame1();
         intScreenNumber = 2; // Change to Setting1
@@ -492,7 +517,9 @@ public class Sketch2 extends PApplet {
       isRightPressed = true;
     }
   }
-
+  /**
+   * Checks if the guesses for Game1 are correct answers
+   */
   public void checkGuess() {
     if (strGuesses[intCurrentRow].equals(strTargetWord)) {
       isGameOver = true;
@@ -503,6 +530,9 @@ public class Sketch2 extends PApplet {
     }
   }
 
+  /**
+   * Initializes Game 1 (Original Wordle)
+   */
   public void initializeGame1() {
     isGameOver = false;
     isGameVictory = false;
@@ -517,30 +547,57 @@ public class Sketch2 extends PApplet {
     textSize(32);
   }
 
+  /**
+   * Player movement and sprite display
+   */
   public void playerMovement(){
-    if (isUpPressed && intPlayerY >= 0 + 25){
-      intPlayerY -=3;
-      image(playerBackward, intPlayerX, intPlayerY);
+    if (isUpPressed && intPlayerY >= 0 + 10){
+      intPlayerY -=3;      
+      currentPlayerState = playerBackward;
     }
-    if (isDownPressed && intPlayerY <= height - 25){
-      intPlayerY += 3;
-      image(playerForward, intPlayerX, intPlayerY);
+    if (isDownPressed && intPlayerY <= height - 10 - 80){
+      intPlayerY += 3;    
+      currentPlayerState = playerForward;
     }
-    if (isLeftPressed && intPlayerX >= 0 + 25){
+    if (isLeftPressed && intPlayerX >= 0 + 10){
       intPlayerX -= 4;
-      image(playerLeft, intPlayerX, intPlayerY);
+      currentPlayerState = playerLeft;
     }
-    if (isRightPressed && intPlayerX <= width - 25){
+    if (isRightPressed && intPlayerX <= width - 10 - 50){
       intPlayerX += 4;
-      image(playerRight, intPlayerX, intPlayerY);
+      currentPlayerState = playerRight;
     }
+    image(currentPlayerState, intPlayerX, intPlayerY);
     // fill(0, 255, 0);
     // ellipse(intPlayerX, intPlayerY, 50, 50);
   }
-  public void resetPlayer(){
-    // Resets player to initial position on the setting screen upon switching of setting screens
+  /**
+   * Resets player to initial position on the setting screen upon switching of setting screens
+   */
+  public void resetSetting(){
+    
     intPlayerX = 300;
     intPlayerY = 300;
+    currentPlayerState = playerForward;
+    fltAlpha = 0;
+    isSwitchButtonDisplayed = false;
+  }
+
+  public void displayExclamMark(float intX, float initialY){
+    
+
+    if (fltAlpha < 255.0) {
+      fltAlpha += fltFadeSpeed;
+    }
+  
+    // Constrain alpha to not exceed 255
+    fltAlpha = constrain((int) fltAlpha, 0, 255);
+  
+    // Apply the tint with the current alpha value
+    tint(255, fltAlpha);
+    float bobbingY = initialY + 20 * sin((float)(TWO_PI * 0.4 * millis() / 1000.0));
+    image(exclamationMark, intX, bobbingY);
+    noTint();
   }
 }
 
