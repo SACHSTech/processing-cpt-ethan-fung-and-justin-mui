@@ -1,7 +1,5 @@
-import java.util.Arrays;
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.core.PVector;
 
 /**
 * The program Sketch2.java creates the basic skeleton of the game.
@@ -69,7 +67,7 @@ public class Sketch2 extends PApplet {
     }
   }
 
-  Button startButton, gameButton, gearButton, backButton;
+  Button startButton, gameButton, infoButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
@@ -118,7 +116,7 @@ public class Sketch2 extends PApplet {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
-    gearButton = new Button(width - 60, 10, 50, 50, "Gear");
+    infoButton = new Button(width - 60, 10, 50, 50, "Gear");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
     playerForward = loadImage("images/NerdFace.png"); 
     playerBackward = loadImage("images/NerdFaceBack.png"); 
@@ -151,19 +149,19 @@ public class Sketch2 extends PApplet {
     } 
     // SETTING 1 SCREEN
     else if (intScreenNumber == 1) {
-      settingsScreen1();
+      settingScreen1();
     } 
     // GAME 1 SCENE
     else if (intScreenNumber == 2) {
-      settingsScreen1();
+      gameScreen1();
     } 
     // TRANSFER 1 SCREEN
     else if (intScreenNumber == 3) {
-      gameScreen1();
+      transferScreen1();
     } 
     // SETTING 2 SCREEN
     else if (intScreenNumber == 4) {
-      settingsScreen2();
+      settingScreen2();
     } 
     // GAME 2 SCREEN
     else if (intScreenNumber == 5) {
@@ -171,7 +169,7 @@ public class Sketch2 extends PApplet {
     } 
     // SETTING 3 SCREEN
     else if (intScreenNumber == 6) {
-      settingsScreen3();
+      settingScreen3();
     } 
     // GAME 3 SCREEN
     else if (intScreenNumber == 7) {
@@ -179,7 +177,7 @@ public class Sketch2 extends PApplet {
     } 
     // TRANSFER 2 SCREEN
     else if (intScreenNumber == 8) {
-      endingScreen();
+      transferScreen2();
     } 
     // END SCREEN
     else if (intScreenNumber == 9) {
@@ -189,7 +187,7 @@ public class Sketch2 extends PApplet {
     else if (intScreenNumber == 10) {
       informationScreen();
     }
-    
+
   }
   
   /**
@@ -205,15 +203,12 @@ public class Sketch2 extends PApplet {
     
   }
 
-  /**
-   * Displays the first game screen (ORIGINAL WORDLE)
-   */
 
   public void gameScreen1() {
     background(173, 210, 255);
     //drawWordleGrid();
-    gearButton.isOver = gearButton.isOver();
-    gearButton.display();
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
@@ -237,8 +232,8 @@ public class Sketch2 extends PApplet {
     
     background(210, 255, 173);
     drawWordleGrid();
-    gearButton.isOver = gearButton.isOver();
-    gearButton.display();
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
@@ -261,8 +256,8 @@ public class Sketch2 extends PApplet {
   public void gameScreen3() {
     background(255, 210, 173);
     //drawWordleGrid();
-    gearButton.isOver = gearButton.isOver();
-    gearButton.display();
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
@@ -340,7 +335,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the first environment screen (FLOOR 3)
    */
-  public void settingsScreen1() {
+  public void settingScreen1() {
     background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
@@ -350,50 +345,55 @@ public class Sketch2 extends PApplet {
     text("Settings Screen 1", width / 2, height / 2);
 
     playerMovement();
-    gameButton.isOver = gameButton.isOver();
-    gameButton.display();
+    
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
   }
 
   /**
    * Displays the second environment screen (FLOOR 2)
    */
-  public void settingsScreen2() {
+  public void settingScreen2() {
     background(200, 100, 100);
     // Setting1 background generation
     intExclamationX = 100;
     intExclamationY = 100;
     if (isGameVictory){
-      image(setting1, 0, 0);
+      image(setting4_2, 0, 0);
     }
     if (!isGameVictory){
-      image(setting1, 0, 0);
+      image(setting4_1, 0, 0);
       displayExclamMark(100, 100);
     }
     
     
-
-    playerMovement();
+    if (!isSwitchButtonDisplayed){
+      playerMovement();
+    }
+    
     if (isCollidingMarker(intExclamationX, intExclamationY)){
       isSwitchButtonDisplayed = true;
     }
     //if player hits bush or smt
-    if (isSwitchButtonDisplayed){
+    if (isSwitchButtonDisplayed && !isGameVictory){
       drawGameInfoPopup();
     }
-    
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
   }
 
   /**
    * Displays the third environment screen (FLOOR 1)
    */
-  public void settingsScreen3() {
+  public void settingScreen3() {
     background(100, 200, 100);
     fill(255);
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 2", width / 2, height / 2);
-    backButton.isOver = backButton.isOver();
-    backButton.display();
+    
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
   }
 
   /**
@@ -405,8 +405,9 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 3", width / 2, height / 2);
-    backButton.isOver = backButton.isOver();
-    backButton.display();
+    
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
   }
   public void transferScreen2() {
     background(100, 100, 200);
@@ -414,8 +415,9 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Settings Screen 3", width / 2, height / 2);
-    backButton.isOver = backButton.isOver();
-    backButton.display();
+    
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
   }
 
   /**
@@ -508,7 +510,7 @@ public class Sketch2 extends PApplet {
     //   } 
     // } 
     // else if (intScreenNumber >= 2 && intScreenNumber <= 6) {
-    //   if (gearButton.isOver()) {
+    //   if (infoButton.isOver()) {
     //     showPopup = true;
     //   } else if (showPopup && backButton.isOver()) {
     //     showPopup = false;
