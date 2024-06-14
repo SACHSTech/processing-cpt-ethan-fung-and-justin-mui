@@ -109,6 +109,11 @@ public class Sketch2 extends PApplet {
   PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
   boolean isScreenFaded;
   
+  int intDeskX = 200; // X position of the hitbox
+  int intDeskY = 200; // Y position of the hitbox
+  int intDeskWidth = 100; // Width of the hitbox
+  int intDeskHeight = 100; // Height of the hitbox
+  boolean isCollidingDesk;
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
@@ -315,21 +320,21 @@ public class Sketch2 extends PApplet {
   public void settingScreen2() {
     background(200, 100, 100);
     // Setting1 background generation
-    intExclamationX = 100;
-    intExclamationY = 100;
+    intExclamationX = 320;
+    intExclamationY = 280;
     if (isGameVictory){
       image(setting4_2, 0, 0);
       isElevatorOpen = true;
     }
     if (!isGameVictory){
       image(setting4_1, 0, 0);
-      displayExclamMark(100, 100);
+      displayExclamMark(intExclamationX, intExclamationY);
     }
     
     playerMovement();
     
     
-    if (isCollidingMarker(intExclamationX, intExclamationY) && !isGameVictory){
+    if (isCollidingDesk && !isGameVictory){
       isSwitchButtonDisplayed = true;
       drawGameInfoPopup();
     }
@@ -668,47 +673,48 @@ public class Sketch2 extends PApplet {
    * Player movement and sprite display
    */
   public void playerMovement(){
+    int intNextX, intNextY;
+
     if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !showPopup) {
-      if (isCollidingElevator() && isElevatorOpen) {
-        
-      } 
-      else {
-        intPlayerY -= 3;
-        currentPlayerState = playerBackward;
+      intNextY = intPlayerY - 3;
+      if (!isCollidingElevator() || !isElevatorOpen) {
+        if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
+          intPlayerY = intNextY;
+          currentPlayerState = playerBackward;
+        }
       }
     }
-    
+
     if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !showPopup) {
-      if (isCollidingElevator() && isElevatorOpen) {
-        // Additional logic for the elevator if needed
-      } 
-      else {
-        intPlayerY += 3;
-        currentPlayerState = playerForward;
+      intNextY = intPlayerY + 3;
+      if (!isCollidingElevator() || !isElevatorOpen) {
+        if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
+          intPlayerY = intNextY;
+          currentPlayerState = playerForward;
+        }
       }
     }
-    
+
     if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !showPopup) {
-      if (isCollidingElevator() && isElevatorOpen) {
-        // Additional logic for the elevator if needed
-      } else {
-        intPlayerX -= 4;
-        currentPlayerState = playerLeft;
+      intNextX = intPlayerX - 4;
+      if (!isCollidingElevator() || !isElevatorOpen) {
+        if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
+          intPlayerX = intNextX;
+          currentPlayerState = playerLeft;
+        }
       }
     }
-    
+
     if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !showPopup) {
-      if (isCollidingElevator() && isElevatorOpen) {
-        // Additional logic for the elevator if needed
-      } else {
-        intPlayerX += 4;
-        currentPlayerState = playerRight;
+      intNextX = intPlayerX + 4;
+      if (!isCollidingElevator() || !isElevatorOpen) {
+        if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
+          intPlayerX = intNextX;
+          currentPlayerState = playerRight;
+        }
       }
     }
-    
     image(currentPlayerState, intPlayerX, intPlayerY);
-    // fill(0, 255, 0);
-    // ellipse(intPlayerX, intPlayerY, 50, 50);
   }
   /**
    * Resets player to initial position on the setting screen upon switching of setting screens
@@ -757,16 +763,7 @@ public class Sketch2 extends PApplet {
     image(exclamationMark, intX, bobbingY);
     noTint();
   }
-  public boolean isCollidingMarker(int intMarkerX, int intMarkerY){
-    
-    if (intPlayerX < intMarkerX + 55 && intPlayerX + intExclamationW > intMarkerX && 
-        intPlayerY < intMarkerY + 55 && intPlayerY + intExclamationH > intMarkerY) {
-      return true;
-    } 
-    else {
-      return false;
-    }
-  }
+  
   public boolean isCollidingElevator(){
     if (intPlayerY <= 50 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       return true;
@@ -787,6 +784,21 @@ public class Sketch2 extends PApplet {
       isScreenFaded = true;
     }
     
+  }
+  public boolean isPlayerCollidingDesk(int intX, int intY){
+    if (intX < intDeskX + intDeskWidth &&
+    intX + 55 > intDeskX &&
+    intY < intDeskY + intDeskHeight &&
+    intY + 55 > intDeskY){
+      isCollidingDesk = true;
+      return true;
+      
+    }
+    else{
+      isCollidingDesk = false;
+      return false;
+    }
+
   }
 }
 
