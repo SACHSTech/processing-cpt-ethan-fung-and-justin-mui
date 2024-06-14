@@ -72,7 +72,7 @@ public class Sketch extends PApplet {
 
   // INITIALIZING BACKGROUND IMAGE VARIABLES
   boolean isSwitchButtonDisplayed;
-  PImage setting0, setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
+  PImage setting0, setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6, setting7;
   boolean isScreenFaded;
 
   // INITIALIZING BROKEN BRIDGE GAME VARIABLES
@@ -165,6 +165,7 @@ public class Sketch extends PApplet {
     setting5_1 = loadImage("images/Floor1Closed.png");
     setting5_2 = loadImage("images/Floor1Open.png");
     setting6 = loadImage("images/GroundFloor.png");
+    setting7 = loadImage("images/OutroScreen.png");
 
     // initializing exclamation mark image
     exclamationMark = loadImage("images/exclamation_mark.png"); 
@@ -530,14 +531,11 @@ public class Sketch extends PApplet {
    */
   public void endingScreen() {
     // Writing ending text
-    background(50);
-    fill(255);
+    image(setting7, 0, 0);
+    fill(0);
     textAlign(CENTER);
     textSize(32);
-    text("Congrats, you got out in: " + strTime, width / 2, height / 2 - 130);
-    text("Unfortunately, you are still legally", width / 2, height / 2 - 60);
-    text("contracted to go to work tomorrow.", width / 2, height / 2 - 20);
-    text("Don't be late!", width / 2, height / 2 + 30);
+    text(strTime, 450, 110);
     // Play Again button
 
   }
