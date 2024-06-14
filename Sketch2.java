@@ -168,7 +168,6 @@ public class Sketch2 extends PApplet {
   }
 
   public void draw() {
-    // print(intScreenNumber);
     background(50);
     
     // HOME SCREEN
@@ -211,10 +210,6 @@ public class Sketch2 extends PApplet {
     else if (intScreenNumber == 9) {
       endingScreen();
     } 
-    // INFO SCREEN
-    else if (intScreenNumber == 10) {
-      informationScreen();
-    }
     // ELAPSED TIME
     if (intScreenNumber != 0 && intScreenNumber != 9){
       displayElapsedTime();
@@ -224,16 +219,20 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the start home screen
    */
-  public void introScreen() {
+  public void introScreen(){
+    // Display title of game
     textAlign(CENTER);
     fill(255);
     textSize(32);
-
     text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
+
+    // start game button
     startButton.isOver = startButton.isOver();
     startButton.display();
   }
-
+  /**
+   * Displays Game 1 Screen (Walk the Plank)
+   */
   public void gameScreen1() {
     // Debugging only, will integrate third game in final sketch file
     isGameOver = true;
@@ -257,23 +256,25 @@ public class Sketch2 extends PApplet {
     }
   }
   /**
-   * Displays the second game screen (WORDLE CONNECTIONS)
+   * Displays Game 2 Screen (WORDLE)
    */
-  
   public void gameScreen2() {
-    
+    // background colour
     background(210, 255, 173);
+
+    // draws wordle guesses, boxes, colours
     drawWordleGrid();
+
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+
+    // Shows win or lose pop-up after game finishes
     if (isGameOver && !isGameVictory) {
       showLosePopup = true;
     }
     if (isGameOver && isGameVictory) {
       showWinPopup = true;
-    }
-    if (showPopup && !showWinPopup && !showLosePopup) {
-      drawPopup();
     }
     if (showWinPopup) {
       drawWinPopup();
@@ -281,6 +282,11 @@ public class Sketch2 extends PApplet {
     if (showLosePopup) {
       drawLosePopup();
     }
+    // Extra info pop-up
+    if (showPopup && !showWinPopup && !showLosePopup) {
+      drawPopup();
+    }
+    // Title of Mini-game
     textSize(70);
     fill(0);
     textAlign(CENTER);
@@ -288,7 +294,7 @@ public class Sketch2 extends PApplet {
   }
 
   /**
-   * Displays the third game screen
+   * Displays Game 3 Screen (Connections)
    */
 
   public void gameScreen3() {
@@ -316,23 +322,26 @@ public class Sketch2 extends PApplet {
       drawLosePopup();
     }
   }  
-
   /**
-   * Displays the first BOSS office screen
+   * Displays setting 1 screen (BOSS office)
    */
 
   public void settingScreen1() {
-    background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
 
+    // player movement is called here
     playerMovement();
+
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
 
+    // extra info pop-up
     if (showPopup) {
       drawPopup();
     }
+    // Plays scene change animation when player is in contact with skybridge door
     if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
       isElevatorOpen = true;
       fadeOutElevator();
@@ -343,13 +352,15 @@ public class Sketch2 extends PApplet {
   }
 
   /**
-   * Displays the second environment screen (FLOOR 2)
+   * Displays setting 2 screen (Floor 2 office)
    */
 
   public void settingScreen2() {
-    // Setting 2 background generation
+    // Setting 2 background generation + exclamation mark generation
     intExclamationX = 440;
     intExclamationY = 280;
+    // Open elevator after player wins game, close elevator before player wins game
+    // player movement is called here
     if (isGameVictory){
       image(setting4_2, 0, 0);
       playerMovement();
@@ -360,37 +371,37 @@ public class Sketch2 extends PApplet {
       playerMovement();
       displayExclamMark(intExclamationX, intExclamationY);
     }
-    
-    
-    
-    
+    // Takes player to game on collision with desk
     if (isCollidingDesk && !isGameVictory){
       isSwitchButtonDisplayed = true;
       drawGameInfoPopup();
     }
-
+    // Scene animation to next scene upon colliding with open elevator
     if (isCollidingElevator() && isGameVictory){
       fadeOutElevator();
-      
     }
     if (isScreenFaded){
-      
       intScreenNumber = 6;
       resetSetting();
     }
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    // extra info pop-up
     if (showPopup && !isSwitchButtonDisplayed) {
       drawPopup();
     }
   }
 
   /**
-   * Displays the third environment screen (FLOOR 1)
+   * Displays setting 3 screen (floor 1 office)
    */
   public void settingScreen3() {
+    // Setting 3 background generation + exclamation mark generation
     intExclamationX = 440;
     intExclamationY = 280;
+    // Open elevator after player wins game, close elevator before player wins game
+    // player movement is called here
     if (isGameVictory){
       image(setting5_2, 0, 0);
       playerMovement();
@@ -401,71 +412,78 @@ public class Sketch2 extends PApplet {
       playerMovement();
       displayExclamMark(intExclamationX, intExclamationY);
     }
-    
-    
+    // Takes player to game on collision with desk
     if (isCollidingDesk && !isGameVictory){
       isSwitchButtonDisplayed = true;
       drawGameInfoPopup();
     }
-
+    // Scene animation to next scene upon colliding with open elevator
     if (isCollidingElevator() && isGameVictory){
       fadeOutElevator();
-      
     }
     if (isScreenFaded){
-      
       intScreenNumber = 8;
       resetSetting();
     }
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    // extra info pop-up
     if (showPopup && !isSwitchButtonDisplayed) {
       drawPopup();
     }
   }
 
   /**
-   * Displays the fourth environment screen (FLOOR 0)
+   * Displays transfer 1 screen (top floor office)
    */
   public void transferScreen1() {
+    // Opens elevator as there is no game
     isElevatorOpen = true;
+    // Transfer 1 background generation
     image(setting3, 0, 0);
-    
+    // player movement is called here
     playerMovement();
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
-
+    // extra info pop-up
     if (showPopup) {
       drawPopup();
     }
+    // Scene animation to next scene upon colliding with open elevator
     if (isCollidingElevator()){
       fadeOutElevator();
       
     }
     if (isScreenFaded){
-      
       intScreenNumber = 4;
       resetSetting();
     }
   }
+  /**
+   * Displays transfer 2 screen (ground floor office)
+   */
   public void transferScreen2() {
-    
+    // Transfer 2 background generation
     image(setting6, 0, 0);
+    // Scene animation to next scene upon colliding with open elevator; player will also disappear 
     if (intPlayerY >= 500 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       isElevatorOpen = true;
       fadeOutElevator();
     } 
     else{
+      // player movement is called here
       playerMovement();
     }
-
+    // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
-
+    // extra info pop-up
     if (showPopup) {
       drawPopup();
     }
-    
+    // Changes scene when animation is finished playing
     if (isScreenFaded){
       intScreenNumber = 9;
       resetSetting();      
@@ -473,9 +491,10 @@ public class Sketch2 extends PApplet {
   }
 
   /**
-   * Displays the end screen of the game upon completion
+   * Displays the end screen of the game 
    */
   public void endingScreen() {
+    // Writing ending text
     background(50);
     fill(255);
     textAlign(CENTER);
@@ -484,56 +503,42 @@ public class Sketch2 extends PApplet {
     text("Unfortunately, you are still legally", width / 2, height / 2 - 60);
     text("contracted to go to work tomorrow.", width / 2, height / 2 - 20);
     text("Don't be late!", width / 2, height / 2 + 30);
-    
+    // Play Again button
 
   }
-
   /**
-   * Displays the screen specific info screen to help player throughout gameplay (FLOOR 2)
+   * Draws a popup window with scene-specific information to help guide the player
    */
-  public void informationScreen() {
-    fill(0, 0, 0, 150);
-    rect(50, 50, width - 100, height - 100);
-    fill(255);
-    textAlign(CENTER);
-    textSize(24);
-    text("Information Screen", width / 2, height / 2 - 50);
-    
-
-    
-
-
-    backButton.isOver = backButton.isOver();
-    backButton.display();
-  }
-
-  /**
-   * Draws a popup window with information.
-   */
-
    public void drawPopup() {
+    // draws padding rectangle
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
+    // displays title of pop-up screen
     fill(255);
     textAlign(CENTER);
     textSize(24);
     text("Information Popup", width / 2, 100);
+    // Setting 1
     if (intScreenNumber == 1){
       text("Make your way to the shattered windows to ", width / 2, height / 2);
       text("escape the boss's office", width / 2, height / 2 + 25);
     }
+    // Game 1
     if (intScreenNumber == 2){
       text("Make your away across the skybridge", width / 2, height / 2);
     }
+    // Transfer 1
     if (intScreenNumber == 3){
       text("GO TO THE ELEVATOR TO ESCAPE THE BUILDING", width / 2, height / 2);
     }
+    // Setting 2
     if (intScreenNumber == 4 && !isGameVictory){
       text("The desk seems to have something on it...", width / 2, height / 2);
     }
     if (intScreenNumber == 4 && isGameVictory){
       text("GO TO THE ELEVATOR TO ESCAPE THE BUILDING", width / 2, height / 2);
     }
+    // Game 2
     if (intScreenNumber == 5){
       text("This is the ORIGINAL Wordle game by the ", width / 2, 160);
       text("New York Times.", width / 2, 200);
@@ -546,6 +551,7 @@ public class Sketch2 extends PApplet {
       text("Green means the letter is in the correct word ", width / 2, 480);
       text("and is in the correct position.", width / 2, 520);
     }
+    // Setting 3
     if (intScreenNumber == 6 && !isGameVictory){
       text("The desk seems to have something on it...", width / 2, height / 2);
     }
@@ -560,6 +566,7 @@ public class Sketch2 extends PApplet {
     if (intScreenNumber == 8){
       text("GO TO THE EXIT!!!", width / 2, height / 2);
     }
+    // displays back button to exit information pop-up
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
@@ -567,13 +574,16 @@ public class Sketch2 extends PApplet {
    * Draws a popup window when the player wins.
    */
   public void drawWinPopup() {
+    // draws padding rectangle
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
+    // displays win text
     fill(255);
     textAlign(CENTER);
     textSize(24);
     text("You Win!", width / 2, height / 2 - 50);
     text("Congratulations!", width / 2, height / 2);
+    // displays back button to escape pop-up and continue to next scene
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
@@ -581,42 +591,50 @@ public class Sketch2 extends PApplet {
    * Draws a popup window when the player loses.
    */
   public void drawLosePopup() {
+    // draws padding rectangle
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
+    // displays lose text
     fill(255);
     textAlign(CENTER);
     textSize(24);
     text("You Lose!", width / 2, height / 2 - 50);
     text("Better luck next time!", width / 2, height / 2);
+    // displays back button to escape pop-up and play the game again
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
 
   public void drawGameInfoPopup() {
+    // draws padding rectangle
     fill(0, 0, 0, 150);
     rect(50, 50, width - 100, height - 100);
+    // displays game preamble text
     fill(255);
     textAlign(CENTER);
     textSize(24);
     text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
     text("Inteligence is needed to join the New York Times", width / 2, height / 2);
     text("Genius is needed to leave the New York Times", width / 2, height / 2 + 50);
+    // displays start mini-game button to escape pop-up and go to the "game" screen
     gameButton.isOver = gameButton.isOver();
     gameButton.display();
   }
 
   /**
-   * Draws the Wordle-like grid and handles Game1 logic.
+   * Draws the Wordle-like grid and handles Game2 logic.
    */
-
   public void drawWordleGrid() {
+    // draws grid based on intGridSizeY and intGridSizeX
     for (int i = 0; i < intGridSizeY; i++) {
       for (int j = 0; j < intGridSizeX; j++) {
+        // draws grid of boxes for letters to be displayed in
         fill(200);
         rect(j * 80 + (width - 380) /2, i * 80 + 100, 60, 60);
+        // Checks if the game is properly initialized
         if (strGuesses[i] != null && j < strGuesses[i].length()) {
+          // Assigns colour to each inputted letter's box based on correctness to the target word
           char letter = strGuesses[i].charAt(j);
-          fill(0);
           if (strTargetWord.charAt(j) == letter && i != intCurrentRow) {
             fill(0, 255, 0); // Correct letter and position
           } else if (strTargetWord.indexOf(letter) != -1 && i != intCurrentRow) {
@@ -624,8 +642,9 @@ public class Sketch2 extends PApplet {
           } else if (i != intCurrentRow) {
             fill(255, 0, 0); // Incorrect letter
           } else {
-            fill(200);
+            fill(200); // empty box
           }
+          // Draws the specific letter in the box (in CAPITAL letters)
           rect(j * 80 + (width - 380) / 2, i * 80 + 100, 60, 60);
           fill(0);
           textSize(32);
@@ -635,30 +654,29 @@ public class Sketch2 extends PApplet {
     }
   }
   /**
-   * Handles mouse pressed events.
+   * Handles mouse pressed events
    */
   public void mousePressed() {
-
-
-    // Intro home button
+    // Start game button (Intro screen)
     if (intScreenNumber == 0) {
+      // brings player from intro screen to setting 1
       if (startButton.isOver()) {
         intStartTime = millis();
-        intScreenNumber = 1; // Change to Setting1 (Debug to transfer1)
+        intScreenNumber = 1; // Change to Setting1 
         resetSetting();
       } 
     } 
-    // Game 1 Buttons
 
+    // Game 1
     if (intScreenNumber == 2) {
+      // Upon game1 win, the user is directed back to the setting 1 screen
       if (backButton.isOver() && showWinPopup) {
-        // Upon game1 win, the user is directed back to the setting 1 screen
         intScreenNumber = 3; // Change to Transfer 1
         resetSetting();
         showWinPopup = false;
       } 
+      // Upon game1 loss, the user is directed to play the game again!
       else if (backButton.isOver() && showLosePopup) {
-        // Upon game1 loss, the user is directed to play the game again!
         initializeGame2();
         showLosePopup = false;
       } 
@@ -666,6 +684,7 @@ public class Sketch2 extends PApplet {
 
     // Setting 2 Buttons
     if (intScreenNumber == 4 && isSwitchButtonDisplayed) {
+      // Takes user from Setting 2 to Game 2
       if (gameButton.isOver()) {
         initializeGame2();
         intScreenNumber = 5; // Change to Game 2
@@ -675,13 +694,13 @@ public class Sketch2 extends PApplet {
 
     // Game 2 buttons
     if (intScreenNumber == 5) {
+      // Upon game 2 win, the user is directed back to the setting 2 screen
       if (backButton.isOver() && showWinPopup) {
-        // Upon game1 win, the user is directed back to the setting 1 screen
         intScreenNumber = 4; // Change to Game1
         showWinPopup = false;
       } 
+      // Upon game 2 loss, the user is directed to play the game again!
       else if (backButton.isOver() && showLosePopup) {
-        // Upon game1 loss, the user is directed to play the game again!
         initializeGame2();
         showLosePopup = false;
       } 
@@ -689,56 +708,54 @@ public class Sketch2 extends PApplet {
 
     // Setting 3 Button
     if (intScreenNumber == 6 && isSwitchButtonDisplayed) {
+      // Takes user from Setting 3 to Game 3
       if (gameButton.isOver()) {
-        // initializeGame2();
         intScreenNumber = 7; // Change to Game 3
         isSwitchButtonDisplayed = false;
       } 
     } 
 
     // Game 3 Buttons
-
     if (intScreenNumber == 7) {
+      // Upon game 3 win, the user is directed back to the setting 3 screen
       if (backButton.isOver() && showWinPopup) {
-        // Upon game1 win, the user is directed back to the setting 1 screen
         intScreenNumber = 6; // Change to Setting 3
         showWinPopup = false;
       } 
+      // Upon game 3 loss, the user is directed to play the game again!
       else if (backButton.isOver() && showLosePopup) {
-        // Upon game3 loss, the user is directed to play the game again!
-        initializeGame2();
+        // initializeGame2();
         showLosePopup = false;
       } 
     }
 
+    // Extra info button for screens except intro and ending
     if (intScreenNumber > 0 && intScreenNumber < 9) {
+      // Upon clicking, will show screen-specific guiding information
       if (infoButton.isOver()) {
         showPopup = true;
       } 
+      // Upon clicking back button of the pop-up, the extra info pop-up will stop displaying
       else if (showPopup && backButton.isOver()) {
         showPopup = false;
       }
     } 
-    
   }
 
   /**
    * Handles key release events.
    */
-
   public void keyReleased(){
+    // Player movement stops if key is released
     if (keyCode == UP) {
       isUpPressed = false;
     }
-
     if (keyCode == DOWN) {
       isDownPressed = false;
     }
-
     if (keyCode == LEFT) {
       isLeftPressed = false;
     }
-
     if (keyCode == RIGHT) {
       isRightPressed = false;
     }
@@ -747,23 +764,29 @@ public class Sketch2 extends PApplet {
    * Handles key pressed events.
    */
   public void keyPressed() {
-    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver){
+    // Game 2 key inputs
+    if (intScreenNumber == 5 && !isGameOver){
+      // Checks if input is a letter
       if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX) && !showPopup) {
+        // replaces null values with empty string
         if (strGuesses[intCurrentRow] == null) {
           strGuesses[intCurrentRow] = "";
         }
+        // changes all inputs to capital letters
         strGuesses[intCurrentRow] += Character.toUpperCase(key);
       } 
+      // Removes letters from the working row that has yet to be submitted to check for correctness
       else if (key == BACKSPACE && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() > 0) {
         strGuesses[intCurrentRow] = strGuesses[intCurrentRow].substring(0, strGuesses[intCurrentRow].length() - 1);
       }
-
+      // Checks the working row for correctness
       else if (key == ENTER && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() == intGridSizeX) {
         checkGuess();
+        // moves onto next row
         intCurrentRow++;
       }
     } 
-
+    // Player movement begins if key is held down
     if (keyCode == UP) {
       isUpPressed = true;
     }
@@ -781,29 +804,35 @@ public class Sketch2 extends PApplet {
    * Checks if the guesses for Game1 are correct answers
    */
   public void checkGuess() {
+    // checks if working row letters match the target word
     if (strGuesses[intCurrentRow].equals(strTargetWord)) {
       isGameOver = true;
       isGameVictory = true;
-    } else if (intCurrentRow == intGridSizeY - 1) {
+    } 
+    // Checks if all rows have been used
+    else if (intCurrentRow == intGridSizeY - 1) {
       isGameOver = true;
       isGameVictory = false;
     }
   }
 
   /**
-   * Initializes Game 1 (Original Wordle)
+   * Initializes Game 2 (WORDLE)
    */
   public void initializeGame2() {
+    // initializing variables
     isGameOver = false;
     isGameVictory = false;
     strGuesses = new String[intGridSizeY];
     intCurrentRow = 0;
+    // Selects target answer randomly from string list
     strTargetWord = strWordList[(int) (random(strWordList.length))]; // Randomly choose a target word
-    println("Target Word: " + strTargetWord); // For debugging
-    // println("Current Guesses: " + Arrays.deepToString(strGuesses)); // Print the current guesses as a readable string
+    // println("Target Word: " + strTargetWord); // For debugging
+    // resetting all pop-ups
     showLosePopup = false;
     showWinPopup = false;
     showPopup = false;
+    // initializing text size
     textSize(32);
   }
 
@@ -811,56 +840,68 @@ public class Sketch2 extends PApplet {
    * Player movement and sprite display
    */
   public void playerMovement(){
+    // initializng next player position variables
     int intNextX, intNextY;
-
+    // player is moving up
     if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !showPopup) {
       intNextY = intPlayerY - 4;
+      // checks if player is colliding with an open elevator
       if (!isCollidingElevator() || !isElevatorOpen) {
+        // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
+          //changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerBackward;
         }
       }
     }
-
+    // player is moving down
     if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !showPopup) {
       intNextY = intPlayerY + 4;
+      // checks if player is colliding with an open elevator
       if (!isCollidingElevator() || !isElevatorOpen) {
+        // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
+          //changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerForward;
         }
       }
     }
-
+    // player is moving left
     if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !showPopup) {
       intNextX = intPlayerX - 4;
+      // checks if player is colliding with an open elevator
       if (!isCollidingElevator() || !isElevatorOpen) {
+        // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
+          //changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerLeft;
         }
       }
     }
-
+    // player is moving right 
     if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !showPopup) {
       intNextX = intPlayerX + 4;
+      // checks if player is colliding with an open elevator
       if (!isCollidingElevator() || !isElevatorOpen) {
+        // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
+          //changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerRight;
         }
       }
     }
+    // displays player onto screen
     image(currentPlayerState, intPlayerX, intPlayerY);
-    fill(255, 0, 0, 150); // Semi-transparent red
-    // rect(intDeskX, intDeskY, intDeskWidth, intDeskHeight);
   }
   /**
    * Resets player to initial position on the setting screen upon switching of setting screens
    */
   public void resetSetting(){
-    
+    // Initializing starting player character position for specific scenes
     if (intScreenNumber == 1 || intScreenNumber == 3){
       intPlayerX = 380;
       intPlayerY = 520;
@@ -869,11 +910,7 @@ public class Sketch2 extends PApplet {
       intPlayerX = 400;
       intPlayerY = 50;
     }
-    // if (intScreenNumber == 4){
-    //   intPlayerX = 400;
-    //   intPlayerY = 50;
-    // }
-    
+    // initializing variables
     currentPlayerState = playerForward;
     fltExclamAlpha = 0;
     fltElevatorAlpha = 0;
@@ -890,27 +927,27 @@ public class Sketch2 extends PApplet {
    * @param initialY Initial Y-coordinate of the exclamation mark
    */
   public void displayExclamMark(float intX, float initialY){
-
     // Slowly increases the opacity of the exclamation mark image
     if (fltExclamAlpha < 255.0) {
       fltExclamAlpha += fltFadeSpeed;
     }
-  
     // Constrain alpha to not exceed 255
     fltExclamAlpha = constrain((int) fltExclamAlpha, 0, 255);
-  
+
     // Apply the tint with the current alpha value
     tint(255, fltExclamAlpha);
     float bobbingY = initialY + 20 * sin((float)(TWO_PI * 0.4 * millis() / 1000.0));
+    // draws exclamation mark
     image(exclamationMark, intX, bobbingY);
+    // disables tint after use
     noTint();
   }
-  
   /**
    * Checks if the player is colliding with the elevator in the image
    * @return true if colliding, false if not colliding
    */
   public boolean isCollidingElevator(){
+    // Checks if player is colliding with elevator hitbox
     if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
       return true;
     } 
@@ -918,7 +955,6 @@ public class Sketch2 extends PApplet {
       return false;
     }
   }
-
   /**
    * Upon player contact with an open elevator, 
    * the whole screen will slowly fade to dark
@@ -948,13 +984,11 @@ public class Sketch2 extends PApplet {
     if (intX < intDeskX + intDeskWidth && intX + 55 > intDeskX && intY < intDeskY + intDeskHeight && intY + 55 > intDeskY && (intScreenNumber == 1 || intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8)){
       isCollidingDesk = true;
       return true;
-      
     }
     else{
       isCollidingDesk = false;
       return false;
     }
-
   }
   /**
    * Displays a clock of the time that has passed since the start of the game
@@ -979,12 +1013,10 @@ public class Sketch2 extends PApplet {
     else{
       fill(255); // Set the text color
     }
-    
     textSize(20);
     textAlign(LEFT, TOP);
-    text("Elapsed Time: ", 10, 10);
-
     // displays the time
+    text("Elapsed Time: ", 10, 10);
     text(strTime, 10, 30);
   }
   
