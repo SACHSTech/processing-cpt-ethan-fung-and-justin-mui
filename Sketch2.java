@@ -109,10 +109,10 @@ public class Sketch2 extends PApplet {
   PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
   boolean isScreenFaded;
   
-  int intDeskX = 200; // X position of the hitbox
-  int intDeskY = 200; // Y position of the hitbox
-  int intDeskWidth = 100; // Width of the hitbox
-  int intDeskHeight = 100; // Height of the hitbox
+  int intDeskX = 315; // X position of the hitbox
+  int intDeskY = 260; // Y position of the hitbox
+  int intDeskWidth = 175; // Width of the hitbox
+  int intDeskHeight = 105; // Height of the hitbox
   boolean isCollidingDesk;
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -151,7 +151,7 @@ public class Sketch2 extends PApplet {
   }
 
   public void draw() {
-    // print(isCollidingMarker(100, 100));
+    print(intScreenNumber);
     background(50);
     
     // HOME SCREEN
@@ -268,6 +268,10 @@ public class Sketch2 extends PApplet {
   public void gameScreen3() {
     background(255, 210, 173);
     //drawWordleGrid();
+
+    // Debugging only, will integrate third game in final sketch file
+    isGameOver = true;
+    isGameVictory = true;
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
     if (isGameOver && !isGameVictory) {
@@ -276,7 +280,7 @@ public class Sketch2 extends PApplet {
     if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
-    if (showPopup) {
+    if (showPopup && !showWinPopup && !showLosePopup) {
       drawPopup();
     }
     if (showWinPopup) {
@@ -318,20 +322,21 @@ public class Sketch2 extends PApplet {
    */
 
   public void settingScreen2() {
-    background(200, 100, 100);
     // Setting1 background generation
-    intExclamationX = 320;
+    intExclamationX = 440;
     intExclamationY = 280;
     if (isGameVictory){
       image(setting4_2, 0, 0);
+      playerMovement();
       isElevatorOpen = true;
     }
     if (!isGameVictory){
       image(setting4_1, 0, 0);
+      playerMovement();
       displayExclamMark(intExclamationX, intExclamationY);
     }
     
-    playerMovement();
+    
     
     
     if (isCollidingDesk && !isGameVictory){
@@ -350,7 +355,7 @@ public class Sketch2 extends PApplet {
     }
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
-    if (showPopup) {
+    if (showPopup && !isSwitchButtonDisplayed) {
       drawPopup();
     }
   }
@@ -359,21 +364,37 @@ public class Sketch2 extends PApplet {
    * Displays the third environment screen (FLOOR 1)
    */
   public void settingScreen3() {
-    intExclamationX = 100;
-    intExclamationY = 100;
+    intExclamationX = 440;
+    intExclamationY = 280;
     if (isGameVictory){
       image(setting5_2, 0, 0);
+      playerMovement();
+      isElevatorOpen = true;
     }
     if (!isGameVictory){
       image(setting5_1, 0, 0);
-      displayExclamMark(100, 100);
+      playerMovement();
+      displayExclamMark(intExclamationX, intExclamationY);
     }
-    playerMovement();
     
     
+    if (isCollidingDesk && !isGameVictory){
+      isSwitchButtonDisplayed = true;
+      drawGameInfoPopup();
+    }
+
+    if (isCollidingElevator() && isGameVictory){
+      fadeOutElevator();
+      
+    }
+    if (isScreenFaded){
+      
+      intScreenNumber = 8;
+      resetSetting();
+    }
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
-    if (showPopup) {
+    if (showPopup && !isSwitchButtonDisplayed) {
       drawPopup();
     }
   }
@@ -403,17 +424,23 @@ public class Sketch2 extends PApplet {
     }
   }
   public void transferScreen2() {
-    
-    background(100, 100, 200);
-    fill(255);
-    textAlign(CENTER);
-    textSize(32);
-    text("Settings Screen 3", width / 2, height / 2);
+    print(intPlayerY);
+    image(setting6, 0, 0);
     
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
     if (showPopup) {
       drawPopup();
+    }
+    if (intPlayerY >= 500 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
+      isElevatorOpen = true;
+      fadeOutElevator();
+    } 
+    else{
+      playerMovement();
+    }
+    if (isScreenFaded){
+      intScreenNumber = 9;
     }
   }
 
@@ -539,7 +566,7 @@ public class Sketch2 extends PApplet {
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
         
-        intScreenNumber = 3; // Change to Setting1 (Debug to transfer1)
+        intScreenNumber = 8; // Change to Setting1 (Debug to transfer1)
         resetSetting();
       } 
     } 
@@ -548,10 +575,9 @@ public class Sketch2 extends PApplet {
     if (intScreenNumber == 4 && isSwitchButtonDisplayed) {
       if (gameButton.isOver()) {
         initializeGame2();
-        intScreenNumber = 5; // Change to Setting1
+        intScreenNumber = 5; // Change to Game 2
         isSwitchButtonDisplayed = false;
       } 
-      
     } 
 
     // Game 2 buttons
@@ -563,6 +589,30 @@ public class Sketch2 extends PApplet {
       } 
       else if (backButton.isOver() && showLosePopup) {
         // Upon game1 loss, the user is directed to play the game again!
+        initializeGame2();
+        showLosePopup = false;
+      } 
+    }
+
+    // Setting 3 Button
+    if (intScreenNumber == 6 && isSwitchButtonDisplayed) {
+      if (gameButton.isOver()) {
+        // initializeGame2();
+        intScreenNumber = 7; // Change to Game 3
+        isSwitchButtonDisplayed = false;
+      } 
+    } 
+
+    // Game 3 Buttons
+
+    if (intScreenNumber == 7) {
+      if (backButton.isOver() && showWinPopup) {
+        // Upon game1 win, the user is directed back to the setting 1 screen
+        intScreenNumber = 6; // Change to Setting 3
+        showWinPopup = false;
+      } 
+      else if (backButton.isOver() && showLosePopup) {
+        // Upon game3 loss, the user is directed to play the game again!
         initializeGame2();
         showLosePopup = false;
       } 
@@ -715,6 +765,8 @@ public class Sketch2 extends PApplet {
       }
     }
     image(currentPlayerState, intPlayerX, intPlayerY);
+    fill(255, 0, 0, 150); // Semi-transparent red
+    rect(intDeskX, intDeskY, intDeskWidth, intDeskHeight);
   }
   /**
    * Resets player to initial position on the setting screen upon switching of setting screens
@@ -724,11 +776,7 @@ public class Sketch2 extends PApplet {
       intPlayerX = 400;
       intPlayerY = 520;
     }
-    if (intScreenNumber == 4){
-      intPlayerX = 400;
-      intPlayerY = 50;
-    }
-    if (intScreenNumber == 6){
+    if (intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8){
       intPlayerX = 400;
       intPlayerY = 50;
     }
@@ -786,10 +834,7 @@ public class Sketch2 extends PApplet {
     
   }
   public boolean isPlayerCollidingDesk(int intX, int intY){
-    if (intX < intDeskX + intDeskWidth &&
-    intX + 55 > intDeskX &&
-    intY < intDeskY + intDeskHeight &&
-    intY + 55 > intDeskY){
+    if (intX < intDeskX + intDeskWidth && intX + 55 > intDeskX && intY < intDeskY + intDeskHeight && intY + 55 > intDeskY && (intScreenNumber == 1 || intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8)){
       isCollidingDesk = true;
       return true;
       
