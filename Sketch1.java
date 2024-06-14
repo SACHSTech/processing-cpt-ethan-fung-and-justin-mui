@@ -85,6 +85,10 @@ public class Sketch1 extends PApplet {
   boolean plank2Show = true;
   boolean plank3Show = true;
 
+  //---------WIN/LOSS VARIABLES---------------
+  boolean isGameOver;
+  boolean isGameVictory = false;
+
   //---------VARIABLES FOR WORDLE--------------
   int intGridSizeX = 5;
   int intGridSizeY = 6;
@@ -92,8 +96,6 @@ public class Sketch1 extends PApplet {
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
-  boolean isGameOver;
-  boolean isGameVictory = false;
   boolean isSettingGameChanged = false;
 
   //----------VARIABLES FOR CONNECTIONS------------
@@ -105,10 +107,6 @@ public class Sketch1 extends PApplet {
   boolean[][] solvedGroups = new boolean[4][4];
   String message = "";
   int lives = 4;
-  boolean gameOver = false;
-  boolean showRestartButton = false;
-  boolean gameWon = false;
-  boolean showWinButton = false;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -220,32 +218,30 @@ public class Sketch1 extends PApplet {
    */
   public void mousePressed() {
 
-    // Toggling Intro, Setting1, Game1 screens
+    // Toggling Intro screen 
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
         resetSettingBottom();
-        intScreenNumber = 1; // Change to Setting1
+        intScreenNumber = 1; // Change to BossFloor
       } 
     } 
 
+    // Mouse press Win/Loss for connections
+    if (intScreenNumber == 8) {
+      if (backButton.isOver() && showWinPopup) {
+        // Upon game1 win, the user is directed back to the setting 1 screen
+        intScreenNumber = 9; // Change to Transfer 1
+        resetSetting();
+        showWinPopup = false;
+      } 
+      else if (backButton.isOver() && showLosePopup) {
+        // Upon game1 loss, the user is directed to play the game again!
+        initializeConnections();
+        showLosePopup = false;
+      } 
+    }
     //Mouse press check for connections
     if (intScreenNumber == 8){
-        // Check if restart button is clicked
-      if (showRestartButton) {
-        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-          resetGame();
-        }
-        return;
-
-      }
-
-      // Check if next game button is clicked
-      if (showWinButton) {
-        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-          println("Next game placeholder");
-        }
-        return;
-      }
 
       //Selects and deselects boxes
       int intWordColumn = 0;
@@ -362,13 +358,13 @@ public class Sketch1 extends PApplet {
 
   public void TopFloorScreen(){
     image(setting3, 0, 0);
-
+    playerMovement();
 
 
   }
 
   public void Floor2ClosedScreen(){
-
+    image(setting4, 0, 0);
   }
 
   public void WordleGameScreen(){
@@ -376,11 +372,11 @@ public class Sketch1 extends PApplet {
   }
 
   public void Floor2OpenScreen(){
-
+    image(setting5, 0, 0);
   }
 
   public void Floor1ClosedScreen(){
-
+    image(setting6, 0, 0);
   }
 
   public void ConnectionsGameScreen(){
@@ -401,7 +397,7 @@ public class Sketch1 extends PApplet {
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
         fill(0);
-        text(incorrectGroups[intWordColumn][intWordRow], 10 + rectRow, 50 + rectColumn);
+        text(incorrectGroups[intWordColumn][intWordRow], 50 + rectRow, 50 + rectColumn);
         intWordRow++;
       }
       intWordColumn++;
@@ -417,43 +413,23 @@ public class Sketch1 extends PApplet {
     fill(0);
     text("Lives left: " + lives, width - 150, 30);
 
-    if (gameOver) {
+    if (isGameOver) {
       // Show game over screen and restart button
-      fill(255);
-      rect(0, 0, width, height);
-      fill(0);
-      textSize(24);
-      text("You lose!", width / 2 - textWidth("You lose!") / 2, height / 2 - 40);
-      text("Better luck next time!", width / 2 - textWidth("Better luck next time!") / 2, height / 2 - 10);
-      fill(100);
-      rect(width / 2 - 50, height / 2, 100, 50);
-      fill(255);
-      textSize(20);
-      text("Restart", width / 2 - textWidth("Restart") / 2, height / 2 + 30);
-      showRestartButton = true;
+      drawLosePopup();
     
-    } else if (gameWon) {
+    } else if (isGameVictory) {
       // Show you won screen and next game button
-      fill(255);
-      rect(0, 0, width, height);
-      fill(0);
-      textSize(32);
-      text("You Won!", width / 2 - textWidth("You Won!") / 2, height / 2 - 40);
-      fill(100);
-      rect(width / 2 - 50, height / 2, 100, 50);
-      fill(255);
-      textSize(20);
-      text("Next", width / 2 - textWidth("Next") / 2, height / 2 + 30);
-      showWinButton = true;
+      drawWinPopup();
     }
   }
 
   public void Floor1OpenScreen(){
-
+    image(setting7, 0, 0);
+    playerMovement();
   }
 
   public void GroundFloorScreen(){
-
+    image(setting8, 0, 0);
   }
 
   public void EndingScreen(){
@@ -544,7 +520,7 @@ public void playerMovementPlankWalk(){
     currentPlayerState = playerBackward;
 
     if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
-      intScreenNumber = 3; // Change to Top Floor screen
+      intScreenNumber = 8; // Change to Top Floor screen
       resetSettingBottom();; // Reset player position to the bottom of the new screen
     }
   }
@@ -582,6 +558,36 @@ public void resetSettingBottom(){
   isSwitchButtonDisplayed = false;
 }
 
+//---------------WIN/LOSS SCREEN METHODS--------------------
+  /**
+   * Draws a popup window when the player wins.
+   */
+  public void drawWinPopup() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("You Win!", width / 2, height / 2 - 50);
+    text("Congratulations!", width / 2, height / 2);
+    backButton.isOver = backButton.isOver();
+    backButton.display();
+  }
+  /**
+   * Draws a popup window when the player loses.
+   */
+  public void drawLosePopup() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("You Lose!", width / 2, height / 2 - 50);
+    text("Better luck next time!", width / 2, height / 2);
+    backButton.isOver = backButton.isOver();
+    backButton.display();
+  }
+
 //----------------CONNECTIONS METHODS------------------------
     
   /**
@@ -609,7 +615,7 @@ public void resetSettingBottom(){
         message = "You solved the group: " + correctGroups[i][4];
         selectedWords.clear();
         if (checkIfGameWon()) {
-          gameWon = true;
+          isGameVictory = true;
         }
         return;
       }
@@ -622,13 +628,13 @@ public void resetSettingBottom(){
         message = "One word away...";
         lives--;
         if (lives <= 0) {
-          gameOver = true;
+          isGameOver = true;
         }
       } else {
         message = "Selected words are incorrect.";
         lives--;
         if (lives <= 0) {
-          gameOver = true;
+          isGameOver = true;
         }
       }
     }
@@ -690,15 +696,13 @@ public void resetSettingBottom(){
   /**
    * Resets the game by resetting all variables
    */
-  public void resetGame() {
+  public void initializeConnections() {
     selectedWords.clear();
     selectedBoxes = new boolean[4][4];
     solvedGroups = new boolean[4][4];
     message = "";
     lives = 4;
-    gameOver = false;
-    gameWon = false;
-    showRestartButton = false;
-    showWinButton = false;
+    isGameOver = false;
+    isGameVictory = false;
   }
 }
