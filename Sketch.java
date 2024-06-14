@@ -75,6 +75,12 @@ public class Sketch extends PApplet {
   PImage setting0, setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
   boolean isScreenFaded;
 
+  // INITIALIZING BROKEN BRIDGE GAME VARIABLES
+  boolean plank1Show = true;
+  boolean plank2Show = true;
+  boolean plank3Show = true;
+  PImage woodenPlank;
+
   // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
@@ -193,6 +199,9 @@ public class Sketch extends PApplet {
           {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally (EXTREMELY HARD)"}
       };
     }
+
+    // initializing wooden plank image
+    woodenPlank = loadImage("images/WoodenPlank.png");
   }
 
   public void draw() {
@@ -257,29 +266,25 @@ public class Sketch extends PApplet {
   }
   // ----------------GAME SCREENS------------------------
   /**
-   * Displays Game 1 Screen (Walk the Plank)
+   * Displays Game 1 Screen (Broken Bridge)
    */
   public void gameScreen1() {
-    // Debugging only, will integrate third game in final sketch file
-    isGameOver = true;
-    isGameVictory = true;
-    infoButton.isOver = infoButton.isOver();
-    infoButton.display();
-    if (isGameOver && !isGameVictory) {
-      showLosePopup = true;
+    image(setting2, 0, 0);
+
+    if (plank1Show == true){
+      image(woodenPlank, 455, 401);
     }
-    if (isGameOver && isGameVictory) {
-      showWinPopup = true;
+
+    if (plank2Show == true){
+      image(woodenPlank,455, 221);
     }
-    if (showPopup && !showWinPopup && !showLosePopup) {
-      drawPopup();
+
+    if (plank3Show == true){
+      image(woodenPlank, 278, 43);
     }
-    if (showWinPopup) {
-      drawWinPopup();
-    }
-    if (showLosePopup) {
-      drawLosePopup();
-    }
+    
+    
+    playerMovementPlankWalk();
   }
   /**
    * Displays Game 2 Screen (WORDLE)
@@ -356,7 +361,8 @@ public class Sketch extends PApplet {
     // Setting1 background generation
     image(setting1, 0, 0);
     // player movement is called here
-    playerMovement();
+    playerMovementBossRoom();
+
     // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
@@ -528,6 +534,7 @@ public class Sketch extends PApplet {
 
   }
   // ----------------POP-UP SCREENS------------------------
+
   /**
    * Draws a popup window with scene-specific information to help guide the player
    */
@@ -818,6 +825,7 @@ public class Sketch extends PApplet {
     }
     return true;
   }
+
   /**
    * Handles mouse pressed events
    */
@@ -1001,6 +1009,7 @@ public class Sketch extends PApplet {
       isRightPressed = true;
     }
   }
+
   /**
    * Checks if the guesses for Game1 are correct answers
    */
@@ -1118,6 +1127,86 @@ public class Sketch extends PApplet {
     // displays player onto screen
     image(currentPlayerState, intPlayerX, intPlayerY);
   }
+
+  public void playerMovementBossRoom(){
+    if (isUpPressed && (intPlayerY > 10 || (intPlayerX >= 278 && intPlayerX <= 534 && intPlayerY > 0))){
+      intPlayerY -=3;      
+      currentPlayerState = playerBackward;
+  
+      if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
+        intScreenNumber = 2; // Change to PlankWalk screen
+        resetSettingBottom();; // Reset player position to the bottom of the new screen
+      }
+    }
+    if (isDownPressed && intPlayerY <= height - 10 - 80){
+      intPlayerY += 3;    
+      currentPlayerState = playerForward;
+    }
+    if (isLeftPressed && intPlayerX >= 0 + 10){
+      intPlayerX -= 4;
+      currentPlayerState = playerLeft;
+    }
+    if (isRightPressed && intPlayerX <= width - 10 - 50){
+      intPlayerX += 4;
+      currentPlayerState = playerRight;
+    }
+    image(currentPlayerState, intPlayerX, intPlayerY);
+  }
+
+  public void playerMovementPlankWalk(){
+  
+    //Death barriers (Left block, right block, top death, middle death, bottom death)
+    if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
+      resetSettingBottom();
+      return; // Exit the method to prevent further movement
+    }
+  
+    //First Dissapearing Plank
+    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
+      plank1Show = false;
+      resetSettingBottom();
+      return;
+    
+    }
+    //Second Dissapearing Plank
+    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
+      plank2Show = false;
+      resetSettingBottom();
+      return;
+    }
+  
+    //Third Dissapearing Plank
+    if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
+      plank3Show = false;
+      resetSettingBottom();
+      return;
+    }
+    
+    if (isUpPressed && (intPlayerY > 10 )){
+      intPlayerY -=3;      
+      currentPlayerState = playerBackward;
+  
+      if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
+        intScreenNumber = 3; // Change to Top Floor screen
+        resetSettingBottom();; // Reset player position to the bottom of the new screen
+      }
+    }
+    if (isDownPressed && intPlayerY <= height - 10 - 80){
+      intPlayerY += 3;    
+      currentPlayerState = playerForward;
+    }
+    if (isLeftPressed && intPlayerX >= 0 + 10){
+      intPlayerX -= 4;
+      currentPlayerState = playerLeft;
+    }
+    if (isRightPressed && intPlayerX <= width - 10 - 50){
+      intPlayerX += 4;
+      currentPlayerState = playerRight;
+    }
+    image(currentPlayerState, intPlayerX, intPlayerY);
+  
+  }
+
   /**
    * Resets player to initial position on the setting screen upon switching of setting screens
    */
@@ -1140,7 +1229,16 @@ public class Sketch extends PApplet {
     isGameVictory = false;
     isGameOver = false;
     isElevatorOpen = false;
+
   }
+
+  public void resetSettingBottom(){
+  
+    intPlayerX = 400 - 25;
+    intPlayerY = 520;
+    currentPlayerState = playerForward;
+  }
+
   /**
    * Displays the exclamation marker at a given x and y coordinate and bobs up and down
    * The exclamation mark also slowly fades into view from an initial transparent state
