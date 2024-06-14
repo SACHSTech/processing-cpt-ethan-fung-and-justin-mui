@@ -9,7 +9,8 @@ import processing.core.PImage;
 * objects that guide the flow of the game (exclamation marks, open/closed doors, etc.) 
 * Furthermore, the program includes the first of 3 mini-games, which is a game very 
 * similar to the New York Time's WORDLE game. Player movement between stages is also 
-* established in this program, including with collision.
+* established in this program, including with collision. Furthermore, animations with 
+* fading images is used to provide more fluid motion between game screens
 * @author: E. Fung
 *
 */
@@ -42,7 +43,9 @@ public class Sketch2 extends PApplet {
       this.label = label;
       
     }
-
+    /**
+     * Displays button and changes colour based on player input
+     */
     void display() {
       // Checks if button is still active
       if (isOver) {
@@ -68,12 +71,19 @@ public class Sketch2 extends PApplet {
     }
   }
 
+  // BUTTON AND POP UP VARIABLES
   Button startButton, gameButton, infoButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
   boolean showLosePopup = false;
 
+  // BACKGROUND IMAGE VARIABLES
+  boolean isSwitchButtonDisplayed;
+  PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
+  boolean isScreenFaded;
+
+  // WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
   String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
@@ -84,58 +94,64 @@ public class Sketch2 extends PApplet {
   boolean isGameVictory = false;
   // boolean isSettingGameChanged = false;
 
+  // PLAYER CHARACTER GENERATION VARIABLES
   int intPlayerX, intPlayerY;
   
   boolean isUpPressed = false;
   boolean isDownPressed = false;
   boolean isLeftPressed = false;
   boolean isRightPressed = false;
-
   
   PImage playerForward, playerBackward, playerLeft, playerRight;
   PImage currentPlayerState;
 
+  // EXCLAMATION MARK VARIABLES
   PImage exclamationMark;
   int intExclamationX, intExclamationY;
   int intExclamationW = 30;
   int intExclamationH = 50;
   float fltExclamAlpha;
-  float fltFadeSpeed = 1.5f;
+  float fltFadeSpeed = 5f;
 
+  // ELAVATOR MARK VARIABLES
   float fltElevatorAlpha = 0f;
   boolean isElevatorOpen;
 
-  boolean isSwitchButtonDisplayed;
-  PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
-  boolean isScreenFaded;
-  
+  // DESK VARIABLES
   int intDeskX = 315; // X position of the hitbox
   int intDeskY = 260; // Y position of the hitbox
   int intDeskWidth = 175; // Width of the hitbox
   int intDeskHeight = 105; // Height of the hitbox
   boolean isCollidingDesk;
 
+  // IN-GAME CLOCK VARIABLES
   int intStartTime;
   String strTime;
+
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
 
   public void settings() {
+    // size of screen
     size(800, 600);
   }
 
   public void setup() {
+    // initializing UI buttons
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
-    gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Play");
-    infoButton = new Button(width - 100, 10, 80, 50, "Info");
+    gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
+    infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
+
+    // initializing player images
     playerForward = loadImage("images/NerdFace.png"); 
     playerBackward = loadImage("images/NerdFaceBack.png"); 
     playerLeft = loadImage("images/NerdFaceLeft.png"); 
     playerRight = loadImage("images/NerdFaceRight.png"); 
     
+    // initializing background images
     setting1 = loadImage("images/BossRoom.png");
     setting2 = loadImage("images/PlankWalk.png");
     setting3 = loadImage("images/TopFloor.png");
@@ -145,12 +161,9 @@ public class Sketch2 extends PApplet {
     setting5_2 = loadImage("images/Floor1Open.png");
     setting6 = loadImage("images/GroundFloor.png");
 
+    // initializing exclamation mark image
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
-
-    
-    
-
   }
 
   public void draw() {
@@ -795,7 +808,7 @@ public class Sketch2 extends PApplet {
     int intNextX, intNextY;
 
     if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !showPopup) {
-      intNextY = intPlayerY - 3;
+      intNextY = intPlayerY - 4;
       if (!isCollidingElevator() || !isElevatorOpen) {
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
           intPlayerY = intNextY;
@@ -805,7 +818,7 @@ public class Sketch2 extends PApplet {
     }
 
     if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !showPopup) {
-      intNextY = intPlayerY + 3;
+      intNextY = intPlayerY + 4;
       if (!isCollidingElevator() || !isElevatorOpen) {
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
           intPlayerY = intNextY;
@@ -954,7 +967,13 @@ public class Sketch2 extends PApplet {
     strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
   
     // initializes formatting of the string display
-    fill(255); // Set the text color
+    if (intScreenNumber == 5 || intScreenNumber == 1){
+      fill(0);
+    }
+    else{
+      fill(255); // Set the text color
+    }
+    
     textSize(20);
     textAlign(LEFT, TOP);
     text("Elapsed Time: ", 10, 10);
