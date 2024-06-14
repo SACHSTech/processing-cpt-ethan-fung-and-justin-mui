@@ -2,17 +2,10 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 /**
-* The program Sketch2.java creates the basic skeleton of the game.
-* The program organizes the various screens in the game and establishes
-* the proper flow and communication, typically through buttons. This includes
-* changing maps based on if the user wins or loses mini-games, and typical in-game
-* objects that guide the flow of the game (exclamation marks, open/closed doors, etc.) 
-* Furthermore, the program includes the first of 3 mini-games, which is a game very 
-* similar to the New York Time's WORDLE game. Player movement between stages is also 
-* established in this program, including with collision. Furthermore, animations with 
-* fading images is used to provide more fluid motion between game screens
+* The program Sketch.java runs the "ESCAPE THE NEW YORK TIMES" game
+* 
 * @author: E. Fung
-*
+* @author: J. Mui
 */
 
 public class Sketch extends PApplet {
