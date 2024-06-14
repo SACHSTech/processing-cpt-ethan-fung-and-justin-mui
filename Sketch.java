@@ -64,7 +64,7 @@ public class Sketch extends PApplet {
   }
   
   // INITIALIZING BUTTON AND POP UP VARIABLES
-  Button startButton, gameButton, infoButton, backButton;
+  Button playAgainButton, startButton, gameButton, infoButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
@@ -84,7 +84,7 @@ public class Sketch extends PApplet {
   // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
-  String[] strWordList = {"STARK"};//, "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
+  String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
@@ -133,7 +133,7 @@ public class Sketch extends PApplet {
 
   // INITIALIZING IN-GAME CLOCK VARIABLES
   int intStartTime;
-  String strTime;
+  String strTime ="";
 
   public void settings() {
     // size of screen
@@ -148,6 +148,7 @@ public class Sketch extends PApplet {
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
+    playAgainButton = new Button(width / 2 - 120, height / 2 + 130, 200, 60, "Play Again!");
 
     // initializing player images
     playerForward = loadImage("images/NerdFace.png"); 
@@ -205,10 +206,8 @@ public class Sketch extends PApplet {
     woodenPlank = loadImage("images/WoodenPlank.png");
     
   }
-
+  
   public void draw() {
-    print(isGameOver + "!");
-    print(isGameVictory + "?");
     background(50);
     
     // HOME SCREEN
@@ -537,7 +536,8 @@ public class Sketch extends PApplet {
     textSize(32);
     text(strTime, 450, 110);
     // Play Again button
-
+    playAgainButton.isOver = playAgainButton.isOver();
+    playAgainButton.display();
   }
   // ----------------POP-UP SCREENS------------------------
 
@@ -944,6 +944,12 @@ public class Sketch extends PApplet {
         showPopup = false;
       }
     } 
+    // Ending screen play again button
+    if (intScreenNumber == 9){
+      if (playAgainButton.isOver){
+        intScreenNumber = 0;
+      }
+    }
   }
 
   /**
