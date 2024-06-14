@@ -616,14 +616,29 @@ public class Sketch extends PApplet {
   }
 
   public void playerMovementPlankWalk(){
+    
     if ((intPlayerX < 278 - 20 && intPlayerY < 506 - 50)|| (intPlayerX > width - 265 - 20 && intPlayerY < 506 - 50)) {
       resetSettingPlankWalk();
       return; // Exit the method to prevent further movement
     }
 
     //First Dissapearing Plank
-    if (intPlayerX > 455 && intPlayerX < width - 265 && intPlayerY > 413 -  50 && intPlayerY < height - 83 - 60){
+    if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 413 + 40 && intPlayerY < 413 + 116 - 50){
       plank1Show = false;
+      resetSettingPlankWalk();
+      return;
+    
+    }
+    //Second Dissapearing Plank
+    if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 221 + 40 && intPlayerY < 221 + 116 - 50){
+      plank2Show = false;
+      resetSettingPlankWalk();
+      return;
+    }
+
+    //Third Dissapearing Plank
+    if (intPlayerX > 278 - 20 && intPlayerX < 278 + 80 && intPlayerY > 43 + 40  && intPlayerY < 43 + 116 - 50){
+      plank3Show = false;
       resetSettingPlankWalk();
       return;
     }
