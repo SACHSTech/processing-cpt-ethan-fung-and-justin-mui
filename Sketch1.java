@@ -3,7 +3,17 @@ import java.util.Arrays;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-  /*
+  /**
+   * Broken Bridge game goals...
+   * Put character at bottom of map
+   * 3 pairs of wooden boards
+   * One is real other will break
+   * Correct path is left, left, right
+   * Death barriers around whole map
+   * Once user walks on broken board the board will dissapear and the user gets teleported back to bottom of map
+   * Goes to next room once the user reaches the end
+   * 
+   * Connections game goals...
    * Start game
    * All boxes are drawn onto screen from incorrectGroups
    * Only a max of 4 boxes can be selected, then the user must press enter
@@ -11,6 +21,7 @@ import processing.core.PImage;
    * If not then checks if the user is one away from a correct group
    * If yes, then turn those boxes grey, etc
    * Game is complete when all 4 rows are solved
+   * @author Justin Mui
    */
 
 public class Sketch1 extends PApplet {
