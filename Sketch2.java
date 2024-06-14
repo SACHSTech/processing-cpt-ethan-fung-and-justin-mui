@@ -17,14 +17,12 @@ import processing.core.PImage;
 
 public class Sketch2 extends PApplet {
 
-  // Define button class
+  // This class creates similar buttons for future use
   class Button {
-
+    // Initializing class specific variables
     float fltX, fltY, fltW, fltH;
     String label;
-    
     boolean isOver = false;
-
     /**
      * Computes input x, y, w, h, and label values and localizes in terms of the class
      * Inputs assigned to class local variables for future use
@@ -41,7 +39,6 @@ public class Sketch2 extends PApplet {
       this.fltW = fltW;
       this.fltH = fltH;
       this.label = label;
-      
     }
     /**
      * Displays button and changes colour based on player input
@@ -61,7 +58,6 @@ public class Sketch2 extends PApplet {
       textAlign(CENTER, CENTER);
       text(label, fltX + fltW / 2, fltY + fltH / 2);
     }
-
     /**
      * Detects if the user has clicked the button
      * @return returns true if the cursor clicks the button. Else, it remains false
@@ -70,20 +66,20 @@ public class Sketch2 extends PApplet {
       return mouseX >= fltX && mouseX <= fltX + fltW && mouseY >= fltY && mouseY <= fltY + fltH;
     }
   }
-
-  // BUTTON AND POP UP VARIABLES
+  
+  // INITIALIZING BUTTON AND POP UP VARIABLES
   Button startButton, gameButton, infoButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
   boolean showLosePopup = false;
 
-  // BACKGROUND IMAGE VARIABLES
+  // INITIALIZING BACKGROUND IMAGE VARIABLES
   boolean isSwitchButtonDisplayed;
   PImage setting0, setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
   boolean isScreenFaded;
 
-  // WORDLE GAME VARIABLES
+  // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
   String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
@@ -92,9 +88,8 @@ public class Sketch2 extends PApplet {
   int intCurrentRow;
   boolean isGameOver;
   boolean isGameVictory = false;
-  // boolean isSettingGameChanged = false;
 
-  // PLAYER CHARACTER GENERATION VARIABLES
+  // INITIALIZING PLAYER CHARACTER GENERATION VARIABLES
   int intPlayerX, intPlayerY;
   
   boolean isUpPressed = false;
@@ -105,7 +100,7 @@ public class Sketch2 extends PApplet {
   PImage playerForward, playerBackward, playerLeft, playerRight;
   PImage currentPlayerState;
 
-  // EXCLAMATION MARK VARIABLES
+  // INITIALIZING EXCLAMATION MARK VARIABLES
   PImage exclamationMark;
   int intExclamationX, intExclamationY;
   int intExclamationW = 30;
@@ -113,18 +108,18 @@ public class Sketch2 extends PApplet {
   float fltExclamAlpha;
   float fltFadeSpeed = 5f;
 
-  // ELAVATOR MARK VARIABLES
+  // INITIALIZING ELAVATOR MARK VARIABLES
   float fltElevatorAlpha = 0f;
   boolean isElevatorOpen;
 
-  // DESK VARIABLES
+  // INITIALIZING DESK VARIABLES
   int intDeskX = 315; // X position of the hitbox
   int intDeskY = 230; // Y position of the hitbox
   int intDeskWidth = 175; // Width of the hitbox
   int intDeskHeight = 135; // Height of the hitbox
   boolean isCollidingDesk;
 
-  // IN-GAME CLOCK VARIABLES
+  // INITIALIZING IN-GAME CLOCK VARIABLES
   int intStartTime;
   String strTime;
 
