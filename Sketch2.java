@@ -864,10 +864,15 @@ public class Sketch2 extends PApplet {
     isGameOver = false;
     isElevatorOpen = false;
   }
-
+  /**
+   * Displays the exclamation marker at a given x and y coordinate and bobs up and down
+   * The exclamation mark also slowly fades into view from an initial transparent state
+   * @param intX X-coordinate of the exclamation mark
+   * @param initialY Initial Y-coordinate of the exclamation mark
+   */
   public void displayExclamMark(float intX, float initialY){
-    
 
+    // Slowly increases the opacity of the exclamation mark image
     if (fltExclamAlpha < 255.0) {
       fltExclamAlpha += fltFadeSpeed;
     }
@@ -882,6 +887,10 @@ public class Sketch2 extends PApplet {
     noTint();
   }
   
+  /**
+   * Checks if the player is colliding with the elevator in the image
+   * @return true if colliding, false if not colliding
+   */
   public boolean isCollidingElevator(){
     if (intPlayerY <= 50 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       return true;
@@ -890,20 +899,33 @@ public class Sketch2 extends PApplet {
       return false;
     }
   }
+
+  /**
+   * Upon player contact with an open elevator, 
+   * the whole screen will slowly fade to dark
+   * to transition to the next scene
+   */
   public void fadeOutElevator(){
+    // Increases opacity of the black screen over time until it is completely opaque
     if (fltElevatorAlpha < 255.0) {
       fltElevatorAlpha += 3.2f;
       fill(0, fltElevatorAlpha);
       rect(0, 0, width, height);
-      
     }
     else{
-      background(0); // Ensure the screen is fully black after 3 seconds
+      // Ensure the screen is fully black after 3 seconds
+      background(0); 
       isScreenFaded = true;
     }
-    
   }
+  /**
+   * Checks if the player will collide with the desk
+   * @param intX The next X-coordinate of the player
+   * @param intY The next Y-coordinate of the player
+   * @return true if the player will collide with the desk, false if the player isn't colliding with desk
+   */
   public boolean isPlayerCollidingDesk(int intX, int intY){
+    // compares the player position with the hitbox of the desk
     if (intX < intDeskX + intDeskWidth && intX + 55 > intDeskX && intY < intDeskY + intDeskHeight && intY + 55 > intDeskY && (intScreenNumber == 1 || intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8)){
       isCollidingDesk = true;
       return true;
@@ -915,20 +937,29 @@ public class Sketch2 extends PApplet {
     }
 
   }
+  /**
+   * Displays a clock of the time that has passed since the start of the game
+   */
   public void displayElapsedTime() {
+    // Compares the current time passed in the game with the time of the game's start
     int intCurrentTime = millis();
     int intElapsedTime = intCurrentTime - intStartTime;
   
+    // Calculates seconds, minutes and hours
     int intSeconds = (intElapsedTime / 1000) % 60;
     int intMinutes = (intElapsedTime / (1000 * 60)) % 60;
     int intHours = (intElapsedTime / (1000 * 60 * 60)) % 24;
   
+    // formats the time in 24 hour clock display
     strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
   
+    // initializes formatting of the string display
     fill(255); // Set the text color
     textSize(20);
     textAlign(LEFT, TOP);
     text("Elapsed Time: ", 10, 10);
+
+    // displays the time
     text(strTime, 10, 30);
   }
   
