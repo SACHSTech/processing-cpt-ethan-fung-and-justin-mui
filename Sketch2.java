@@ -154,7 +154,7 @@ public class Sketch2 extends PApplet {
   }
 
   public void draw() {
-    print(intScreenNumber);
+    // print(intScreenNumber);
     background(50);
     
     // HOME SCREEN
@@ -222,8 +222,9 @@ public class Sketch2 extends PApplet {
   }
 
   public void gameScreen1() {
-    background(173, 210, 255);
-    //drawWordleGrid();
+    // Debugging only, will integrate third game in final sketch file
+    isGameOver = true;
+    isGameVictory = true;
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
     if (isGameOver && !isGameVictory) {
@@ -232,7 +233,7 @@ public class Sketch2 extends PApplet {
     if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
-    if (showPopup) {
+    if (showPopup && !showWinPopup && !showLosePopup) {
       drawPopup();
     }
     if (showWinPopup) {
@@ -314,14 +315,20 @@ public class Sketch2 extends PApplet {
 
     playerMovement();
     
-    if (isCollidingElevator()){
-      intScreenNumber = 2;
-    }
+    
 
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+
     if (showPopup) {
       drawPopup();
+    }
+    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
+      isElevatorOpen = true;
+      fadeOutElevator();
+    } 
+    if (isScreenFaded){
+      intScreenNumber = 2;
     }
   }
 
@@ -432,7 +439,7 @@ public class Sketch2 extends PApplet {
     }
   }
   public void transferScreen2() {
-    print(intPlayerY);
+    // print(intPlayerY);
     image(setting6, 0, 0);
     
     infoButton.isOver = infoButton.isOver();
@@ -461,7 +468,7 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(32);
     text("Congrats, you got out in: " + strTime, width / 2, height / 2);
-    text("Unfortunately, you are legally contracted to go to work tomorrow " + strTime, width / 2, height / 2 + 30);
+    text("Unfortunately, you are still legally contracted to go to work tomorrow ", width / 2, height / 2 + 30);
   }
 
   /**
@@ -474,11 +481,10 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(24);
     text("Information Screen", width / 2, height / 2 - 50);
-    text("This is the information screen.", width / 2, height / 2);
+    
 
-    if (intScreenNumber == 1){
-      
-    }
+    
+
 
     backButton.isOver = backButton.isOver();
     backButton.display();
@@ -494,8 +500,49 @@ public class Sketch2 extends PApplet {
     fill(255);
     textAlign(CENTER);
     textSize(24);
-    text("Information Popup", width / 2, height / 2 - 50);
-    text("This is some information for the user.", width / 2, height / 2);
+    text("Information Popup", width / 2, 100);
+    if (intScreenNumber == 1){
+      text("Make your way to the shattered windows to ", width / 2, height / 2);
+      text("escape the boss's office", width / 2, height / 2 + 25);
+    }
+    if (intScreenNumber == 2){
+      text("Make your away across the skybridge", width / 2, height / 2);
+    }
+    if (intScreenNumber == 3){
+      text("GO TO THE ELEVATOR TO ESCAPE THE BUILDING", width / 2, height / 2);
+    }
+    if (intScreenNumber == 4 && !isGameVictory){
+      text("The desk seems to have something on it...", width / 2, height / 2);
+    }
+    if (intScreenNumber == 4 && isGameVictory){
+      text("GO TO THE ELEVATOR TO ESCAPE THE BUILDING", width / 2, height / 2);
+    }
+    if (intScreenNumber == 5){
+      text("This is the ORIGINAL Wordle game by the ", width / 2, 160);
+      text("New York Times.", width / 2, 200);
+      text("To play, enter 5 letter combinations and ", width / 2, 240);
+      text("press enter to check if your guess is the ", width / 2, 280);
+      text("target 5 letter word. ", width / 2, 320);
+      text("Red means the letter is not in the correct word.", width / 2, 360);
+      text("Yellow means the letter is in the correct word, ", width / 2, 400);
+      text("but not in the correct position.", width / 2, 440);
+      text("Green means the letter is in the correct word ", width / 2, 480);
+      text("and is in the correct position.", width / 2, 520);
+    }
+    if (intScreenNumber == 6 && !isGameVictory){
+      text("The desk seems to have something on it...", width / 2, height / 2);
+    }
+    if (intScreenNumber == 6 && isGameVictory){
+      text("GO TO THE ELEVATOR TO ESCAPE THE BUILDING", width / 2, height / 2);
+    }
+    // Game 3
+    if (intScreenNumber == 7){
+      text("This is the information screen.", width / 2, height / 2);
+    }
+    // Transfer 2
+    if (intScreenNumber == 8){
+      text("GO TO THE EXIT!!!", width / 2, height / 2);
+    }
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
@@ -565,7 +612,7 @@ public class Sketch2 extends PApplet {
           rect(j * 80 + (width - 380) / 2, i * 80 + 100, 60, 60);
           fill(0);
           textSize(32);
-          text(Character.toUpperCase(letter), j * 80 + (width - 380) / 2 + 20, i * 80 + 140);
+          text(Character.toUpperCase(letter), j * 80 + (width - 380) / 2 + 20, i * 80 + 120);
         }
       }
     }
@@ -580,10 +627,25 @@ public class Sketch2 extends PApplet {
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
         intStartTime = millis();
-        intScreenNumber = 8; // Change to Setting1 (Debug to transfer1)
+        intScreenNumber = 1; // Change to Setting1 (Debug to transfer1)
         resetSetting();
       } 
     } 
+    // Game 1 Buttons
+
+    if (intScreenNumber == 2) {
+      if (backButton.isOver() && showWinPopup) {
+        // Upon game1 win, the user is directed back to the setting 1 screen
+        intScreenNumber = 3; // Change to Transfer 1
+        resetSetting();
+        showWinPopup = false;
+      } 
+      else if (backButton.isOver() && showLosePopup) {
+        // Upon game1 loss, the user is directed to play the game again!
+        initializeGame2();
+        showLosePopup = false;
+      } 
+    }
 
     // Setting 2 Buttons
     if (intScreenNumber == 4 && isSwitchButtonDisplayed) {
@@ -780,14 +842,15 @@ public class Sketch2 extends PApplet {
     }
     image(currentPlayerState, intPlayerX, intPlayerY);
     fill(255, 0, 0, 150); // Semi-transparent red
-    rect(intDeskX, intDeskY, intDeskWidth, intDeskHeight);
+    // rect(intDeskX, intDeskY, intDeskWidth, intDeskHeight);
   }
   /**
    * Resets player to initial position on the setting screen upon switching of setting screens
    */
   public void resetSetting(){
-    if (intScreenNumber == 3){
-      intPlayerX = 400;
+    
+    if (intScreenNumber == 1 || intScreenNumber == 3){
+      intPlayerX = 380;
       intPlayerY = 520;
     }
     if (intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8){
@@ -836,7 +899,7 @@ public class Sketch2 extends PApplet {
   }
   public void fadeOutElevator(){
     if (fltElevatorAlpha < 255.0) {
-      fltElevatorAlpha += 1.5f;
+      fltElevatorAlpha += 3.2f;
       fill(0, fltElevatorAlpha);
       rect(0, 0, width, height);
       
