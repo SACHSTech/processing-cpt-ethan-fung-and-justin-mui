@@ -18,7 +18,8 @@ public class Sketch2 extends PApplet {
 
   // Define button class
   class Button {
-    float x, y, w, h;
+
+    float fltX, fltY, fltW, fltH;
     String label;
     
     boolean isOver = false;
@@ -27,17 +28,17 @@ public class Sketch2 extends PApplet {
      * Computes input x, y, w, h, and label values and localizes in terms of the class
      * Inputs assigned to class local variables for future use
      * 
-     * @param x x-coordinate of the button
-     * @param y y-coordinate of the button
-     * @param w Width of the button
-     * @param h Height of the button
+     * @param fltX x-coordinate of the button
+     * @param fltY y-coordinate of the button
+     * @param fltW Width of the button
+     * @param fltH Height of the button
      * @param label Text displayed on the button
      */
-    Button(float x, float y, float w, float h, String label) {
-      this.x = x;
-      this.y = y;
-      this.w = w;
-      this.h = h;
+    Button(float fltX, float fltY, float fltW, float fltH, String label) {
+      this.fltX = fltX;
+      this.fltY = fltY;
+      this.fltW = fltW;
+      this.fltH = fltH;
       this.label = label;
       
     }
@@ -50,12 +51,12 @@ public class Sketch2 extends PApplet {
         fill(0, 102, 153); // Default color
       }
       // Drawing button rectangle
-      rect(x, y, w, h);
+      rect(fltX, fltY, fltW, fltH);
       fill(255);
 
       // Writing button text
       textAlign(CENTER, CENTER);
-      text(label, x + w / 2, y + h / 2);
+      text(label, fltX + fltW / 2, fltY + fltH / 2);
     }
 
     /**
@@ -63,7 +64,7 @@ public class Sketch2 extends PApplet {
      * @return returns true if the cursor clicks the button. Else, it remains false
      */
     public boolean isOver() {
-      return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+      return mouseX >= fltX && mouseX <= fltX + fltW && mouseY >= fltY && mouseY <= fltY + fltH;
     }
   }
 
@@ -98,7 +99,7 @@ public class Sketch2 extends PApplet {
   int intExclamationX, intExclamationY;
   int intExclamationW = 30;
   int intExclamationH = 50;
-  float fltAlpha;
+  float fltExclamAlpha;
   float fltFadeSpeed = 1.5f;
 
   float fltElevatorAlpha = 0f;
@@ -119,7 +120,7 @@ public class Sketch2 extends PApplet {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
-    infoButton = new Button(width - 60, 10, 50, 50, "Gear");
+    infoButton = new Button(width - 60, 10, 50, 50, "Info");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
     playerForward = loadImage("images/NerdFace.png"); 
     playerBackward = loadImage("images/NerdFaceBack.png"); 
@@ -191,7 +192,6 @@ public class Sketch2 extends PApplet {
     else if (intScreenNumber == 10) {
       informationScreen();
     }
-    
   }
   
   /**
@@ -201,12 +201,11 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     fill(255);
     textSize(32);
+
     text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
     startButton.isOver = startButton.isOver();
     startButton.display();
-    
   }
-
 
   public void gameScreen1() {
     background(173, 210, 255);
@@ -232,6 +231,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the second game screen (WORDLE CONNECTIONS)
    */
+  
   public void gameScreen2() {
     
     background(210, 255, 173);
@@ -254,9 +254,11 @@ public class Sketch2 extends PApplet {
       drawLosePopup();
     }
   }
+
   /**
    * Displays the third game screen
    */
+
   public void gameScreen3() {
     background(255, 210, 173);
     //drawWordleGrid();
@@ -277,13 +279,12 @@ public class Sketch2 extends PApplet {
     if (showLosePopup) {
       drawLosePopup();
     }
-  }
-
-  
+  }  
 
   /**
-   * Displays the first environment screen (FLOOR 3)
+   * Displays the first BOSS office screen
    */
+
   public void settingScreen1() {
     background(200, 100, 100);
     // Setting1 background generation
@@ -295,13 +296,21 @@ public class Sketch2 extends PApplet {
 
     playerMovement();
     
+    if (isCollidingElevator()){
+      intScreenNumber = 2;
+    }
+
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
   }
 
   /**
    * Displays the second environment screen (FLOOR 2)
    */
+
   public void settingScreen2() {
     background(200, 100, 100);
     // Setting1 background generation
@@ -328,16 +337,30 @@ public class Sketch2 extends PApplet {
       
     }
     if (isScreenFaded){
+      resetSetting();
       intScreenNumber = 6;
+      
     }
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
   }
 
   /**
    * Displays the third environment screen (FLOOR 1)
    */
   public void settingScreen3() {
+    intExclamationX = 100;
+    intExclamationY = 100;
+    if (isGameVictory){
+      image(setting5_2, 0, 0);
+    }
+    if (!isGameVictory){
+      image(setting5_1, 0, 0);
+      displayExclamMark(100, 100);
+    }
     background(100, 200, 100);
     fill(255);
     textAlign(CENTER);
@@ -346,6 +369,9 @@ public class Sketch2 extends PApplet {
     
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
   }
 
   /**
@@ -360,6 +386,9 @@ public class Sketch2 extends PApplet {
     
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
   }
   public void transferScreen2() {
     background(100, 100, 200);
@@ -370,6 +399,9 @@ public class Sketch2 extends PApplet {
     
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
   }
 
   /**
@@ -489,13 +521,16 @@ public class Sketch2 extends PApplet {
    */
   public void mousePressed() {
 
-    // Toggling Intro, Setting1, Game1 screens
+
+    // Intro home button
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
         resetSetting();
-        intScreenNumber = 4; // Change to Setting1
+        intScreenNumber = 1; // Change to Setting1
       } 
     } 
+
+    // Setting 2 Buttons
     if (intScreenNumber == 4 && isSwitchButtonDisplayed) {
       if (gameButton.isOver()) {
         initializeGame2();
@@ -504,6 +539,8 @@ public class Sketch2 extends PApplet {
       } 
       
     } 
+
+    // Game 2 buttons
     if (intScreenNumber == 5) {
       if (backButton.isOver() && showWinPopup) {
         // Upon game1 win, the user is directed back to the setting 1 screen
@@ -517,29 +554,20 @@ public class Sketch2 extends PApplet {
       } 
     }
     // if (intScreenNumber == 1) {
-    //   if (gameButton.isOver()) {
+    //   if (gameButton.isOver()){
     //     // initializeGame();
     //     intScreenNumber = 2; // Change to Setting1
     //   } 
     // } 
-    // else if (intScreenNumber >= 2 && intScreenNumber <= 6) {
-    //   if (infoButton.isOver()) {
-    //     showPopup = true;
-    //   } else if (showPopup && backButton.isOver()) {
-    //     showPopup = false;
-    //   }
-    //   if ((showWinPopup || showLosePopup) && backButton.isOver()) {
-    //     intScreenNumber = 0; // Change to Intro Screen
-    //     initializeGame();
-    //     showWinPopup = false;
-    //     showLosePopup = false;
-    //   }
-    // } 
-    // else if (intScreenNumber == 1 || intScreenNumber == 7 || intScreenNumber == 8) {
-    //   if (backButton.isOver()) {
-    //     intScreenNumber = 0; // Change to Intro Screen
-    //   }
-    // }
+    if (intScreenNumber > 0 && intScreenNumber < 9) {
+      if (infoButton.isOver()) {
+        showPopup = true;
+      } 
+      else if (showPopup && backButton.isOver()) {
+        showPopup = false;
+      }
+    } 
+    
   }
 
   /**
@@ -550,13 +578,16 @@ public class Sketch2 extends PApplet {
     if (keyCode == UP) {
       isUpPressed = false;
     }
-    else if (keyCode == DOWN) {
+
+    if (keyCode == DOWN) {
       isDownPressed = false;
     }
-    else if (keyCode == LEFT) {
+
+    if (keyCode == LEFT) {
       isLeftPressed = false;
     }
-    else if (keyCode == RIGHT) {
+
+    if (keyCode == RIGHT) {
       isRightPressed = false;
     }
   }
@@ -564,15 +595,18 @@ public class Sketch2 extends PApplet {
    * Handles key pressed events.
    */
   public void keyPressed() {
-    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver) {
+    if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver){
       if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX)) {
         if (strGuesses[intCurrentRow] == null) {
           strGuesses[intCurrentRow] = "";
         }
         strGuesses[intCurrentRow] += Character.toUpperCase(key);
-      } else if (key == BACKSPACE && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() > 0) {
+      } 
+      else if (key == BACKSPACE && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() > 0) {
         strGuesses[intCurrentRow] = strGuesses[intCurrentRow].substring(0, strGuesses[intCurrentRow].length() - 1);
-      } else if (key == ENTER && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() == intGridSizeX) {
+      }
+
+      else if (key == ENTER && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() == intGridSizeX) {
         checkGuess();
         intCurrentRow++;
       }
@@ -581,13 +615,13 @@ public class Sketch2 extends PApplet {
     if (keyCode == UP) {
       isUpPressed = true;
     }
-    else if (keyCode == DOWN) {
+    if (keyCode == DOWN) {
       isDownPressed = true;
     }
-    else if (keyCode == LEFT) {
+    if (keyCode == LEFT) {
       isLeftPressed = true;
     }
-    else if (keyCode == RIGHT) {
+    if (keyCode == RIGHT) {
       isRightPressed = true;
     }
   }
@@ -625,19 +659,19 @@ public class Sketch2 extends PApplet {
    * Player movement and sprite display
    */
   public void playerMovement(){
-    if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !isCollidingElevator()){
+    if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
       intPlayerY -=3;      
       currentPlayerState = playerBackward;
     }
-    if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !isCollidingElevator()){
-      intPlayerY += 3;    
+    if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
+      intPlayerY += 3;
       currentPlayerState = playerForward;
     }
-    if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !isCollidingElevator()){
+    if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
       intPlayerX -= 4;
       currentPlayerState = playerLeft;
     }
-    if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !isCollidingElevator()){
+    if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
       intPlayerX += 4;
       currentPlayerState = playerRight;
     }
@@ -653,23 +687,25 @@ public class Sketch2 extends PApplet {
     intPlayerX = 300;
     intPlayerY = 300;
     currentPlayerState = playerForward;
-    fltAlpha = 0;
+    fltExclamAlpha = 0;
     isSwitchButtonDisplayed = false;
     isScreenFaded = false;
+    isGameVictory = false;
+    isGameOver = false;
   }
 
   public void displayExclamMark(float intX, float initialY){
     
 
-    if (fltAlpha < 255.0) {
-      fltAlpha += fltFadeSpeed;
+    if (fltExclamAlpha < 255.0) {
+      fltExclamAlpha += fltFadeSpeed;
     }
   
     // Constrain alpha to not exceed 255
-    fltAlpha = constrain((int) fltAlpha, 0, 255);
+    fltExclamAlpha = constrain((int) fltExclamAlpha, 0, 255);
   
     // Apply the tint with the current alpha value
-    tint(255, fltAlpha);
+    tint(255, fltExclamAlpha);
     float bobbingY = initialY + 20 * sin((float)(TWO_PI * 0.4 * millis() / 1000.0));
     image(exclamationMark, intX, bobbingY);
     noTint();
