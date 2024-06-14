@@ -123,10 +123,6 @@ public class Sketch2 extends PApplet {
   int intStartTime;
   String strTime;
 
-  public static void main(String[] args) {
-    PApplet.main("Sketch2");
-  }
-
   public void settings() {
     // size of screen
     size(800, 600);
@@ -206,7 +202,7 @@ public class Sketch2 extends PApplet {
     else if (intScreenNumber == 9) {
       endingScreen();
     } 
-    // ELAPSED TIME
+    // ELAPSED TIME CLOCK
     if (intScreenNumber != 0 && intScreenNumber != 9){
       displayElapsedTime();
     }
