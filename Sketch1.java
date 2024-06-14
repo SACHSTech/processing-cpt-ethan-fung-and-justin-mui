@@ -223,7 +223,7 @@ public class Sketch1 extends PApplet {
     // Toggling Intro, Setting1, Game1 screens
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
-        resetSetting();
+        resetSettingBottom();
         intScreenNumber = 1; // Change to Setting1
       } 
     } 
@@ -335,14 +335,12 @@ public class Sketch1 extends PApplet {
   }
 
   public void BossRoomScreen(){
-    background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
     playerMovementBossRoom();
   }
 
   public void PlankWalkScreen(){
-    background(200, 100, 100);
     // Setting1 background generation
     image(setting2, 0, 0);
 
@@ -363,6 +361,9 @@ public class Sketch1 extends PApplet {
   }
 
   public void TopFloorScreen(){
+    image(setting3, 0, 0);
+
+
 
   }
 
@@ -489,7 +490,7 @@ public void playerMovementBossRoom(){
 
     if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
       intScreenNumber = 2; // Change to PlankWalk screen
-      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+      resetSettingBottom();; // Reset player position to the bottom of the new screen
     }
   }
   if (isDownPressed && intPlayerY <= height - 10 - 80){
@@ -513,28 +514,28 @@ public void playerMovementPlankWalk(){
   
   //Death barriers (Left block, right block, top death, middle death, bottom death)
   if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return; // Exit the method to prevent further movement
   }
 
   //First Dissapearing Plank
   if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
     plank1Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   
   }
   //Second Dissapearing Plank
   if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
     plank2Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   }
 
   //Third Dissapearing Plank
   if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
     plank3Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   }
   
@@ -544,7 +545,7 @@ public void playerMovementPlankWalk(){
 
     if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
       intScreenNumber = 3; // Change to Top Floor screen
-      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+      resetSettingBottom();; // Reset player position to the bottom of the new screen
     }
   }
   if (isDownPressed && intPlayerY <= height - 10 - 80){
@@ -572,9 +573,9 @@ public void resetSetting(){
   isSwitchButtonDisplayed = false;
 }
 
-public void resetSettingPlankWalk(){
+public void resetSettingBottom(){
   
-  intPlayerX = 400;
+  intPlayerX = 400 - 25;
   intPlayerY = 520;
   currentPlayerState = playerForward;
   fltAlpha = 0;
