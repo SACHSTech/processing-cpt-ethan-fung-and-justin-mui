@@ -128,7 +128,7 @@ public class Sketch2 extends PApplet {
   public void setup() {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
-    gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
+    gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "Info");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
     playerForward = loadImage("images/NerdFace.png"); 
@@ -308,15 +308,8 @@ public class Sketch2 extends PApplet {
     background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
-    fill(255);
-    textAlign(CENTER);
-    textSize(32);
-    text("Settings Screen 1", width / 2, height / 2);
 
     playerMovement();
-    
-    
-
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
 
@@ -582,8 +575,8 @@ public class Sketch2 extends PApplet {
     textAlign(CENTER);
     textSize(24);
     text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
-    text("It takes one of extreme intellect to join the New York Times", width / 2, height / 2);
-    text("It takes one of extreme optimism to leave the New York Times", width / 2, height / 2 + 50);
+    text("Inteligence is needed to join the New York Times", width / 2, height / 2);
+    text("Genius is needed to leave the New York Times", width / 2, height / 2 + 50);
     gameButton.isOver = gameButton.isOver();
     gameButton.display();
   }
