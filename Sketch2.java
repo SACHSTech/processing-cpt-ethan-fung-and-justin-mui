@@ -59,7 +59,6 @@ public class Sketch2 extends PApplet {
 
       // Writing button text
       textAlign(CENTER, CENTER);
-      textSize(26);
       text(label, fltX + fltW / 2, fltY + fltH / 2);
     }
 
@@ -81,7 +80,7 @@ public class Sketch2 extends PApplet {
 
   // BACKGROUND IMAGE VARIABLES
   boolean isSwitchButtonDisplayed;
-  PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
+  PImage setting0, setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
   boolean isScreenFaded;
 
   // WORDLE GAME VARIABLES
@@ -140,8 +139,9 @@ public class Sketch2 extends PApplet {
 
   public void setup() {
     // initializing UI buttons
-    textSize(32);
-    startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
+    textSize(50);
+    startButton = new Button(width / 2 - 80, height / 2 + 60, 200, 50, "Start Game");
+    textSize(26);
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
@@ -153,6 +153,7 @@ public class Sketch2 extends PApplet {
     playerRight = loadImage("images/NerdFaceRight.png"); 
     
     // initializing background images
+    setting0 = loadImage("images/IntroScreen.png");
     setting1 = loadImage("images/BossRoom.png");
     setting2 = loadImage("images/PlankWalk.png");
     setting3 = loadImage("images/TopFloor.png");
@@ -215,17 +216,14 @@ public class Sketch2 extends PApplet {
       displayElapsedTime();
     }
   }
-  
+
   /**
    * Displays the start home screen
    */
   public void introScreen(){
-    // Display title of game
-    textAlign(CENTER);
-    fill(255);
-    textSize(32);
-    text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
-
+    // Displays intro screen
+    image(setting0, 0, 0);
+    
     // start game button
     startButton.isOver = startButton.isOver();
     startButton.display();
@@ -1019,7 +1017,4 @@ public class Sketch2 extends PApplet {
     text("Elapsed Time: ", 10, 10);
     text(strTime, 10, 30);
   }
-  
 }
-
-
