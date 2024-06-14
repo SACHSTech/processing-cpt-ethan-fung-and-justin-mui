@@ -116,6 +116,7 @@ public class Sketch2 extends PApplet {
   boolean isCollidingDesk;
 
   int intStartTime;
+  String strTime;
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
@@ -200,11 +201,11 @@ public class Sketch2 extends PApplet {
     else if (intScreenNumber == 10) {
       informationScreen();
     }
-
     // ELAPSED TIME
-    if (intScreenNumber != 0){
+    if (intScreenNumber != 0 && intScreenNumber != 9){
       displayElapsedTime();
     }
+    
   }
   
   /**
@@ -459,7 +460,8 @@ public class Sketch2 extends PApplet {
     fill(255);
     textAlign(CENTER);
     textSize(32);
-    text("Ending Screen", width / 2, height / 2);
+    text("Congrats, you got out in: " + strTime, width / 2, height / 2);
+    text("Unfortunately, you are legally contracted to go to work tomorrow " + strTime, width / 2, height / 2 + 30);
   }
 
   /**
@@ -473,6 +475,11 @@ public class Sketch2 extends PApplet {
     textSize(24);
     text("Information Screen", width / 2, height / 2 - 50);
     text("This is the information screen.", width / 2, height / 2);
+
+    if (intScreenNumber == 1){
+      
+    }
+
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
@@ -860,7 +867,7 @@ public class Sketch2 extends PApplet {
     int intMinutes = (intElapsedTime / (1000 * 60)) % 60;
     int intHours = (intElapsedTime / (1000 * 60 * 60)) % 24;
   
-    String strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
+    strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
   
     fill(255); // Set the text color
     textSize(20);
