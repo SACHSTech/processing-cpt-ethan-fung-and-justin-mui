@@ -406,7 +406,7 @@ public class Sketch1 extends PApplet {
     //Writes the current message to the top of the screen
     textSize(20);
     fill(0);
-    text(message, 50, 30);
+    text(message, 100, 30);
 
     //Display lives
     textSize(20);
