@@ -114,6 +114,8 @@ public class Sketch2 extends PApplet {
   int intDeskWidth = 175; // Width of the hitbox
   int intDeskHeight = 105; // Height of the hitbox
   boolean isCollidingDesk;
+
+  int intStartTime;
   public static void main(String[] args) {
     PApplet.main("Sketch2");
   }
@@ -145,7 +147,7 @@ public class Sketch2 extends PApplet {
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
 
-
+    
     
 
   }
@@ -197,6 +199,11 @@ public class Sketch2 extends PApplet {
     // INFO SCREEN
     else if (intScreenNumber == 10) {
       informationScreen();
+    }
+
+    // ELAPSED TIME
+    if (intScreenNumber != 0){
+      displayElapsedTime();
     }
   }
   
@@ -565,7 +572,7 @@ public class Sketch2 extends PApplet {
     // Intro home button
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
-        
+        intStartTime = millis();
         intScreenNumber = 8; // Change to Setting1 (Debug to transfer1)
         resetSetting();
       } 
@@ -845,6 +852,23 @@ public class Sketch2 extends PApplet {
     }
 
   }
+  public void displayElapsedTime() {
+    int intCurrentTime = millis();
+    int intElapsedTime = intCurrentTime - intStartTime;
+  
+    int intSeconds = (intElapsedTime / 1000) % 60;
+    int intMinutes = (intElapsedTime / (1000 * 60)) % 60;
+    int intHours = (intElapsedTime / (1000 * 60 * 60)) % 24;
+  
+    String strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
+  
+    fill(255); // Set the text color
+    textSize(20);
+    textAlign(LEFT, TOP);
+    text("Elapsed Time: ", 10, 10);
+    text(strTime, 10, 30);
+  }
+  
 }
 
 
