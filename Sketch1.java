@@ -85,7 +85,7 @@ public class Sketch1 extends PApplet {
   boolean plank2Show = true;
   boolean plank3Show = true;
 
-  //Variables for Wordle
+  //---------VARIABLES FOR WORDLE--------------
   int intGridSizeX = 5;
   int intGridSizeY = 6;
   String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
@@ -96,7 +96,7 @@ public class Sketch1 extends PApplet {
   boolean isGameVictory = false;
   boolean isSettingGameChanged = false;
 
-  //Variables for Connections
+  //----------VARIABLES FOR CONNECTIONS------------
   String[][] incorrectGroups;
   String[][] correctGroups;
 
@@ -219,6 +219,14 @@ public class Sketch1 extends PApplet {
    * Called when the mouse is pressed. Checks words selected and button clicks.
    */
   public void mousePressed() {
+
+    // Toggling Intro, Setting1, Game1 screens
+    if (intScreenNumber == 0) {
+      if (startButton.isOver()) {
+        resetSetting();
+        intScreenNumber = 1; // Change to Setting1
+      } 
+    } 
 
     //Mouse press check for connections
     if (intScreenNumber == 8){
@@ -503,27 +511,28 @@ public void playerMovementBossRoom(){
 
 public void playerMovementPlankWalk(){
   
-  if ((intPlayerX < 278 - 20 && intPlayerY < 506 - 50)|| (intPlayerX > width - 265 - 20 && intPlayerY < 506 - 50)) {
+  //Death barriers (Left block, right block, top death, middle death, bottom death)
+  if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
     resetSettingPlankWalk();
     return; // Exit the method to prevent further movement
   }
 
   //First Dissapearing Plank
-  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 413 + 40 && intPlayerY < 413 + 116 - 50){
+  if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
     plank1Show = false;
     resetSettingPlankWalk();
     return;
   
   }
   //Second Dissapearing Plank
-  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 221 + 40 && intPlayerY < 221 + 116 - 50){
+  if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
     plank2Show = false;
     resetSettingPlankWalk();
     return;
   }
 
   //Third Dissapearing Plank
-  if (intPlayerX > 278 - 20 && intPlayerX < 278 + 80 && intPlayerY > 43 + 40  && intPlayerY < 43 + 116 - 50){
+  if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
     plank3Show = false;
     resetSettingPlankWalk();
     return;
@@ -533,7 +542,7 @@ public void playerMovementPlankWalk(){
     intPlayerY -=3;      
     currentPlayerState = playerBackward;
 
-    if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
+    if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
       intScreenNumber = 3; // Change to Top Floor screen
       resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
     }
