@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -82,6 +85,16 @@ public class Sketch extends PApplet {
   boolean isGameOver;
   boolean isGameVictory = false;
 
+  // INITIALIZING CONNECTIONS GAME VARIABLES
+  String[][] incorrectGroups;
+  String[][] correctGroups;
+
+  ArrayList<String> selectedWords = new ArrayList<>();
+  boolean[][] selectedBoxes = new boolean[4][4];
+  boolean[][] solvedGroups = new boolean[4][4];
+  String message = "";
+  int lives = 4;
+
   // INITIALIZING PLAYER CHARACTER GENERATION VARIABLES
   int intPlayerX, intPlayerY;
   
@@ -150,6 +163,36 @@ public class Sketch extends PApplet {
     // initializing exclamation mark image
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
+
+    // Initializes and randomizes connection game answers
+    if (random(1) < 0.5) {
+      incorrectGroups = new String[][] {
+        {"TAPE", "GOOD", "RIVET", "PETALS"},
+        {"PLEATS", "FILM", "ENGROSS", "WOMAN"},
+        {"RECORD", "STAPLE", "SHOOT", "PENNY"},
+        {"HOLD", "ABSORB", "PLEASE", "PASTEL"}
+      };
+    
+      correctGroups = new String[][] {
+        {"ABSORB", "ENGROSS", "HOLD", "RIVET", "Grab one’s attention (EASY)"},
+        {"FILM", "RECORD", "SHOOT", "TAPE", "Document with video (MODERATE)"},
+        {"PASTEL", "PETALS", "PLEATS", "STAPLE", "Anagrams (HARD)"},
+        {"GOOD", "PENNY", "PLEASE", "WOMAN", "Pretty ____ (EXTREMELY HARD)"}
+      };
+  } else {
+      incorrectGroups = new String[][] {
+          {"SICK", "KIND", "DRIFT", "TENDER"},
+          {"STYLE", "RING", "NICE", "SWEET"},
+          {"POINT", "SORT", "COOL", "WING"},
+          {"MESSAGE", "TYPE", "STICK", "IDEA"}
+      };
+      correctGroups = new String[][] {
+          {"COOL", "NICE", "SICK", "SWEET", "Awesome! (EASY)"},
+          {"KIND", "SORT", "STYLE", "TYPE", "Variety (MODERATE)"},
+          {"DRIFT", "IDEA", "MESSAGE", "POINT", "Gist (HARD)"},
+          {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally (EXTREMELY HARD)"}
+      };
+    }
   }
 
   public void draw() {
@@ -200,7 +243,7 @@ public class Sketch extends PApplet {
       displayElapsedTime();
     }
   }
-
+  // ----------------INTRO SCREEN------------------------
   /**
    * Displays the start home screen
    */
@@ -212,6 +255,7 @@ public class Sketch extends PApplet {
     startButton.isOver = startButton.isOver();
     startButton.display();
   }
+  // ----------------GAME SCREENS------------------------
   /**
    * Displays Game 1 Screen (Walk the Plank)
    */
@@ -304,21 +348,18 @@ public class Sketch extends PApplet {
       drawLosePopup();
     }
   }  
+  // ----------------SETTING SCREENS------------------------
   /**
    * Displays setting 1 screen (BOSS office)
    */
-
   public void settingScreen1() {
     // Setting1 background generation
     image(setting1, 0, 0);
-
     // player movement is called here
     playerMovement();
-
     // extra info button
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
-
     // extra info pop-up
     if (showPopup) {
       drawPopup();
@@ -332,11 +373,9 @@ public class Sketch extends PApplet {
       intScreenNumber = 2; // GAME 1
     }
   }
-
   /**
    * Displays setting 2 screen (Floor 2 office)
    */
-
   public void settingScreen2() {
     // Setting 2 background generation + exclamation mark generation
     intExclamationX = 440;
@@ -415,7 +454,7 @@ public class Sketch extends PApplet {
       drawPopup();
     }
   }
-
+  // ----------------TRANSFER SCREENS------------------------
   /**
    * Displays transfer 1 screen (top floor office)
    */
@@ -488,6 +527,7 @@ public class Sketch extends PApplet {
     // Play Again button
 
   }
+  // ----------------POP-UP SCREENS------------------------
   /**
    * Draws a popup window with scene-specific information to help guide the player
    */
@@ -602,7 +642,7 @@ public class Sketch extends PApplet {
     gameButton.isOver = gameButton.isOver();
     gameButton.display();
   }
-
+  // ----------------WORDLE METHODS------------------------
   /**
    * Draws the Wordle-like grid and handles Game2 logic.
    */
@@ -634,6 +674,149 @@ public class Sketch extends PApplet {
         }
       }
     }
+  }
+  // ----------------CONNECTIONS METHODS------------------------
+  /**
+   * Draws the Connections Game grid and handles Game 3 logic.
+   */
+  public void ConnectionsGameScreen(){
+    background(255); 
+    int intWordColumn = 0;
+
+    // Draws out boxes in a 4x4 grid with text in each of them. Depending on the status of the box, completed, selected, unselected, it will have a different colour
+    for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
+      int intWordRow = 0;
+      for (int rectRow = 40; rectRow < 600; rectRow += 140) {
+        if (solvedGroups[intWordColumn][intWordRow]) {
+          fill(200); 
+        } else if (selectedBoxes[intWordColumn][intWordRow]) {
+          fill(0, 255, 0); 
+        } else {
+          fill(255); 
+        }
+        rect(rectRow, rectColumn, 100, 100);
+        textSize(20);
+        fill(0);
+        text(incorrectGroups[intWordColumn][intWordRow], 50 + rectRow, 50 + rectColumn);
+        intWordRow++;
+      }
+      intWordColumn++;
+    }
+
+    // Writes the current message to the top of the screen
+    textSize(20);
+    fill(0);
+    text(message, 100, 30);
+
+    // Display lives
+    textSize(20);
+    fill(0);
+    text("Lives left: " + lives, width - 150, 30);
+
+    if (isGameOver) {
+      // Show game over screen and restart button
+      drawLosePopup();
+    
+    } else if (isGameVictory) {
+      // Show you won screen and next game button
+      drawWinPopup();
+    }
+  }
+  /**
+   * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
+   */
+  public void checkSelectedWords() {
+    //Checks that 4 words are selected
+    if (selectedWords.size() != 4) {
+      message = "You must select exactly 4 words.";
+      return;
+    }
+
+    for (int i = 0; i < correctGroups.length; i++) {
+      String[] correctGroup = Arrays.copyOfRange(correctGroups[i], 0, 4);
+      if (selectedWords.containsAll(Arrays.asList(correctGroup))) {
+        // Mark the solved group
+        for (int j = 0; j < 4; j++) {
+          int index = findWordIndex(correctGroups[i][j]);
+          if (index != -1) {
+            int row = index / 4;
+            int col = index % 4;
+            solvedGroups[row][col] = true;
+          }
+        }
+        message = "You solved the group: " + correctGroups[i][4];
+        selectedWords.clear();
+        if (checkIfGameWon()) {
+          isGameVictory = true;
+        }
+        return;
+      }
+    }
+
+    //If the correctGroup was not found, checks for one word away, and if not then just removes a life
+    boolean correctGroupFound = false;
+    if (!correctGroupFound) {
+      if (checkIfOneWordAway()) {
+        message = "One word away...";
+        lives--;
+        if (lives <= 0) {
+          isGameOver = true;
+        }
+      } else {
+        message = "Selected words are incorrect.";
+        lives--;
+        if (lives <= 0) {
+          isGameOver = true;
+        }
+      }
+    }
+  }
+  /**
+   * Checks if the selected words are one word away from forming a correct group.
+   * @return true if three out of four words are correct and belong to the same category, false otherwise
+   */
+  public boolean checkIfOneWordAway() {
+    for (int i = 0; i < correctGroups.length; i++) {
+      int matchCount = 0;
+      for (int j = 0; j < 4; j++) {
+        if (selectedWords.contains(correctGroups[i][j])) {
+          matchCount++;
+        }
+      }
+      if (matchCount == 3) {
+        return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * Finds the index of a given word in the incorrectGroups array.
+   * @param word the word to find
+   * @return the index of the word, or -1 if not found
+   */
+  public int findWordIndex(String word) {
+    for (int i = 0; i < incorrectGroups.length; i++) {
+      for (int j = 0; j < incorrectGroups[i].length; j++) {
+        if (incorrectGroups[i][j].equals(word)) {
+          return i * 4 + j;
+        }
+      }
+    }
+    return -1;
+  }
+  /**
+   * Checks if all groups are solved and will make the game end if it has
+   * @return true if the game is won, false otherwise
+   */
+  public boolean checkIfGameWon() {
+    for (int i = 0; i < solvedGroups.length; i++) {
+      for (int j = 0; j < solvedGroups[i].length; j++) {
+        if (!solvedGroups[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
   /**
    * Handles mouse pressed events
@@ -696,7 +879,36 @@ public class Sketch extends PApplet {
         isSwitchButtonDisplayed = false;
       } 
     } 
+    // Mouse press check for connections
+    if (intScreenNumber == 8){
 
+      // Selects and deselects boxes
+      int intWordColumn = 0;
+      for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
+        int intWordRow = 0;
+        for (int rectRow = 40; rectRow < 600; rectRow += 140) {
+          if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
+            String word = incorrectGroups[intWordColumn][intWordRow];
+            if (solvedGroups[intWordColumn][intWordRow]) {
+              // Do nothing if the group is solved
+            } else if (selectedBoxes[intWordColumn][intWordRow]) {
+              // Deselect the box
+              selectedBoxes[intWordColumn][intWordRow] = false;
+              selectedWords.remove(word);
+            } else {
+              // Select the box if less than 4 are selected
+              if (selectedWords.size() < 4) {
+                selectedBoxes[intWordColumn][intWordRow] = true;
+                selectedWords.add(word);
+              }
+            }
+            return; 
+          }
+          intWordRow++;
+        }
+        intWordColumn++;
+      }
+    }
     // Game 3 Buttons
     if (intScreenNumber == 7) {
       // Upon game 3 win, the user is directed back to the setting 3 screen
@@ -768,6 +980,13 @@ public class Sketch extends PApplet {
         intCurrentRow++;
       }
     } 
+    // Game 3 Inputs
+    //Key press check for connections
+    if (intScreenNumber == 8){
+      if (key == ENTER) {
+        checkSelectedWords();
+      }
+    }
     // Player movement begins if key is held down
     if (keyCode == UP) {
       isUpPressed = true;
@@ -810,6 +1029,26 @@ public class Sketch extends PApplet {
     // Selects target answer randomly from string list
     strTargetWord = strWordList[(int) (random(strWordList.length))]; // Randomly choose a target word
     // println("Target Word: " + strTargetWord); // For debugging
+    // resetting all pop-ups
+    showLosePopup = false;
+    showWinPopup = false;
+    showPopup = false;
+    // initializing text size
+    textSize(32);
+  }
+  /**
+   * Initializes Game 2 (WORDLE)
+   */
+  public void initializeGame3() {
+    // initializing variables
+    isGameOver = false;
+    isGameVictory = false;
+    selectedWords.clear();
+    selectedBoxes = new boolean[4][4];
+    solvedGroups = new boolean[4][4];
+    message = "";
+    lives = 4;
+    
     // resetting all pop-ups
     showLosePopup = false;
     showWinPopup = false;
