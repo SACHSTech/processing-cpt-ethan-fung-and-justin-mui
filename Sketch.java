@@ -648,9 +648,16 @@ public class Sketch extends PApplet {
     fill(255);
     textAlign(CENTER);
     textSize(24);
-    text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
-    text("Inteligence is needed to join the New York Times", width / 2, height / 2);
-    text("Genius is needed to leave the New York Times", width / 2, height / 2 + 50);
+    if (intScreenNumber == 4){
+      text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
+      text("Inteligence is needed to join the New York Times", width / 2, height / 2);
+      text("Genius is needed to leave the New York Times", width / 2, height / 2 + 50);
+    }
+    else if (intScreenNumber == 6){
+      text("Solve the Connections puzzle to Unlock the Elevator", width / 2, height / 2 - 50);
+      text("'Know the enemy, know yourself;", width / 2, height / 2);
+      text("victory will never be endangered' - Sun Tzu", width / 2, height / 2 + 50);
+    }
     // displays start mini-game button to escape pop-up and go to the "game" screen
     gameButton.isOver = gameButton.isOver();
     gameButton.display();
@@ -710,7 +717,7 @@ public class Sketch extends PApplet {
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
         fill(0);
-        text(incorrectGroups[intWordColumn][intWordRow], 50 + rectRow, 50 + rectColumn);
+        text(incorrectGroups[intWordColumn][intWordRow], 8 + rectRow, 31 + rectColumn);
         intWordRow++;
       }
       intWordColumn++;
@@ -724,7 +731,9 @@ public class Sketch extends PApplet {
     // Display lives
     textSize(20);
     fill(0);
-    text("Lives left: " + lives, width - 150, 30);
+    text("Lives left: " + lives, width - 130, 90);
+
+    // Check if game is won
     if (checkIfGameWon()) {
       isGameVictory = true;
       isGameOver = true;
@@ -1057,6 +1066,7 @@ public class Sketch extends PApplet {
    * Initializes Game 2 (WORDLE)
    */
   public void initializeGame3() {
+    
     // initializing variables
     isGameOver = false;
     isGameVictory = false;
@@ -1306,16 +1316,23 @@ public class Sketch extends PApplet {
     strTime = nf(intHours, 2) + "h:" + nf(intMinutes, 2) + "m:" + nf(intSeconds, 2) + "s";
   
     // initializes formatting of the string display
-    if (intScreenNumber == 5 || intScreenNumber == 1){
-      fill(0);
+    if (intScreenNumber == 5 || intScreenNumber == 1 || intScreenNumber == 7){
+      fill(0); // Set the text color to black
     }
     else{
-      fill(255); // Set the text color
+      fill(255); // Set the text color to white
     }
     textSize(20);
     textAlign(LEFT, TOP);
     // displays the time
-    text("Elapsed Time: ", 10, 10);
-    text(strTime, 10, 30);
+    if (intScreenNumber == 7){
+      text("Elapsed Time: ", 630, 500);
+      text(strTime, 630, 530);
+    }
+    else{
+      text("Elapsed Time: ", 10, 10);
+      text(strTime, 10, 30);
+    }
+    
   }
 }
