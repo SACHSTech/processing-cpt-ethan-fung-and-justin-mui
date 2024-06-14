@@ -84,7 +84,7 @@ public class Sketch extends PApplet {
   // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
-  String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
+  String[] strWordList = {"STARK"};//, "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
@@ -199,12 +199,15 @@ public class Sketch extends PApplet {
           {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally (EXTREMELY HARD)"}
       };
     }
-
+    
     // initializing wooden plank image
     woodenPlank = loadImage("images/WoodenPlank.png");
+    
   }
 
   public void draw() {
+    print(isGameOver + "!");
+    print(isGameVictory + "?");
     background(50);
     
     // HOME SCREEN
@@ -274,17 +277,24 @@ public class Sketch extends PApplet {
     if (plank1Show == true){
       image(woodenPlank, 455, 401);
     }
-
     if (plank2Show == true){
       image(woodenPlank,455, 221);
     }
-
     if (plank3Show == true){
       image(woodenPlank, 278, 43);
     }
-    
-    
     playerMovementPlankWalk();
+    // extra info button
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
+    if (showPopup) {
+      drawPopup();
+    }
+    // Plays scene change animation when player is in contact with skybridge door
+    if (intPlayerY <= 50) {
+      intScreenNumber = 3; // Transfer 1
+      resetSetting();
+    } 
   }
   /**
    * Displays Game 2 Screen (WORDLE)
@@ -330,11 +340,8 @@ public class Sketch extends PApplet {
 
   public void gameScreen3() {
     background(255, 210, 173);
-    //drawWordleGrid();
-
-    // Debugging only, will integrate third game in final sketch file
-    isGameOver = true;
-    isGameVictory = true;
+    ConnectionsGameScreen();
+    
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
     if (isGameOver && !isGameVictory) {
@@ -361,7 +368,7 @@ public class Sketch extends PApplet {
     // Setting1 background generation
     image(setting1, 0, 0);
     // player movement is called here
-    playerMovementBossRoom();
+    playerMovement();
 
     // extra info button
     infoButton.isOver = infoButton.isOver();
@@ -424,6 +431,7 @@ public class Sketch extends PApplet {
    * Displays setting 3 screen (floor 1 office)
    */
   public void settingScreen3() {
+    
     // Setting 3 background generation + exclamation mark generation
     intExclamationX = 440;
     intExclamationY = 280;
@@ -719,15 +727,11 @@ public class Sketch extends PApplet {
     textSize(20);
     fill(0);
     text("Lives left: " + lives, width - 150, 30);
-
-    if (isGameOver) {
-      // Show game over screen and restart button
-      drawLosePopup();
-    
-    } else if (isGameVictory) {
-      // Show you won screen and next game button
-      drawWinPopup();
+    if (checkIfGameWon()) {
+      isGameVictory = true;
+      isGameOver = true;
     }
+
   }
   /**
    * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
@@ -753,9 +757,7 @@ public class Sketch extends PApplet {
         }
         message = "You solved the group: " + correctGroups[i][4];
         selectedWords.clear();
-        if (checkIfGameWon()) {
-          isGameVictory = true;
-        }
+        
         return;
       }
     }
@@ -769,7 +771,8 @@ public class Sketch extends PApplet {
         if (lives <= 0) {
           isGameOver = true;
         }
-      } else {
+      } 
+      else {
         message = "Selected words are incorrect.";
         lives--;
         if (lives <= 0) {
@@ -883,12 +886,13 @@ public class Sketch extends PApplet {
     if (intScreenNumber == 6 && isSwitchButtonDisplayed) {
       // Takes user from Setting 3 to Game 3
       if (gameButton.isOver()) {
+        initializeGame3();
         intScreenNumber = 7; // Change to Game 3
         isSwitchButtonDisplayed = false;
       } 
     } 
     // Mouse press check for connections
-    if (intScreenNumber == 8){
+    if (intScreenNumber == 7){
 
       // Selects and deselects boxes
       int intWordColumn = 0;
@@ -926,7 +930,7 @@ public class Sketch extends PApplet {
       } 
       // Upon game 3 loss, the user is directed to play the game again!
       else if (backButton.isOver() && showLosePopup) {
-        // initializeGame2();
+        initializeGame3();
         showLosePopup = false;
       } 
     }
@@ -990,7 +994,7 @@ public class Sketch extends PApplet {
     } 
     // Game 3 Inputs
     //Key press check for connections
-    if (intScreenNumber == 8){
+    if (intScreenNumber == 7){
       if (key == ENTER) {
         checkSelectedWords();
       }
@@ -1135,7 +1139,7 @@ public class Sketch extends PApplet {
   
       if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
         intScreenNumber = 2; // Change to PlankWalk screen
-        resetSettingBottom();; // Reset player position to the bottom of the new screen
+        resetSetting(); // Reset player position to the bottom of the new screen
       }
     }
     if (isDownPressed && intPlayerY <= height - 10 - 80){
@@ -1157,53 +1161,32 @@ public class Sketch extends PApplet {
   
     //Death barriers (Left block, right block, top death, middle death, bottom death)
     if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
-      resetSettingBottom();
+      resetSetting();
       return; // Exit the method to prevent further movement
     }
   
     //First Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
       plank1Show = false;
-      resetSettingBottom();
+      resetSetting();
       return;
     
     }
     //Second Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
       plank2Show = false;
-      resetSettingBottom();
+      resetSetting();
       return;
     }
   
     //Third Dissapearing Plank
     if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
       plank3Show = false;
-      resetSettingBottom();
+      resetSetting();
       return;
     }
     
-    if (isUpPressed && (intPlayerY > 10 )){
-      intPlayerY -=3;      
-      currentPlayerState = playerBackward;
-  
-      if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
-        intScreenNumber = 3; // Change to Top Floor screen
-        resetSettingBottom();; // Reset player position to the bottom of the new screen
-      }
-    }
-    if (isDownPressed && intPlayerY <= height - 10 - 80){
-      intPlayerY += 3;    
-      currentPlayerState = playerForward;
-    }
-    if (isLeftPressed && intPlayerX >= 0 + 10){
-      intPlayerX -= 4;
-      currentPlayerState = playerLeft;
-    }
-    if (isRightPressed && intPlayerX <= width - 10 - 50){
-      intPlayerX += 4;
-      currentPlayerState = playerRight;
-    }
-    image(currentPlayerState, intPlayerX, intPlayerY);
+    playerMovement();
   
   }
 
@@ -1212,7 +1195,7 @@ public class Sketch extends PApplet {
    */
   public void resetSetting(){
     // Initializing starting player character position for specific scenes
-    if (intScreenNumber == 1 || intScreenNumber == 3){
+    if (intScreenNumber == 1 || intScreenNumber == 2 || intScreenNumber == 3){
       intPlayerX = 380;
       intPlayerY = 520;
     }
@@ -1230,13 +1213,6 @@ public class Sketch extends PApplet {
     isGameOver = false;
     isElevatorOpen = false;
 
-  }
-
-  public void resetSettingBottom(){
-  
-    intPlayerX = 400 - 25;
-    intPlayerY = 520;
-    currentPlayerState = playerForward;
   }
 
   /**
