@@ -59,6 +59,7 @@ public class Sketch2 extends PApplet {
 
       // Writing button text
       textAlign(CENTER, CENTER);
+      textSize(26);
       text(label, fltX + fltW / 2, fltY + fltH / 2);
     }
 
@@ -119,9 +120,9 @@ public class Sketch2 extends PApplet {
 
   // DESK VARIABLES
   int intDeskX = 315; // X position of the hitbox
-  int intDeskY = 260; // Y position of the hitbox
+  int intDeskY = 230; // Y position of the hitbox
   int intDeskWidth = 175; // Width of the hitbox
-  int intDeskHeight = 105; // Height of the hitbox
+  int intDeskHeight = 135; // Height of the hitbox
   boolean isCollidingDesk;
 
   // IN-GAME CLOCK VARIABLES
@@ -143,7 +144,7 @@ public class Sketch2 extends PApplet {
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
-    backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
+    backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
 
     // initializing player images
     playerForward = loadImage("images/NerdFace.png"); 
@@ -218,7 +219,6 @@ public class Sketch2 extends PApplet {
     if (intScreenNumber != 0 && intScreenNumber != 9){
       displayElapsedTime();
     }
-    
   }
   
   /**
@@ -281,6 +281,10 @@ public class Sketch2 extends PApplet {
     if (showLosePopup) {
       drawLosePopup();
     }
+    textSize(70);
+    fill(0);
+    textAlign(CENTER);
+    text("WORDLE", width / 2, 70);
   }
 
   /**
@@ -334,7 +338,7 @@ public class Sketch2 extends PApplet {
       fadeOutElevator();
     } 
     if (isScreenFaded){
-      intScreenNumber = 2;
+      intScreenNumber = 2; // GAME 1
     }
   }
 
@@ -343,7 +347,7 @@ public class Sketch2 extends PApplet {
    */
 
   public void settingScreen2() {
-    // Setting1 background generation
+    // Setting 2 background generation
     intExclamationX = 440;
     intExclamationY = 280;
     if (isGameVictory){
@@ -445,14 +449,8 @@ public class Sketch2 extends PApplet {
     }
   }
   public void transferScreen2() {
-    // print(intPlayerY);
-    image(setting6, 0, 0);
     
-    infoButton.isOver = infoButton.isOver();
-    infoButton.display();
-    if (showPopup) {
-      drawPopup();
-    }
+    image(setting6, 0, 0);
     if (intPlayerY >= 500 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       isElevatorOpen = true;
       fadeOutElevator();
@@ -460,8 +458,17 @@ public class Sketch2 extends PApplet {
     else{
       playerMovement();
     }
+
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
+
+    if (showPopup) {
+      drawPopup();
+    }
+    
     if (isScreenFaded){
       intScreenNumber = 9;
+      resetSetting();      
     }
   }
 
@@ -473,8 +480,12 @@ public class Sketch2 extends PApplet {
     fill(255);
     textAlign(CENTER);
     textSize(32);
-    text("Congrats, you got out in: " + strTime, width / 2, height / 2);
-    text("Unfortunately, you are still legally contracted to go to work tomorrow ", width / 2, height / 2 + 30);
+    text("Congrats, you got out in: " + strTime, width / 2, height / 2 - 130);
+    text("Unfortunately, you are still legally", width / 2, height / 2 - 60);
+    text("contracted to go to work tomorrow.", width / 2, height / 2 - 20);
+    text("Don't be late!", width / 2, height / 2 + 30);
+    
+
   }
 
   /**
@@ -699,12 +710,7 @@ public class Sketch2 extends PApplet {
         showLosePopup = false;
       } 
     }
-    // if (intScreenNumber == 1) {
-    //   if (gameButton.isOver()){
-    //     // initializeGame();
-    //     intScreenNumber = 2; // Change to Setting1
-    //   } 
-    // } 
+
     if (intScreenNumber > 0 && intScreenNumber < 9) {
       if (infoButton.isOver()) {
         showPopup = true;
@@ -905,7 +911,7 @@ public class Sketch2 extends PApplet {
    * @return true if colliding, false if not colliding
    */
   public boolean isCollidingElevator(){
-    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
+    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
       return true;
     } 
     else {
@@ -964,7 +970,7 @@ public class Sketch2 extends PApplet {
     int intHours = (intElapsedTime / (1000 * 60 * 60)) % 24;
   
     // formats the time in 24 hour clock display
-    strTime = nf(intHours, 2) + ":" + nf(intMinutes, 2) + ":" + nf(intSeconds, 2);
+    strTime = nf(intHours, 2) + "h:" + nf(intMinutes, 2) + "m:" + nf(intSeconds, 2) + "s";
   
     // initializes formatting of the string display
     if (intScreenNumber == 5 || intScreenNumber == 1){
