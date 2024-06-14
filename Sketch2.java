@@ -103,6 +103,7 @@ public class Sketch2 extends PApplet {
   float fltFadeSpeed = 1.5f;
 
   float fltElevatorAlpha = 0f;
+  boolean isElevatorOpen;
 
   boolean isSwitchButtonDisplayed;
   PImage setting1, setting2, setting3, setting4_1, setting4_2, setting5_1, setting5_2, setting6;
@@ -120,7 +121,7 @@ public class Sketch2 extends PApplet {
     textSize(32);
     startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
     gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
-    infoButton = new Button(width - 60, 10, 50, 50, "Info");
+    infoButton = new Button(width - 100, 10, 80, 50, "Info");
     backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
     playerForward = loadImage("images/NerdFace.png"); 
     playerBackward = loadImage("images/NerdFaceBack.png"); 
@@ -244,7 +245,7 @@ public class Sketch2 extends PApplet {
     if (isGameOver && isGameVictory) {
       showWinPopup = true;
     }
-    if (showPopup) {
+    if (showPopup && !showWinPopup && !showLosePopup) {
       drawPopup();
     }
     if (showWinPopup) {
@@ -318,6 +319,7 @@ public class Sketch2 extends PApplet {
     intExclamationY = 100;
     if (isGameVictory){
       image(setting4_2, 0, 0);
+      isElevatorOpen = true;
     }
     if (!isGameVictory){
       image(setting4_1, 0, 0);
@@ -337,9 +339,9 @@ public class Sketch2 extends PApplet {
       
     }
     if (isScreenFaded){
-      resetSetting();
-      intScreenNumber = 6;
       
+      intScreenNumber = 6;
+      resetSetting();
     }
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
@@ -361,11 +363,8 @@ public class Sketch2 extends PApplet {
       image(setting5_1, 0, 0);
       displayExclamMark(100, 100);
     }
-    background(100, 200, 100);
-    fill(255);
-    textAlign(CENTER);
-    textSize(32);
-    text("Settings Screen 2", width / 2, height / 2);
+    playerMovement();
+    
     
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
@@ -378,19 +377,28 @@ public class Sketch2 extends PApplet {
    * Displays the fourth environment screen (FLOOR 0)
    */
   public void transferScreen1() {
-    background(100, 100, 200);
-    fill(255);
-    textAlign(CENTER);
-    textSize(32);
-    text("Settings Screen 3", width / 2, height / 2);
+    isElevatorOpen = true;
+    image(setting3, 0, 0);
     
+    playerMovement();
     infoButton.isOver = infoButton.isOver();
     infoButton.display();
+
     if (showPopup) {
       drawPopup();
     }
+    if (isCollidingElevator()){
+      fadeOutElevator();
+      
+    }
+    if (isScreenFaded){
+      
+      intScreenNumber = 4;
+      resetSetting();
+    }
   }
   public void transferScreen2() {
+    
     background(100, 100, 200);
     fill(255);
     textAlign(CENTER);
@@ -525,8 +533,9 @@ public class Sketch2 extends PApplet {
     // Intro home button
     if (intScreenNumber == 0) {
       if (startButton.isOver()) {
+        
+        intScreenNumber = 3; // Change to Setting1 (Debug to transfer1)
         resetSetting();
-        intScreenNumber = 1; // Change to Setting1
       } 
     } 
 
@@ -596,7 +605,7 @@ public class Sketch2 extends PApplet {
    */
   public void keyPressed() {
     if (intScreenNumber >= 2 && intScreenNumber <= 6 && !isGameOver){
-      if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX)) {
+      if (key >= 'a' && key <= 'z' && (strGuesses[intCurrentRow] == null || strGuesses[intCurrentRow].length() < intGridSizeX) && !showPopup) {
         if (strGuesses[intCurrentRow] == null) {
           strGuesses[intCurrentRow] = "";
         }
@@ -659,22 +668,44 @@ public class Sketch2 extends PApplet {
    * Player movement and sprite display
    */
   public void playerMovement(){
-    if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
-      intPlayerY -=3;      
-      currentPlayerState = playerBackward;
+    if (isUpPressed && intPlayerY >= 0 + 40 && !isSwitchButtonDisplayed && !showPopup) {
+      if (isCollidingElevator() && isElevatorOpen) {
+        
+      } 
+      else {
+        intPlayerY -= 3;
+        currentPlayerState = playerBackward;
+      }
     }
-    if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
-      intPlayerY += 3;
-      currentPlayerState = playerForward;
+    
+    if (isDownPressed && intPlayerY <= height - 10 - 80 && !isSwitchButtonDisplayed && !showPopup) {
+      if (isCollidingElevator() && isElevatorOpen) {
+        // Additional logic for the elevator if needed
+      } 
+      else {
+        intPlayerY += 3;
+        currentPlayerState = playerForward;
+      }
     }
-    if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
-      intPlayerX -= 4;
-      currentPlayerState = playerLeft;
+    
+    if (isLeftPressed && intPlayerX >= 0 + 10 && !isSwitchButtonDisplayed && !showPopup) {
+      if (isCollidingElevator() && isElevatorOpen) {
+        // Additional logic for the elevator if needed
+      } else {
+        intPlayerX -= 4;
+        currentPlayerState = playerLeft;
+      }
     }
-    if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !isCollidingElevator() && !showPopup){
-      intPlayerX += 4;
-      currentPlayerState = playerRight;
+    
+    if (isRightPressed && intPlayerX <= width - 10 - 50 && !isSwitchButtonDisplayed && !showPopup) {
+      if (isCollidingElevator() && isElevatorOpen) {
+        // Additional logic for the elevator if needed
+      } else {
+        intPlayerX += 4;
+        currentPlayerState = playerRight;
+      }
     }
+    
     image(currentPlayerState, intPlayerX, intPlayerY);
     // fill(0, 255, 0);
     // ellipse(intPlayerX, intPlayerY, 50, 50);
@@ -683,15 +714,31 @@ public class Sketch2 extends PApplet {
    * Resets player to initial position on the setting screen upon switching of setting screens
    */
   public void resetSetting(){
+    if (intScreenNumber == 3){
+      intPlayerX = 400;
+      intPlayerY = 520;
+    }
+    if (intScreenNumber == 4){
+      intPlayerX = 400;
+      intPlayerY = 50;
+    }
+    if (intScreenNumber == 6){
+      intPlayerX = 400;
+      intPlayerY = 50;
+    }
+    // if (intScreenNumber == 4){
+    //   intPlayerX = 400;
+    //   intPlayerY = 50;
+    // }
     
-    intPlayerX = 300;
-    intPlayerY = 300;
     currentPlayerState = playerForward;
     fltExclamAlpha = 0;
+    fltElevatorAlpha = 0;
     isSwitchButtonDisplayed = false;
     isScreenFaded = false;
     isGameVictory = false;
     isGameOver = false;
+    isElevatorOpen = false;
   }
 
   public void displayExclamMark(float intX, float initialY){
@@ -721,7 +768,7 @@ public class Sketch2 extends PApplet {
     }
   }
   public boolean isCollidingElevator(){
-    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 20 && intPlayerX > (width / 2) - 20) {
+    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       return true;
     } 
     else {
@@ -730,7 +777,7 @@ public class Sketch2 extends PApplet {
   }
   public void fadeOutElevator(){
     if (fltElevatorAlpha < 255.0) {
-      fltElevatorAlpha += 0.5f;
+      fltElevatorAlpha += 1.5f;
       fill(0, fltElevatorAlpha);
       rect(0, 0, width, height);
       
@@ -739,7 +786,6 @@ public class Sketch2 extends PApplet {
       background(0); // Ensure the screen is fully black after 3 seconds
       isScreenFaded = true;
     }
-    
     
   }
 }
