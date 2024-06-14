@@ -96,11 +96,16 @@ public class Sketch extends PApplet {
   PImage currentPlayerState;
 
   PImage exclamationMark;
+  PImage woodenPlank;
   int intExclamationY;
   float fltAlpha;
   float fltFadeSpeed = 0.5f;
 
   boolean isSwitchButtonDisplayed;
+
+  boolean plank1Show = true;
+  boolean plank2Show = true;
+  boolean plank3Show = true;
 
   public static void main(String[] args) {
     PApplet.main("Sketch2");
@@ -120,6 +125,7 @@ public class Sketch extends PApplet {
     playerBackward = loadImage("images/NerdFaceBack.png"); 
     playerLeft = loadImage("images/NerdFaceLeft.png"); 
     playerRight = loadImage("images/NerdFaceRight.png"); 
+
     setting1 = loadImage("images/BossRoom.png");
     setting2 = loadImage("images/PlankWalk.png");
     setting3 = loadImage("images/TopFloor.png");
@@ -131,9 +137,8 @@ public class Sketch extends PApplet {
 
     exclamationMark = loadImage("images/exclamation_mark.png"); 
     exclamationMark.resize(55, 55);
+    woodenPlank = loadImage("images/WoodenPlank.png");
 
-
-    
 
   }
 
@@ -322,8 +327,20 @@ public class Sketch extends PApplet {
     background(200, 100, 100);
     // Setting1 background generation
     image(setting2, 0, 0);
-    
 
+    if (plank1Show == true){
+      image(woodenPlank, 455, 401);
+    }
+
+    if (plank2Show == true){
+      image(woodenPlank,455, 221);
+    }
+
+    if (plank3Show == true){
+      image(woodenPlank, 278, 43);
+    }
+    
+    
     playerMovementPlankWalk();
     // displayExclamMark(100, 100);
     //if player hits bush or smt
@@ -599,12 +616,39 @@ public class Sketch extends PApplet {
   }
 
   public void playerMovementPlankWalk(){
-    if (isUpPressed && (intPlayerY > 10 || (intPlayerX >= 278 && intPlayerX <= 534 && intPlayerY > 0))){
+    
+    if ((intPlayerX < 278 - 20 && intPlayerY < 506 - 50)|| (intPlayerX > width - 265 - 20 && intPlayerY < 506 - 50)) {
+      resetSettingPlankWalk();
+      return; // Exit the method to prevent further movement
+    }
+
+    //First Dissapearing Plank
+    if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 413 + 40 && intPlayerY < 413 + 116 - 50){
+      plank1Show = false;
+      resetSettingPlankWalk();
+      return;
+    
+    }
+    //Second Dissapearing Plank
+    if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 221 + 40 && intPlayerY < 221 + 116 - 50){
+      plank2Show = false;
+      resetSettingPlankWalk();
+      return;
+    }
+
+    //Third Dissapearing Plank
+    if (intPlayerX > 278 - 20 && intPlayerX < 278 + 80 && intPlayerY > 43 + 40  && intPlayerY < 43 + 116 - 50){
+      plank3Show = false;
+      resetSettingPlankWalk();
+      return;
+    }
+    
+    if (isUpPressed && (intPlayerY > 10 )){
       intPlayerY -=3;      
       currentPlayerState = playerBackward;
 
       if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
-        intScreenNumber = 2; // Change to PlankWalk screen
+        intScreenNumber = 3; // Change to Top Floor screen
         resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
       }
     }
