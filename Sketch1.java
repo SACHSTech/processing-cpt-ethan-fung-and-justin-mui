@@ -85,18 +85,20 @@ public class Sketch1 extends PApplet {
   boolean plank2Show = true;
   boolean plank3Show = true;
 
-  //Variables for Wordle
+  //---------WIN/LOSS VARIABLES---------------
+  boolean isGameOver;
+  boolean isGameVictory = false;
+
+  //---------VARIABLES FOR WORDLE--------------
   int intGridSizeX = 5;
   int intGridSizeY = 6;
   String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
-  boolean isGameOver;
-  boolean isGameVictory = false;
   boolean isSettingGameChanged = false;
 
-  //Variables for Connections
+  //----------VARIABLES FOR CONNECTIONS------------
   String[][] incorrectGroups;
   String[][] correctGroups;
 
@@ -105,10 +107,6 @@ public class Sketch1 extends PApplet {
   boolean[][] solvedGroups = new boolean[4][4];
   String message = "";
   int lives = 4;
-  boolean gameOver = false;
-  boolean showRestartButton = false;
-  boolean gameWon = false;
-  boolean showWinButton = false;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -220,24 +218,30 @@ public class Sketch1 extends PApplet {
    */
   public void mousePressed() {
 
+    // Toggling Intro screen 
+    if (intScreenNumber == 0) {
+      if (startButton.isOver()) {
+        resetSettingBottom();
+        intScreenNumber = 1; // Change to BossFloor
+      } 
+    } 
+
+    // Mouse press Win/Loss for connections
+    if (intScreenNumber == 8) {
+      if (backButton.isOver() && showWinPopup) {
+        // Upon game1 win, the user is directed back to the setting 1 screen
+        intScreenNumber = 9; // Change to Transfer 1
+        resetSetting();
+        showWinPopup = false;
+      } 
+      else if (backButton.isOver() && showLosePopup) {
+        // Upon game1 loss, the user is directed to play the game again!
+        initializeConnections();
+        showLosePopup = false;
+      } 
+    }
     //Mouse press check for connections
     if (intScreenNumber == 8){
-        // Check if restart button is clicked
-      if (showRestartButton) {
-        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-          resetGame();
-        }
-        return;
-
-      }
-
-      // Check if next game button is clicked
-      if (showWinButton) {
-        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-          println("Next game placeholder");
-        }
-        return;
-      }
 
       //Selects and deselects boxes
       int intWordColumn = 0;
@@ -327,14 +331,12 @@ public class Sketch1 extends PApplet {
   }
 
   public void BossRoomScreen(){
-    background(200, 100, 100);
     // Setting1 background generation
     image(setting1, 0, 0);
     playerMovementBossRoom();
   }
 
   public void PlankWalkScreen(){
-    background(200, 100, 100);
     // Setting1 background generation
     image(setting2, 0, 0);
 
@@ -355,11 +357,14 @@ public class Sketch1 extends PApplet {
   }
 
   public void TopFloorScreen(){
+    image(setting3, 0, 0);
+    playerMovement();
+
 
   }
 
   public void Floor2ClosedScreen(){
-
+    image(setting4, 0, 0);
   }
 
   public void WordleGameScreen(){
@@ -367,11 +372,11 @@ public class Sketch1 extends PApplet {
   }
 
   public void Floor2OpenScreen(){
-
+    image(setting5, 0, 0);
   }
 
   public void Floor1ClosedScreen(){
-
+    image(setting6, 0, 0);
   }
 
   public void ConnectionsGameScreen(){
@@ -392,7 +397,7 @@ public class Sketch1 extends PApplet {
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
         fill(0);
-        text(incorrectGroups[intWordColumn][intWordRow], 10 + rectRow, 50 + rectColumn);
+        text(incorrectGroups[intWordColumn][intWordRow], 50 + rectRow, 50 + rectColumn);
         intWordRow++;
       }
       intWordColumn++;
@@ -401,50 +406,30 @@ public class Sketch1 extends PApplet {
     //Writes the current message to the top of the screen
     textSize(20);
     fill(0);
-    text(message, 50, 30);
+    text(message, 100, 30);
 
     //Display lives
     textSize(20);
     fill(0);
     text("Lives left: " + lives, width - 150, 30);
 
-    if (gameOver) {
+    if (isGameOver) {
       // Show game over screen and restart button
-      fill(255);
-      rect(0, 0, width, height);
-      fill(0);
-      textSize(24);
-      text("You lose!", width / 2 - textWidth("You lose!") / 2, height / 2 - 40);
-      text("Better luck next time!", width / 2 - textWidth("Better luck next time!") / 2, height / 2 - 10);
-      fill(100);
-      rect(width / 2 - 50, height / 2, 100, 50);
-      fill(255);
-      textSize(20);
-      text("Restart", width / 2 - textWidth("Restart") / 2, height / 2 + 30);
-      showRestartButton = true;
+      drawLosePopup();
     
-    } else if (gameWon) {
+    } else if (isGameVictory) {
       // Show you won screen and next game button
-      fill(255);
-      rect(0, 0, width, height);
-      fill(0);
-      textSize(32);
-      text("You Won!", width / 2 - textWidth("You Won!") / 2, height / 2 - 40);
-      fill(100);
-      rect(width / 2 - 50, height / 2, 100, 50);
-      fill(255);
-      textSize(20);
-      text("Next", width / 2 - textWidth("Next") / 2, height / 2 + 30);
-      showWinButton = true;
+      drawWinPopup();
     }
   }
 
   public void Floor1OpenScreen(){
-
+    image(setting7, 0, 0);
+    playerMovement();
   }
 
   public void GroundFloorScreen(){
-
+    image(setting8, 0, 0);
   }
 
   public void EndingScreen(){
@@ -481,7 +466,7 @@ public void playerMovementBossRoom(){
 
     if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
       intScreenNumber = 2; // Change to PlankWalk screen
-      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+      resetSettingBottom();; // Reset player position to the bottom of the new screen
     }
   }
   if (isDownPressed && intPlayerY <= height - 10 - 80){
@@ -503,29 +488,30 @@ public void playerMovementBossRoom(){
 
 public void playerMovementPlankWalk(){
   
-  if ((intPlayerX < 278 - 20 && intPlayerY < 506 - 50)|| (intPlayerX > width - 265 - 20 && intPlayerY < 506 - 50)) {
-    resetSettingPlankWalk();
+  //Death barriers (Left block, right block, top death, middle death, bottom death)
+  if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
+    resetSettingBottom();
     return; // Exit the method to prevent further movement
   }
 
   //First Dissapearing Plank
-  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 413 + 40 && intPlayerY < 413 + 116 - 50){
+  if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
     plank1Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   
   }
   //Second Dissapearing Plank
-  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 221 + 40 && intPlayerY < 221 + 116 - 50){
+  if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
     plank2Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   }
 
   //Third Dissapearing Plank
-  if (intPlayerX > 278 - 20 && intPlayerX < 278 + 80 && intPlayerY > 43 + 40  && intPlayerY < 43 + 116 - 50){
+  if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
     plank3Show = false;
-    resetSettingPlankWalk();
+    resetSettingBottom();
     return;
   }
   
@@ -533,9 +519,9 @@ public void playerMovementPlankWalk(){
     intPlayerY -=3;      
     currentPlayerState = playerBackward;
 
-    if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
-      intScreenNumber = 3; // Change to Top Floor screen
-      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+    if (intPlayerY <= 20 && intPlayerX >= 278 && intPlayerX <= 535) {
+      intScreenNumber = 8; // Change to Top Floor screen
+      resetSettingBottom();; // Reset player position to the bottom of the new screen
     }
   }
   if (isDownPressed && intPlayerY <= height - 10 - 80){
@@ -563,14 +549,44 @@ public void resetSetting(){
   isSwitchButtonDisplayed = false;
 }
 
-public void resetSettingPlankWalk(){
+public void resetSettingBottom(){
   
-  intPlayerX = 400;
+  intPlayerX = 400 - 25;
   intPlayerY = 520;
   currentPlayerState = playerForward;
   fltAlpha = 0;
   isSwitchButtonDisplayed = false;
 }
+
+//---------------WIN/LOSS SCREEN METHODS--------------------
+  /**
+   * Draws a popup window when the player wins.
+   */
+  public void drawWinPopup() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("You Win!", width / 2, height / 2 - 50);
+    text("Congratulations!", width / 2, height / 2);
+    backButton.isOver = backButton.isOver();
+    backButton.display();
+  }
+  /**
+   * Draws a popup window when the player loses.
+   */
+  public void drawLosePopup() {
+    fill(0, 0, 0, 150);
+    rect(50, 50, width - 100, height - 100);
+    fill(255);
+    textAlign(CENTER);
+    textSize(24);
+    text("You Lose!", width / 2, height / 2 - 50);
+    text("Better luck next time!", width / 2, height / 2);
+    backButton.isOver = backButton.isOver();
+    backButton.display();
+  }
 
 //----------------CONNECTIONS METHODS------------------------
     
@@ -599,7 +615,7 @@ public void resetSettingPlankWalk(){
         message = "You solved the group: " + correctGroups[i][4];
         selectedWords.clear();
         if (checkIfGameWon()) {
-          gameWon = true;
+          isGameVictory = true;
         }
         return;
       }
@@ -612,13 +628,13 @@ public void resetSettingPlankWalk(){
         message = "One word away...";
         lives--;
         if (lives <= 0) {
-          gameOver = true;
+          isGameOver = true;
         }
       } else {
         message = "Selected words are incorrect.";
         lives--;
         if (lives <= 0) {
-          gameOver = true;
+          isGameOver = true;
         }
       }
     }
@@ -680,15 +696,13 @@ public void resetSettingPlankWalk(){
   /**
    * Resets the game by resetting all variables
    */
-  public void resetGame() {
+  public void initializeConnections() {
     selectedWords.clear();
     selectedBoxes = new boolean[4][4];
     solvedGroups = new boolean[4][4];
     message = "";
     lives = 4;
-    gameOver = false;
-    gameWon = false;
-    showRestartButton = false;
-    showWinButton = false;
+    isGameOver = false;
+    isGameVictory = false;
   }
 }
