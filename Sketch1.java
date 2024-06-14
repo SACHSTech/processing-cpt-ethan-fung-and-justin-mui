@@ -69,7 +69,7 @@ public class Sketch1 extends PApplet {
   boolean isLeftPressed = false;
   boolean isRightPressed = false;
 
-  PImage setting1, setting2, setting3, setting4, setting5, setting6, setting7, setting8;
+  PImage setting1, setting2, setting3, setting4, setting5, setting6, setting7, setting8, introImage;
   PImage playerForward, playerBackward, playerLeft, playerRight;
   PImage currentPlayerState;
 
@@ -133,6 +133,7 @@ public class Sketch1 extends PApplet {
     playerLeft = loadImage("images/NerdFaceLeft.png"); 
     playerRight = loadImage("images/NerdFaceRight.png"); 
 
+    introImage = loadImage("images/IntroScreen.png");
     setting1 = loadImage("images/BossRoom.png");
     setting2 = loadImage("images/PlankWalk.png");
     setting3 = loadImage("images/TopFloor.png");
@@ -325,7 +326,7 @@ public class Sketch1 extends PApplet {
     textAlign(CENTER);
     fill(255);
     textSize(32);
-    text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
+    image(introImage, 0, 0);
     startButton.isOver = startButton.isOver();
     startButton.display();
   }
