@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import processing.core.PApplet;
+import processing.core.PImage;
 
   /*
    * Start game
@@ -14,6 +15,88 @@ import processing.core.PApplet;
 
 public class Sketch1 extends PApplet {
 	
+  class Button {
+    float x, y, w, h;
+    String label;
+    
+    boolean isOver = false;
+
+    Button(float x, float y, float w, float h, String label) {
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+      this.label = label;
+      
+    }
+
+    void display() {
+      // Checks if button is still active
+      if (isOver) {
+        fill(50, 150, 200); // Change to hover color
+      } else {
+        fill(0, 102, 153); // Default color
+      }
+      // Drawing button rectangle
+      rect(x, y, w, h);
+      fill(255);
+
+      // Writing button text
+      textAlign(CENTER, CENTER);
+      text(label, x + w / 2, y + h / 2);
+    }
+
+    /**
+     * Detects if the user has clicked the button
+     * @return returns true if the cursor clicks the button. Else, it remains false
+     */
+    public boolean isOver() {
+      return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
+    }
+  }
+
+  //Variables For Rest Of The Game
+  Button startButton, gameButton, gearButton, backButton;
+  int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
+  boolean showPopup = false; // screen specific pop up info screen
+  boolean showWinPopup = false;
+  boolean showLosePopup = false;
+
+  int intPlayerX, intPlayerY;
+  
+  boolean isUpPressed = false;
+  boolean isDownPressed = false;
+  boolean isLeftPressed = false;
+  boolean isRightPressed = false;
+
+  PImage setting1, setting2, setting3, setting4, setting5, setting6, setting7, setting8;
+  PImage playerForward, playerBackward, playerLeft, playerRight;
+  PImage currentPlayerState;
+
+  PImage exclamationMark;
+  PImage woodenPlank;
+  int intExclamationY;
+  float fltAlpha;
+  float fltFadeSpeed = 0.5f;
+
+  boolean isSwitchButtonDisplayed;
+
+  boolean plank1Show = true;
+  boolean plank2Show = true;
+  boolean plank3Show = true;
+
+  //Variables for Wordle
+  int intGridSizeX = 5;
+  int intGridSizeY = 6;
+  String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
+  String strTargetWord;
+  String[] strGuesses;
+  int intCurrentRow;
+  boolean isGameOver;
+  boolean isGameVictory = false;
+  boolean isSettingGameChanged = false;
+
+  //Variables for Connections
   String[][] incorrectGroups;
   String[][] correctGroups;
 
@@ -40,6 +123,32 @@ public class Sketch1 extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    
+    //Rest of game setup
+    textSize(32);
+    startButton = new Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game");
+    gameButton = new Button(width / 2 - 100, height / 2 + 50, 200, 50, "Settings");
+    gearButton = new Button(width - 60, 10, 50, 50, "Gear");
+    backButton = new Button(width / 2 - 50, height / 2 + 100, 100, 50, "Back");
+    playerForward = loadImage("images/NerdFace.png"); 
+    playerBackward = loadImage("images/NerdFaceBack.png"); 
+    playerLeft = loadImage("images/NerdFaceLeft.png"); 
+    playerRight = loadImage("images/NerdFaceRight.png"); 
+
+    setting1 = loadImage("images/BossRoom.png");
+    setting2 = loadImage("images/PlankWalk.png");
+    setting3 = loadImage("images/TopFloor.png");
+    setting4 = loadImage("images/Floor2Closed.png");
+    setting5 = loadImage("images/Floor2Open.png");
+    setting6 = loadImage("images/Floor1Closed.png");
+    setting7 = loadImage("images/Floor1Open.png");
+    setting8 = loadImage("images/GroundFloor.png");
+
+    exclamationMark = loadImage("images/exclamation_mark.png"); 
+    exclamationMark.resize(55, 55);
+    woodenPlank = loadImage("images/WoodenPlank.png");
+
+    //Connections Setup
     background(255);
     if (random(1) < 0.5) {
       incorrectGroups = new String[][] {
@@ -75,6 +184,197 @@ public class Sketch1 extends PApplet {
    * Called repeatedly. Draws the boxes and updates the game state display.
    */
   public void draw() {
+    
+    background(50);
+    if (intScreenNumber == 0) {
+      introScreen();
+    } else if (intScreenNumber == 1) {
+      BossRoomScreen();
+    } else if (intScreenNumber == 2) {
+      PlankWalkScreen();
+    } else if (intScreenNumber == 3) {
+      TopFloorScreen();
+    } else if (intScreenNumber == 4) {
+      Floor2ClosedScreen();
+    } else if (intScreenNumber == 5) {
+      WordleGameScreen();
+    } else if (intScreenNumber == 6) {
+      Floor2OpenScreen();
+    } else if (intScreenNumber == 7) {
+      Floor1ClosedScreen();
+    } else if (intScreenNumber == 8) {
+      ConnectionsGameScreen();
+    } else if (intScreenNumber == 9) {
+      Floor1OpenScreen();
+    } else if (intScreenNumber == 10) {
+      GroundFloorScreen();
+    } else if (intScreenNumber == 11) {
+      EndingScreen();
+    }
+
+  }
+
+  //---------------------MOUSE PRESSED METHOD------------------------
+  /**
+   * Called when the mouse is pressed. Checks words selected and button clicks.
+   */
+  public void mousePressed() {
+
+    //Mouse press check for connections
+    if (intScreenNumber == 8){
+        // Check if restart button is clicked
+      if (showRestartButton) {
+        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
+          resetGame();
+        }
+        return;
+
+      }
+
+      // Check if next game button is clicked
+      if (showWinButton) {
+        if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
+          println("Next game placeholder");
+        }
+        return;
+      }
+
+      //Selects and deselects boxes
+      int intWordColumn = 0;
+      for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
+        int intWordRow = 0;
+        for (int rectRow = 40; rectRow < 600; rectRow += 140) {
+          if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
+            String word = incorrectGroups[intWordColumn][intWordRow];
+            if (solvedGroups[intWordColumn][intWordRow]) {
+              // Do nothing if the group is solved
+            } else if (selectedBoxes[intWordColumn][intWordRow]) {
+              // Deselect the box
+              selectedBoxes[intWordColumn][intWordRow] = false;
+              selectedWords.remove(word);
+            } else {
+              // Select the box if less than 4 are selected
+              if (selectedWords.size() < 4) {
+                selectedBoxes[intWordColumn][intWordRow] = true;
+                selectedWords.add(word);
+              }
+            }
+            return; 
+          }
+          intWordRow++;
+        }
+        intWordColumn++;
+      }
+    }
+  }
+
+  //----------------KEY PRESSED/RELEASED METHODS------------------------
+  /**
+   * Handles key release events.
+   */
+
+   public void keyReleased(){
+    if (keyCode == UP) {
+      isUpPressed = false;
+    }
+    else if (keyCode == DOWN) {
+      isDownPressed = false;
+    }
+    else if (keyCode == LEFT) {
+      isLeftPressed = false;
+    }
+    else if (keyCode == RIGHT) {
+      isRightPressed = false;
+    }
+  }
+
+  /**
+   * Checks if a key is pressed. Checks if the Enter key is pressed and then checks the selected words if they are correct.
+   */
+  public void keyPressed() {
+
+    //Key press check for movement
+    if (keyCode == UP) {
+      isUpPressed = true;
+    }
+    else if (keyCode == DOWN) {
+      isDownPressed = true;
+    }
+    else if (keyCode == LEFT) {
+      isLeftPressed = true;
+    }
+    else if (keyCode == RIGHT) {
+      isRightPressed = true;
+    }
+  
+    //Key press check for connections
+    if (intScreenNumber == 8){
+      if (key == ENTER) {
+        checkSelectedWords();
+      }
+    }
+  }
+
+
+//-------------------SCREEN METHODS---------------
+  public void introScreen(){
+    textAlign(CENTER);
+    fill(255);
+    textSize(32);
+    text("ESCAPE THE NEW YORK TIMES", width / 2, height / 3);
+    startButton.isOver = startButton.isOver();
+    startButton.display();
+  }
+
+  public void BossRoomScreen(){
+    background(200, 100, 100);
+    // Setting1 background generation
+    image(setting1, 0, 0);
+    playerMovementBossRoom();
+  }
+
+  public void PlankWalkScreen(){
+    background(200, 100, 100);
+    // Setting1 background generation
+    image(setting2, 0, 0);
+
+    if (plank1Show == true){
+      image(woodenPlank, 455, 401);
+    }
+
+    if (plank2Show == true){
+      image(woodenPlank,455, 221);
+    }
+
+    if (plank3Show == true){
+      image(woodenPlank, 278, 43);
+    }
+    
+    
+    playerMovementPlankWalk();
+  }
+
+  public void TopFloorScreen(){
+
+  }
+
+  public void Floor2ClosedScreen(){
+
+  }
+
+  public void WordleGameScreen(){
+
+  }
+
+  public void Floor2OpenScreen(){
+
+  }
+
+  public void Floor1ClosedScreen(){
+
+  }
+
+  public void ConnectionsGameScreen(){
     background(255); 
     int intWordColumn = 0;
 
@@ -139,65 +439,141 @@ public class Sketch1 extends PApplet {
     }
   }
 
-  /**
-   * Called when the mouse is pressed. Checks words selected and button clicks.
-   */
-  public void mousePressed() {
+  public void Floor1OpenScreen(){
 
-    // Check if restart button is clicked
-    if (showRestartButton) {
-      if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-        resetGame();
-      }
-      return;
-
-    }
-
-    // Check if next game button is clicked
-    if (showWinButton) {
-      if (mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 && mouseY < height / 2 + 50) {
-        println("Next game placeholder");
-      }
-      return;
-    }
-
-    //Selects and deselects boxes
-    int intWordColumn = 0;
-    for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
-      int intWordRow = 0;
-      for (int rectRow = 40; rectRow < 600; rectRow += 140) {
-        if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
-          String word = incorrectGroups[intWordColumn][intWordRow];
-          if (solvedGroups[intWordColumn][intWordRow]) {
-            // Do nothing if the group is solved
-          } else if (selectedBoxes[intWordColumn][intWordRow]) {
-            // Deselect the box
-            selectedBoxes[intWordColumn][intWordRow] = false;
-            selectedWords.remove(word);
-          } else {
-            // Select the box if less than 4 are selected
-            if (selectedWords.size() < 4) {
-              selectedBoxes[intWordColumn][intWordRow] = true;
-              selectedWords.add(word);
-            }
-          }
-          return; 
-        }
-        intWordRow++;
-      }
-      intWordColumn++;
-    }
   }
 
-  /**
-   * Checks if a key is pressed. Checks if the Enter key is pressed and then checks the selected words if they are correct.
-   */
-  public void keyPressed() {
-    if (key == ENTER) {
-      checkSelectedWords();
-    }
+  public void GroundFloorScreen(){
+
   }
 
+  public void EndingScreen(){
+
+  }
+
+//----------------MOVEMENT METHODS---------------------------
+public void playerMovement(){
+  if (isUpPressed && intPlayerY >= 0 + 10){
+    intPlayerY -=3;      
+    currentPlayerState = playerBackward;
+  }
+  if (isDownPressed && intPlayerY <= height - 10 - 80){
+    intPlayerY += 3;    
+    currentPlayerState = playerForward;
+  }
+  if (isLeftPressed && intPlayerX >= 0 + 10){
+    intPlayerX -= 4;
+    currentPlayerState = playerLeft;
+  }
+  if (isRightPressed && intPlayerX <= width - 10 - 50){
+    intPlayerX += 4;
+    currentPlayerState = playerRight;
+  }
+  image(currentPlayerState, intPlayerX, intPlayerY);
+  // fill(0, 255, 0);
+  // ellipse(intPlayerX, intPlayerY, 50, 50);
+}
+
+public void playerMovementBossRoom(){
+  if (isUpPressed && (intPlayerY > 10 || (intPlayerX >= 278 && intPlayerX <= 534 && intPlayerY > 0))){
+    intPlayerY -=3;      
+    currentPlayerState = playerBackward;
+
+    if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
+      intScreenNumber = 2; // Change to PlankWalk screen
+      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+    }
+  }
+  if (isDownPressed && intPlayerY <= height - 10 - 80){
+    intPlayerY += 3;    
+    currentPlayerState = playerForward;
+  }
+  if (isLeftPressed && intPlayerX >= 0 + 10){
+    intPlayerX -= 4;
+    currentPlayerState = playerLeft;
+  }
+  if (isRightPressed && intPlayerX <= width - 10 - 50){
+    intPlayerX += 4;
+    currentPlayerState = playerRight;
+  }
+  image(currentPlayerState, intPlayerX, intPlayerY);
+  // fill(0, 255, 0);
+  // ellipse(intPlayerX, intPlayerY, 50, 50);
+}
+
+public void playerMovementPlankWalk(){
+  
+  if ((intPlayerX < 278 - 20 && intPlayerY < 506 - 50)|| (intPlayerX > width - 265 - 20 && intPlayerY < 506 - 50)) {
+    resetSettingPlankWalk();
+    return; // Exit the method to prevent further movement
+  }
+
+  //First Dissapearing Plank
+  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 413 + 40 && intPlayerY < 413 + 116 - 50){
+    plank1Show = false;
+    resetSettingPlankWalk();
+    return;
+  
+  }
+  //Second Dissapearing Plank
+  if (intPlayerX > 455 - 20 && intPlayerX < 455 + 80  && intPlayerY > 221 + 40 && intPlayerY < 221 + 116 - 50){
+    plank2Show = false;
+    resetSettingPlankWalk();
+    return;
+  }
+
+  //Third Dissapearing Plank
+  if (intPlayerX > 278 - 20 && intPlayerX < 278 + 80 && intPlayerY > 43 + 40  && intPlayerY < 43 + 116 - 50){
+    plank3Show = false;
+    resetSettingPlankWalk();
+    return;
+  }
+  
+  if (isUpPressed && (intPlayerY > 10 )){
+    intPlayerY -=3;      
+    currentPlayerState = playerBackward;
+
+    if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
+      intScreenNumber = 3; // Change to Top Floor screen
+      resetSettingPlankWalk(); // Reset player position to the bottom of the new screen
+    }
+  }
+  if (isDownPressed && intPlayerY <= height - 10 - 80){
+    intPlayerY += 3;    
+    currentPlayerState = playerForward;
+  }
+  if (isLeftPressed && intPlayerX >= 0 + 10){
+    intPlayerX -= 4;
+    currentPlayerState = playerLeft;
+  }
+  if (isRightPressed && intPlayerX <= width - 10 - 50){
+    intPlayerX += 4;
+    currentPlayerState = playerRight;
+  }
+  image(currentPlayerState, intPlayerX, intPlayerY);
+
+}
+
+public void resetSetting(){
+    
+  intPlayerX = 300;
+  intPlayerY = 300;
+  currentPlayerState = playerForward;
+  fltAlpha = 0;
+  isSwitchButtonDisplayed = false;
+}
+
+public void resetSettingPlankWalk(){
+  
+  intPlayerX = 400;
+  intPlayerY = 520;
+  currentPlayerState = playerForward;
+  fltAlpha = 0;
+  isSwitchButtonDisplayed = false;
+}
+
+//----------------CONNECTIONS METHODS------------------------
+    
   /**
    * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
    */
