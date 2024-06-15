@@ -244,7 +244,7 @@ public class Sketch2 extends PApplet {
     startButton.isOver = startButton.isOver();
     startButton.display();
     
-    
+    // difficulty toggle button
     difficultyButton.isOver = difficultyButton.isOver();
     difficultyButton.display();
   }
