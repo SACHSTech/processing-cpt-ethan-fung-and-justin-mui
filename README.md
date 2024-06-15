@@ -8,7 +8,8 @@
 
 ## Gameplay Mechanics & User Interactions
 Within the game, the user will have to interact with the map to access puzzles and move through the game. This includes walking to the elevators and interacting with the desk to play certain puzzles. Buttons are used to switch between screens and provide
-the user with guidance. The user can also toggle the difficulty of the puzzles at the start of the game.
+the user with guidance. The user will also need to use key inputs to solve the puzzles. The user can also toggle the 
+difficulty of the puzzles at the start of the game. 
 
 ### Broken Bridge
 The first puzzle is a broken bridge game. There are 3 pairs of wooden planks placed next to each other. In each pair of wooden planks, one is safe to step on, and the other plunges you to your death, sending you back to the start.
@@ -20,7 +21,7 @@ The second puzzle is the classic New York Times game, Wordle. Here you will have
 The third and final game is the classic New York Times game, Connections. The goal of the game is to divide a grid of sixteeen words into four gruops of four such that the words in each group belong to a specific category (Eg, green, red, blue, yellow, for the category "Colours"). When a group is found, the category is revealed and the words will no longer be selectable. The categories range from easy to extremely hard. The game is won once all four groups are found.
 
 ## Speedrun Timer (Scoring)
-The game features a timer system for speedrunning/scoring purposes. While it doesn't impact any gameplay, it allows for a more competitive environment with players trying to beat each others' or their own best times.
+The game features a timer system for speedrunning/scoring purposes. While it doesn't impact any gameplay, it allows for a more competitive environment to see who can finish the quickest and rank the highest in the highscore ranking. 
 
 ## Limitations 
 
