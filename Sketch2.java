@@ -732,11 +732,14 @@ public class Sketch2 extends PApplet {
           char letter = strGuesses[i].charAt(j);
           if (strTargetWord.charAt(j) == letter && i != intCurrentRow) {
             fill(0, 255, 0); // Correct letter and position
-          } else if (strTargetWord.indexOf(letter) != -1 && i != intCurrentRow) {
+          } 
+          else if (strTargetWord.indexOf(letter) != -1 && i != intCurrentRow) {
             fill(255, 255, 0); // Correct letter but wrong position
-          } else if (i != intCurrentRow) {
+          } 
+          else if (i != intCurrentRow) {
             fill(255, 0, 0); // Incorrect letter
-          } else {
+          } 
+          else {
             fill(200); // empty box
           }
           // Draws the specific letter in the box (in CAPITAL letters)
