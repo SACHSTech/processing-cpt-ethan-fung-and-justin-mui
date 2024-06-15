@@ -16,7 +16,7 @@ The first puzzle is a broken bridge game. There are 3 pairs of wooden planks pla
 The second puzzle is the classic New York Times game, Wordle. Here you will have six attempts to guess a five-letter word. Feedback will be given for each guess, with the colour of the tile indicating when letters match or occupy the correct position. A green tile 🟩 indicates that the letter is correct and in the correct position, yellow 🟨 means it is in the answer but not in the right position, and gray ⬜ indicates that the letter is not in the word at all.
 
 ### Connections
-The third and final game is the classic New York Times game, Connections. The goal of the game is to divide a grid of sixteeen words into four gruops of four such that the words in each group belong to a specific categroy (Eg, green, red, blue, yellow, for the category "Colours"). When a group is found, the category is revealed and the words will no longer be selectable. The categories range from easy to extremely hard. The game is won once all four groups are found.
+The third and final game is the classic New York Times game, Connections. The goal of the game is to divide a grid of sixteeen words into four gruops of four such that the words in each group belong to a specific category (Eg, green, red, blue, yellow, for the category "Colours"). When a group is found, the category is revealed and the words will no longer be selectable. The categories range from easy to extremely hard. The game is won once all four groups are found.
 
 ## Speedrun Timer (Scoring)
 The game features a timer system for speedrunning/scoring purposes. While it doesn't impact any gameplay, it allows for a more competitive environment with players trying to beat each others' or their own best times.
