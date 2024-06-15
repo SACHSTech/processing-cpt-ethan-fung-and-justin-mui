@@ -46,10 +46,25 @@ public class Sketch extends PApplet {
       } else {
         fill(0, 102, 153); // Default color
       }
+      if (strLabel == "Change Difficulty"){
+        if (intWordleDifficulty == 0){
+          fill(0, 255, 0);
+        }
+        if (intWordleDifficulty == 1){
+          fill(255, 255, 0);
+        }
+        if (intWordleDifficulty == 2){
+          fill(255, 0, 0);
+        }
+      }
       // Drawing button rectangle
       rect(fltX, fltY, fltW, fltH);
-      fill(255);
-
+      if (strLabel == "Change Difficulty"){
+        fill(0);
+      }
+      else{
+        fill(255);
+      }
       // Writing button text
       textAlign(CENTER, CENTER);
       text(strLabel, fltX + fltW / 2, fltY + fltH / 2);
@@ -941,6 +956,15 @@ public class Sketch extends PApplet {
         intScreenNumber = 1; // Change to Setting1 
         resetSetting();
       } 
+      // toggles from easy, medium, and hard difficulty
+      if (difficultyButton.isOver()){
+        if (intWordleDifficulty == 2){
+          intWordleDifficulty = 0;
+        }
+        else{
+          intWordleDifficulty++;
+        }
+      }
     } 
     // Game 1
     if (intScreenNumber == 2) {

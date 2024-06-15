@@ -69,8 +69,6 @@ public class Sketch2 extends PApplet {
       else{
         fill(255);
       }
-      
-
       // Writing button text
       textAlign(CENTER, CENTER);
       text(strLabel, fltX + fltW / 2, fltY + fltH / 2);
