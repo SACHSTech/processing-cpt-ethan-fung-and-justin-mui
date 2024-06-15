@@ -101,8 +101,8 @@ public class Sketch extends PApplet {
   int intGridSizeY = 6;
   String[][] strWordList = {
     {"HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"},
-    {"LYMPH", "WALTZ", "XYLEM", "GLYPH", "NYMPH"},
-    {"CRWTH", "SCHWA", "GLITZ", "ZEBEC", "PSYCH"}
+    {"CREST", "SCHWA", "GLITZ", "ZEBEC", "PSYCH"},
+    {"LYMPH", "WALTZ", "XYLEM", "GLYPH", "NYMPH"}
   };
   String strTargetWord;
   String[] strGuesses;
@@ -153,7 +153,7 @@ public class Sketch extends PApplet {
 
   // INITIALIZING IN-GAME CLOCK VARIABLES
   int intStartTime;
-  String strTime ="";
+  String strTime = "";
 
   public void settings() {
     // size of screen
@@ -229,7 +229,6 @@ public class Sketch extends PApplet {
   
   public void draw() {
     background(50);
-    
     // HOME SCREEN
     if (intScreenNumber == 0) {
       textSize(26);
@@ -347,6 +346,10 @@ public class Sketch extends PApplet {
     }
     if (showLosePopup) {
       drawLosePopup();
+      textSize(24);
+      fill(255);
+      textAlign(CENTER);
+      text("The word was: " + strTargetWord, width / 2, height / 2 + 50);
     }
     // Extra info pop-up
     if (showPopup && !showWinPopup && !showLosePopup) {
@@ -654,7 +657,7 @@ public class Sketch extends PApplet {
       text("When a group is found, the category is revealed", width / 2, 400);
       text("and the words will no longer be selectable.", width / 2, 440);
       text("The categories range from easy to extremely hard.", width / 2, 480);
-      text("The game is won once all four groups are found.", width / 2, 520);
+      text("The game is won once all four groups are found.", width / 2 - 50, 520);
     }
     // Transfer 2
     if (intScreenNumber == 8){
