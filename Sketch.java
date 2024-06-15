@@ -17,7 +17,7 @@ public class Sketch extends PApplet {
   class Button {
     // Initializing class specific variables
     float fltX, fltY, fltW, fltH;
-    String label;
+    String strLabel;
     boolean isOver = false;
     /**
      * Computes input x, y, w, h, and label values and localizes in terms of the class
@@ -29,12 +29,12 @@ public class Sketch extends PApplet {
      * @param fltH Height of the button
      * @param label Text displayed on the button
      */
-    Button(float fltX, float fltY, float fltW, float fltH, String label) {
+    Button(float fltX, float fltY, float fltW, float fltH, String strLabel) {
       this.fltX = fltX;
       this.fltY = fltY;
       this.fltW = fltW;
       this.fltH = fltH;
-      this.label = label;
+      this.strLabel = strLabel;
     }
     /**
      * Displays button and changes colour based on player input
@@ -52,7 +52,7 @@ public class Sketch extends PApplet {
 
       // Writing button text
       textAlign(CENTER, CENTER);
-      text(label, fltX + fltW / 2, fltY + fltH / 2);
+      text(strLabel, fltX + fltW / 2, fltY + fltH / 2);
     }
     /**
      * Detects if the user has clicked the button

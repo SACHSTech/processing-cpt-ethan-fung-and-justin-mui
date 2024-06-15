@@ -21,7 +21,7 @@ public class Sketch2 extends PApplet {
   class Button {
     // Initializing class specific variables
     float fltX, fltY, fltW, fltH;
-    String label;
+    String strLabel;
     boolean isOver = false;
     /**
      * Computes input x, y, w, h, and label values and localizes in terms of the class
@@ -31,14 +31,14 @@ public class Sketch2 extends PApplet {
      * @param fltY y-coordinate of the button
      * @param fltW Width of the button
      * @param fltH Height of the button
-     * @param label Text displayed on the button
+     * @param strLabel Text displayed on the button
      */
-    Button(float fltX, float fltY, float fltW, float fltH, String label) {
+    Button(float fltX, float fltY, float fltW, float fltH, String strLabel) {
       this.fltX = fltX;
       this.fltY = fltY;
       this.fltW = fltW;
       this.fltH = fltH;
-      this.label = label;
+      this.strLabel = strLabel;
     }
     /**
      * Displays button and changes colour based on player input
@@ -56,10 +56,11 @@ public class Sketch2 extends PApplet {
 
       // Writing button text
       textAlign(CENTER, CENTER);
-      text(label, fltX + fltW / 2, fltY + fltH / 2);
+      text(strLabel, fltX + fltW / 2, fltY + fltH / 2);
     }
     /**
      * Detects if the user has clicked the button
+     * 
      * @return returns true if the cursor clicks the button. Else, it remains false
      */
     public boolean isOver() {
@@ -288,7 +289,6 @@ public class Sketch2 extends PApplet {
 
   public void gameScreen3() {
     background(255, 210, 173);
-    //drawWordleGrid();
 
     // Debugging only, will integrate third game in final sketch file
     isGameOver = true;
@@ -838,7 +838,7 @@ public class Sketch2 extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerBackward;
         }
@@ -851,7 +851,7 @@ public class Sketch2 extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerForward;
         }
@@ -864,7 +864,7 @@ public class Sketch2 extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerLeft;
         }
@@ -877,7 +877,7 @@ public class Sketch2 extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerRight;
         }
@@ -912,6 +912,7 @@ public class Sketch2 extends PApplet {
   /**
    * Displays the exclamation marker at a given x and y coordinate and bobs up and down
    * The exclamation mark also slowly fades into view from an initial transparent state
+   * 
    * @param intX X-coordinate of the exclamation mark
    * @param initialY Initial Y-coordinate of the exclamation mark
    */
@@ -933,6 +934,7 @@ public class Sketch2 extends PApplet {
   }
   /**
    * Checks if the player is colliding with the elevator in the image
+   * 
    * @return true if colliding, false if not colliding
    */
   public boolean isCollidingElevator(){
@@ -964,6 +966,7 @@ public class Sketch2 extends PApplet {
   }
   /**
    * Checks if the player will collide with the desk
+   * 
    * @param intX The next X-coordinate of the player
    * @param intY The next Y-coordinate of the player
    * @return true if the player will collide with the desk, false if the player isn't colliding with desk
