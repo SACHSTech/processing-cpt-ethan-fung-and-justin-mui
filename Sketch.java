@@ -470,6 +470,29 @@ public class Sketch extends PApplet {
     }
     
   }
+  /**
+   * Resets player to initial position on the setting screen upon switching of setting screens
+   */
+  public void resetSetting(){
+    // Initializing starting player character position for specific scenes
+    if (intScreenNumber == 1 || intScreenNumber == 2 || intScreenNumber == 3){
+      intPlayerX = 380;
+      intPlayerY = 520;
+    }
+    if (intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8){
+      intPlayerX = 400;
+      intPlayerY = 50;
+    }
+    // initializing variables
+    currentPlayerState = playerForward;
+    fltExclamAlpha = 0;
+    fltElevatorAlpha = 0;
+    isSwitchButtonDisplayed = false;
+    isScreenFaded = false;
+    isGameVictory = false;
+    isGameOver = false;
+    isElevatorOpen = false;
+  }
   // ----------------TRANSFER SCREENS------------------------
   /**
    * Displays transfer 1 screen (top floor office)
@@ -526,7 +549,7 @@ public class Sketch extends PApplet {
       resetSetting();      
     }
   }
-
+  // --------------------------ENDING SCREEN----------------------------
   /**
    * Displays the end screen of the game 
    */
@@ -641,7 +664,10 @@ public class Sketch extends PApplet {
     backButton.isOver = backButton.isOver();
     backButton.display();
   }
-
+  /** 
+   * Before entering this game, a brief preamble and a button will be displayed through this pop-up
+   * Only after clicking the button will the player be able to play the game
+   */
   public void drawGameInfoPopup() {
     // draws padding rectangle
     fill(0, 0, 0, 150);
@@ -663,6 +689,38 @@ public class Sketch extends PApplet {
     // displays start mini-game button to escape pop-up and go to the "game" screen
     gameButton.isOver = gameButton.isOver();
     gameButton.display();
+  }
+  // <-----------------------PLANK PUZZLE METHODS ------------------------------->
+  /**
+   * Considers hitboxes of when the player falls off the building to regular player movement
+   * Resets the player to the initial starting position
+   */
+  public void playerMovementPlankWalk(){
+    // Death barriers (Left block, right block, top death, middle death, bottom death)
+    if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
+      resetSetting();
+      return; // Exit the method to prevent further movement
+    }
+    // First Dissapearing Plank
+    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
+      plank1Show = false;
+      resetSetting();
+      return;
+    }
+    // Second Dissapearing Plank
+    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
+      plank2Show = false;
+      resetSetting();
+      return;
+    }
+    // Third Dissapearing Plank
+    if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
+      plank3Show = false;
+      resetSetting();
+      return;
+    }
+    // player movement is called here
+    playerMovement();
   }
   // ----------------WORDLE METHODS------------------------
   /**
@@ -697,14 +755,29 @@ public class Sketch extends PApplet {
       }
     }
   }
+  /**
+   * Checks if the guesses for Game 2 (WORDLE) are correct answers
+   */
+  public void checkWordleGuess() {
+    // checks if working row letters match the target word
+    if (strGuesses[intCurrentRow].equals(strTargetWord)) {
+      isGameOver = true;
+      isGameVictory = true;
+    } 
+    // Checks if all rows have been used
+    else if (intCurrentRow == intGridSizeY - 1) {
+      isGameOver = true;
+      isGameVictory = false;
+    }
+  }
   // ----------------CONNECTIONS METHODS------------------------
   /**
    * Draws the Connections Game grid and handles Game 3 logic.
    */
   public void ConnectionsGameScreen(){
     background(255); 
+    // Initializing method variable
     int intWordColumn = 0;
-
     // Draws out boxes in a 4x4 grid with text in each of them. Depending on the status of the box, completed, selected, unselected, it will have a different colour
     for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
       int intWordRow = 0;
@@ -724,7 +797,6 @@ public class Sketch extends PApplet {
       }
       intWordColumn++;
     }
-
     // Writes the current message to the top of the screen
     textSize(20);
     fill(0);
@@ -734,13 +806,11 @@ public class Sketch extends PApplet {
     textSize(20);
     fill(0);
     text("Lives left: " + lives, width - 130, 90);
-
     // Check if game is won
     if (checkIfGameWon()) {
       isGameVictory = true;
       isGameOver = true;
     }
-
   }
   /**
    * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
@@ -770,7 +840,6 @@ public class Sketch extends PApplet {
         return;
       }
     }
-
     // If the correctGroup was not found, checks for one word away, and if not then just removes a life
     boolean correctGroupFound = false;
     if (!correctGroupFound) {
@@ -792,6 +861,7 @@ public class Sketch extends PApplet {
   }
   /**
    * Checks if the selected words are one word away from forming a correct group.
+   * 
    * @return true if three out of four words are correct and belong to the same category, false otherwise
    */
   public boolean checkIfOneWordAway() {
@@ -810,7 +880,8 @@ public class Sketch extends PApplet {
   }
   /**
    * Finds the index of a given word in the incorrectGroups array.
-   * @param word the string word to find
+   * 
+   * @param word is the string word to find
    * @return the index of the word, or -1 if not found
    */
   public int findWordIndex(String word) {
@@ -825,6 +896,7 @@ public class Sketch extends PApplet {
   }
   /**
    * Checks if all groups are solved and will make the game end if it has
+   * 
    * @return true if the game is won, false otherwise
    */
   public boolean checkIfGameWon() {
@@ -837,7 +909,7 @@ public class Sketch extends PApplet {
     }
     return true;
   }
-
+  // -----------------------------MOUSE EVENT METHODS----------------------------
   /**
    * Handles mouse pressed events
    */
@@ -851,7 +923,6 @@ public class Sketch extends PApplet {
         resetSetting();
       } 
     } 
-
     // Game 1
     if (intScreenNumber == 2) {
       // Upon game1 win, the user is directed back to the setting 1 screen
@@ -902,7 +973,6 @@ public class Sketch extends PApplet {
     } 
     // Mouse press check for connections
     if (intScreenNumber == 7){
-
       // Selects and deselects boxes
       int intWordColumn = 0;
       for (int rectColumn = 40; rectColumn < 600; rectColumn += 140) {
@@ -958,11 +1028,12 @@ public class Sketch extends PApplet {
     // Ending screen play again button
     if (intScreenNumber == 9){
       if (playAgainButton.isOver){
+        // go back to the intro screen
         intScreenNumber = 0;
       }
     }
   }
-
+  // -------------------------------------KEY RELEASED / PRESSED METHODS------------------------------
   /**
    * Handles key release events.
    */
@@ -1002,7 +1073,7 @@ public class Sketch extends PApplet {
       }
       // Checks the working row for correctness
       else if (key == ENTER && strGuesses[intCurrentRow] != null && strGuesses[intCurrentRow].length() == intGridSizeX) {
-        checkGuess();
+        checkWordleGuess();
         // moves onto next row
         intCurrentRow++;
       }
@@ -1028,23 +1099,7 @@ public class Sketch extends PApplet {
       isRightPressed = true;
     }
   }
-
-  /**
-   * Checks if the guesses for Game1 are correct answers
-   */
-  public void checkGuess() {
-    // checks if working row letters match the target word
-    if (strGuesses[intCurrentRow].equals(strTargetWord)) {
-      isGameOver = true;
-      isGameVictory = true;
-    } 
-    // Checks if all rows have been used
-    else if (intCurrentRow == intGridSizeY - 1) {
-      isGameOver = true;
-      isGameVictory = false;
-    }
-  }
-
+  // -------------------------- GAME INITIALIZATION METHODS-------------------------------
   /**
    * Initializes Game 2 (WORDLE)
    */
@@ -1065,10 +1120,9 @@ public class Sketch extends PApplet {
     textSize(32);
   }
   /**
-   * Initializes Game 2 (WORDLE)
+   * Initializes Game 3 (CONNECTIONS)
    */
   public void initializeGame3() {
-    
     // initializing variables
     isGameOver = false;
     isGameVictory = false;
@@ -1077,7 +1131,6 @@ public class Sketch extends PApplet {
     solvedGroups = new boolean[4][4];
     message = "";
     lives = 4;
-    
     // resetting all pop-ups
     showLosePopup = false;
     showWinPopup = false;
@@ -1085,7 +1138,7 @@ public class Sketch extends PApplet {
     // initializing text size
     textSize(32);
   }
-
+  // ------------------------------PLAYER MOVEMENT & COLLISION METHODS-----------------------------
   /**
    * Player movement and sprite display
    */
@@ -1147,93 +1200,44 @@ public class Sketch extends PApplet {
     // displays player onto screen
     image(currentPlayerState, intPlayerX, intPlayerY);
   }
-
-  public void playerMovementBossRoom(){
-    if (isUpPressed && (intPlayerY > 10 || (intPlayerX >= 278 && intPlayerX <= 534 && intPlayerY > 0))){
-      intPlayerY -=3;      
-      currentPlayerState = playerBackward;
-  
-      if (intPlayerY <= 0 && intPlayerX >= 278 && intPlayerX <= 534) {
-        intScreenNumber = 2; // Change to PlankWalk screen
-        resetSetting(); // Reset player position to the bottom of the new screen
-      }
-    }
-    if (isDownPressed && intPlayerY <= height - 10 - 80){
-      intPlayerY += 3;    
-      currentPlayerState = playerForward;
-    }
-    if (isLeftPressed && intPlayerX >= 0 + 10){
-      intPlayerX -= 4;
-      currentPlayerState = playerLeft;
-    }
-    if (isRightPressed && intPlayerX <= width - 10 - 50){
-      intPlayerX += 4;
-      currentPlayerState = playerRight;
-    }
-    image(currentPlayerState, intPlayerX, intPlayerY);
-  }
-
-  public void playerMovementPlankWalk(){
-  
-    // Death barriers (Left block, right block, top death, middle death, bottom death)
-    if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
-      resetSetting();
-      return; // Exit the method to prevent further movement
-    }
-  
-    // First Dissapearing Plank
-    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
-      plank1Show = false;
-      resetSetting();
-      return;
-    
-    }
-    // Second Dissapearing Plank
-    if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
-      plank2Show = false;
-      resetSetting();
-      return;
-    }
-  
-    // Third Dissapearing Plank
-    if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
-      plank3Show = false;
-      resetSetting();
-      return;
-    }
-    
-    playerMovement();
-  
-  }
-
   /**
-   * Resets player to initial position on the setting screen upon switching of setting screens
+   * Checks if the player is colliding with the elevator in the image
+   * 
+   * @return true if colliding, false if not colliding
    */
-  public void resetSetting(){
-    // Initializing starting player character position for specific scenes
-    if (intScreenNumber == 1 || intScreenNumber == 2 || intScreenNumber == 3){
-      intPlayerX = 380;
-      intPlayerY = 520;
+  public boolean isCollidingElevator(){
+    // Checks if player is colliding with elevator hitbox
+    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
+      return true;
+    } 
+    else {
+      return false;
     }
-    if (intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8){
-      intPlayerX = 400;
-      intPlayerY = 50;
-    }
-    // initializing variables
-    currentPlayerState = playerForward;
-    fltExclamAlpha = 0;
-    fltElevatorAlpha = 0;
-    isSwitchButtonDisplayed = false;
-    isScreenFaded = false;
-    isGameVictory = false;
-    isGameOver = false;
-    isElevatorOpen = false;
-
   }
-
+  /**
+   * Checks if the player will collide with the desk
+   * 
+   * @param intX The next X-coordinate of the player
+   * @param intY The next Y-coordinate of the player
+   * @return true if the player will collide with the desk, false if the player isn't colliding with desk
+   */
+  public boolean isPlayerCollidingDesk(int intX, int intY){
+    // compares the player position with the hitbox of the desk
+    if (intX < intDeskX + intDeskWidth && intX + 55 > intDeskX && intY < intDeskY + intDeskHeight && intY + 55 > intDeskY && (intScreenNumber == 1 || intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8)){
+      isCollidingDesk = true;
+      return true;
+    }
+    else{
+      isCollidingDesk = false;
+      return false;
+    }
+  }
+  
+  // ------------------------------FADING OBJECT METHODS----------------------------------
   /**
    * Displays the exclamation marker at a given x and y coordinate and bobs up and down
    * The exclamation mark also slowly fades into view from an initial transparent state
+   * 
    * @param intX X-coordinate of the exclamation mark
    * @param initialY Initial Y-coordinate of the exclamation mark
    */
@@ -1253,19 +1257,7 @@ public class Sketch extends PApplet {
     // disables tint after use
     noTint();
   }
-  /**
-   * Checks if the player is colliding with the elevator in the image
-   * @return true if colliding, false if not colliding
-   */
-  public boolean isCollidingElevator(){
-    // Checks if player is colliding with elevator hitbox
-    if (intPlayerY <= 50 && intPlayerX < (width / 2) + 60 && intPlayerX > (width / 2) - 60) {
-      return true;
-    } 
-    else {
-      return false;
-    }
-  }
+  
   /**
    * Upon player contact with an open elevator, 
    * the whole screen will slowly fade to dark
@@ -1284,23 +1276,7 @@ public class Sketch extends PApplet {
       isScreenFaded = true;
     }
   }
-  /**
-   * Checks if the player will collide with the desk
-   * @param intX The next X-coordinate of the player
-   * @param intY The next Y-coordinate of the player
-   * @return true if the player will collide with the desk, false if the player isn't colliding with desk
-   */
-  public boolean isPlayerCollidingDesk(int intX, int intY){
-    // compares the player position with the hitbox of the desk
-    if (intX < intDeskX + intDeskWidth && intX + 55 > intDeskX && intY < intDeskY + intDeskHeight && intY + 55 > intDeskY && (intScreenNumber == 1 || intScreenNumber == 4 || intScreenNumber == 6 || intScreenNumber == 8)){
-      isCollidingDesk = true;
-      return true;
-    }
-    else{
-      isCollidingDesk = false;
-      return false;
-    }
-  }
+  // -------------------------------IN GAME STOPWATCH--------------------------------------
   /**
    * Displays a clock of the time that has passed since the start of the game
    */
