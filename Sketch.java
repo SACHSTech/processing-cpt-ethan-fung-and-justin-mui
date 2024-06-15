@@ -746,7 +746,7 @@ public class Sketch extends PApplet {
    * Checks if the selected words form a correct group. If not, it checks for one away and removes a life. If wrong then removes a life.
    */
   public void checkSelectedWords() {
-    //Checks that 4 words are selected
+    // Checks that 4 words are selected
     if (selectedWords.size() != 4) {
       message = "You must select exactly 4 words.";
       return;
@@ -771,7 +771,7 @@ public class Sketch extends PApplet {
       }
     }
 
-    //If the correctGroup was not found, checks for one word away, and if not then just removes a life
+    // If the correctGroup was not found, checks for one word away, and if not then just removes a life
     boolean correctGroupFound = false;
     if (!correctGroupFound) {
       if (checkIfOneWordAway()) {
@@ -810,7 +810,7 @@ public class Sketch extends PApplet {
   }
   /**
    * Finds the index of a given word in the incorrectGroups array.
-   * @param word the word to find
+   * @param word the string word to find
    * @return the index of the word, or -1 if not found
    */
   public int findWordIndex(String word) {
@@ -1008,7 +1008,7 @@ public class Sketch extends PApplet {
       }
     } 
     // Game 3 Inputs
-    //Key press check for connections
+    // Key press check for correctness for connections (Game 3)
     if (intScreenNumber == 7){
       if (key == ENTER) {
         checkSelectedWords();
@@ -1099,7 +1099,7 @@ public class Sketch extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerBackward;
         }
@@ -1112,7 +1112,7 @@ public class Sketch extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intPlayerX, intNextY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerY = intNextY;
           currentPlayerState = playerForward;
         }
@@ -1125,7 +1125,7 @@ public class Sketch extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerLeft;
         }
@@ -1138,7 +1138,7 @@ public class Sketch extends PApplet {
       if (!isCollidingElevator() || !isElevatorOpen) {
         // restricts player from overlapping the desk hitbox
         if (!isPlayerCollidingDesk(intNextX, intPlayerY)) {
-          //changes player character image and position
+          // changes player character image and position
           intPlayerX = intNextX;
           currentPlayerState = playerRight;
         }
@@ -1175,27 +1175,27 @@ public class Sketch extends PApplet {
 
   public void playerMovementPlankWalk(){
   
-    //Death barriers (Left block, right block, top death, middle death, bottom death)
+    // Death barriers (Left block, right block, top death, middle death, bottom death)
     if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
       resetSetting();
       return; // Exit the method to prevent further movement
     }
   
-    //First Dissapearing Plank
+    // First Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
       plank1Show = false;
       resetSetting();
       return;
     
     }
-    //Second Dissapearing Plank
+    // Second Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
       plank2Show = false;
       resetSetting();
       return;
     }
   
-    //Third Dissapearing Plank
+    // Third Dissapearing Plank
     if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
       plank3Show = false;
       resetSetting();
