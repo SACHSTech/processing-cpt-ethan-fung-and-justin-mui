@@ -91,9 +91,9 @@ public class Sketch extends PApplet {
   boolean isScreenFaded;
 
   // INITIALIZING BROKEN BRIDGE GAME VARIABLES
-  boolean plank1Show = true;
-  boolean plank2Show = true;
-  boolean plank3Show = true;
+  boolean isPlank1Show = true;
+  boolean isPlank2Show = true;
+  boolean isPlank3Show = true;
   PImage woodenPlank;
 
   // INITIALIZING WORDLE GAME VARIABLES
@@ -112,14 +112,14 @@ public class Sketch extends PApplet {
   int intWordleDifficulty = 0;
 
   // INITIALIZING CONNECTIONS GAME VARIABLES
-  String[][] incorrectGroups;
-  String[][] correctGroups;
+  String[][] strIncorrectGroups;
+  String[][] strCorrectGroups;
 
   ArrayList<String> selectedWords = new ArrayList<>();
   boolean[][] selectedBoxes = new boolean[4][4];
   boolean[][] solvedGroups = new boolean[4][4];
-  String message = "";
-  int lives = 4;
+  String strMessage = "";
+  int intLives = 4;
 
   // INITIALIZING PLAYER CHARACTER GENERATION VARIABLES
   int intPlayerX, intPlayerY;
@@ -200,27 +200,27 @@ public class Sketch extends PApplet {
 
     // Initializes and randomizes connection game answers
     if (random(1) < 0.5) {
-      incorrectGroups = new String[][] {
+      strIncorrectGroups = new String[][] {
         {"TAPE", "GOOD", "RIVET", "PETALS"},
         {"PLEATS", "FILM", "ENGROSS", "WOMAN"},
         {"RECORD", "STAPLE", "SHOOT", "PENNY"},
         {"HOLD", "ABSORB", "PLEASE", "PASTEL"}
       };
     
-      correctGroups = new String[][] {
+      strCorrectGroups = new String[][] {
         {"ABSORB", "ENGROSS", "HOLD", "RIVET", "Grab one’s attention (EASY)"},
         {"FILM", "RECORD", "SHOOT", "TAPE", "Document with video (MODERATE)"},
         {"PASTEL", "PETALS", "PLEATS", "STAPLE", "Anagrams (HARD)"},
         {"GOOD", "PENNY", "PLEASE", "WOMAN", "Pretty ____ (EXTREMELY HARD)"}
       };
   } else {
-      incorrectGroups = new String[][] {
+      strIncorrectGroups = new String[][] {
           {"SICK", "KIND", "DRIFT", "TENDER"},
           {"STYLE", "RING", "NICE", "SWEET"},
           {"POINT", "SORT", "COOL", "WING"},
           {"MESSAGE", "TYPE", "STICK", "IDEA"}
       };
-      correctGroups = new String[][] {
+      strCorrectGroups = new String[][] {
           {"COOL", "NICE", "SICK", "SWEET", "Awesome! (EASY)"},
           {"KIND", "SORT", "STYLE", "TYPE", "Variety (MODERATE)"},
           {"DRIFT", "IDEA", "MESSAGE", "POINT", "Gist (HARD)"},
@@ -326,13 +326,13 @@ public class Sketch extends PApplet {
   public void gameScreen1() {
     image(setting2, 0, 0);
 
-    if (plank1Show == true){
+    if (isPlank1Show == true){
       image(woodenPlank, 455, 401);
     }
-    if (plank2Show == true){
+    if (isPlank2Show == true){
       image(woodenPlank,455, 221);
     }
-    if (plank3Show == true){
+    if (isPlank3Show == true){
       image(woodenPlank, 278, 43);
     }
     playerMovementPlankWalk();
@@ -807,19 +807,19 @@ public class Sketch extends PApplet {
     }
     // First Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
-      plank1Show = false;
+      isPlank1Show = false;
       resetSetting();
       return;
     }
     // Second Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
-      plank2Show = false;
+      isPlank2Show = false;
       resetSetting();
       return;
     }
     // Third Dissapearing Plank
     if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
-      plank3Show = false;
+      isPlank3Show = false;
       resetSetting();
       return;
     }
@@ -896,7 +896,7 @@ public class Sketch extends PApplet {
         rect(rectRow, rectColumn, 100, 100);
         textSize(20);
         fill(0);
-        text(incorrectGroups[intWordColumn][intWordRow], 8 + rectRow, 31 + rectColumn);
+        text(strIncorrectGroups[intWordColumn][intWordRow], 8 + rectRow, 31 + rectColumn);
         intWordRow++;
       }
       intWordColumn++;
@@ -904,12 +904,12 @@ public class Sketch extends PApplet {
     // Writes the current message to the top of the screen
     textSize(20);
     fill(0);
-    text(message, 30, 10);
+    text(strMessage, 30, 10);
 
     // Display lives
     textSize(20);
     fill(0);
-    text("Lives left: " + lives, width - 130, 90);
+    text("Lives left: " + intLives, width - 130, 90);
     // Check if game is won
     if (checkIfGameWon()) {
       isGameVictory = true;
@@ -922,23 +922,23 @@ public class Sketch extends PApplet {
   public void checkSelectedWords() {
     // Checks that 4 words are selected
     if (selectedWords.size() != 4) {
-      message = "You must select exactly 4 words.";
+      strMessage = "You must select exactly 4 words.";
       return;
     }
 
-    for (int i = 0; i < correctGroups.length; i++) {
-      String[] correctGroup = Arrays.copyOfRange(correctGroups[i], 0, 4);
+    for (int i = 0; i < strCorrectGroups.length; i++) {
+      String[] correctGroup = Arrays.copyOfRange(strCorrectGroups[i], 0, 4);
       if (selectedWords.containsAll(Arrays.asList(correctGroup))) {
         // Mark the solved group
         for (int j = 0; j < 4; j++) {
-          int index = findWordIndex(correctGroups[i][j]);
+          int index = findWordIndex(strCorrectGroups[i][j]);
           if (index != -1) {
             int row = index / 4;
             int col = index % 4;
             solvedGroups[row][col] = true;
           }
         }
-        message = "You solved the group: " + correctGroups[i][4];
+        strMessage = "You solved the group: " + strCorrectGroups[i][4];
         selectedWords.clear();
         
         return;
@@ -948,16 +948,16 @@ public class Sketch extends PApplet {
     boolean correctGroupFound = false;
     if (!correctGroupFound) {
       if (checkIfOneWordAway()) {
-        message = "One word away...";
-        lives--;
-        if (lives <= 0) {
+        strMessage = "One word away...";
+        intLives--;
+        if (intLives <= 0) {
           isGameOver = true;
         }
       } 
       else {
-        message = "Selected words are incorrect.";
-        lives--;
-        if (lives <= 0) {
+        strMessage = "Selected words are incorrect.";
+        intLives--;
+        if (intLives <= 0) {
           isGameOver = true;
         }
       }
@@ -969,10 +969,10 @@ public class Sketch extends PApplet {
    * @return true if three out of four words are correct and belong to the same category, false otherwise
    */
   public boolean checkIfOneWordAway() {
-    for (int i = 0; i < correctGroups.length; i++) {
+    for (int i = 0; i < strCorrectGroups.length; i++) {
       int matchCount = 0;
       for (int j = 0; j < 4; j++) {
-        if (selectedWords.contains(correctGroups[i][j])) {
+        if (selectedWords.contains(strCorrectGroups[i][j])) {
           matchCount++;
         }
       }
@@ -989,9 +989,9 @@ public class Sketch extends PApplet {
    * @return the index of the word, or -1 if not found
    */
   public int findWordIndex(String word) {
-    for (int i = 0; i < incorrectGroups.length; i++) {
-      for (int j = 0; j < incorrectGroups[i].length; j++) {
-        if (incorrectGroups[i][j].equals(word)) {
+    for (int i = 0; i < strIncorrectGroups.length; i++) {
+      for (int j = 0; j < strIncorrectGroups[i].length; j++) {
+        if (strIncorrectGroups[i][j].equals(word)) {
           return i * 4 + j;
         }
       }
@@ -1101,7 +1101,7 @@ public class Sketch extends PApplet {
         int intWordRow = 0;
         for (int rectRow = 40; rectRow < 600; rectRow += 140) {
           if (mouseX > rectRow && mouseX < rectRow + 100 && mouseY > rectColumn && mouseY < rectColumn + 100) {
-            String word = incorrectGroups[intWordColumn][intWordRow];
+            String word = strIncorrectGroups[intWordColumn][intWordRow];
             if (solvedGroups[intWordColumn][intWordRow]) {
               // Do nothing if the group is solved
             } else if (selectedBoxes[intWordColumn][intWordRow]) {
@@ -1253,8 +1253,8 @@ public class Sketch extends PApplet {
     selectedWords.clear();
     selectedBoxes = new boolean[4][4];
     solvedGroups = new boolean[4][4];
-    message = "";
-    lives = 4;
+    strMessage = "";
+    intLives = 4;
     // resetting all pop-ups
     showLosePopup = false;
     showWinPopup = false;
@@ -1267,9 +1267,9 @@ public class Sketch extends PApplet {
     initializeGame2();
     initializeGame3();
     resetSetting();
-    plank1Show = true;
-    plank2Show = true;
-    plank3Show = true;
+    isPlank1Show = true;
+    isPlank2Show = true;
+    isPlank3Show = true;
   }
   
   // ------------------------------PLAYER MOVEMENT & COLLISION METHODS-----------------------------
