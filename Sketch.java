@@ -620,7 +620,16 @@ public class Sketch extends PApplet {
     }
     // Game 3
     if (intScreenNumber == 7){
-      text("This is the information screen.", width / 2, height / 2);
+      text("This is Connections, the classic puzzle game by the", width / 2, 160);
+      text("New York Times.", width / 2, 200);
+      text("To play, you will need to sort all 16 tiles into ", width / 2, 240);
+      text("four groups of four such that the words in each group", width / 2, 280);
+      text("belong to a specific category.", width / 2, 320);
+      text("To guess a group press ENTER", width / 2, 360);
+      text("When a group is found, the category is revealed", width / 2, 400);
+      text("and the words will no longer be selectable.", width / 2, 440);
+      text("The categories range from easy to extremely hard.", width / 2, 480);
+      text("The game is won once all four groups are found.", width / 2, 520);
     }
     // Transfer 2
     if (intScreenNumber == 8){
@@ -678,7 +687,7 @@ public class Sketch extends PApplet {
     textSize(24);
     if (intScreenNumber == 4){
       text("Complete the Wordle to Unlock the Elevator", width / 2, height / 2 - 50);
-      text("Inteligence is needed to join the New York Times", width / 2, height / 2);
+      text("Intelligence is needed to join the New York Times", width / 2, height / 2);
       text("Genius is needed to leave the New York Times", width / 2, height / 2 + 50);
     }
     else if (intScreenNumber == 6){
