@@ -79,7 +79,7 @@ public class Sketch extends PApplet {
   }
   
   // INITIALIZING BUTTON AND POP UP VARIABLES
-  Button difficultyButton, playAgainButton, startButton, gameButton, infoButton, backButton;
+  Button highscoreButton, difficultyButton, playAgainButton, startButton, gameButton, infoButton, backButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
@@ -155,6 +155,11 @@ public class Sketch extends PApplet {
   int intStartTime;
   String strTime = "";
 
+  // HIGHSCORE VARIABLES
+  ArrayList<String> strHighScores = new ArrayList<>();
+  ArrayList<Integer> intHighScoreDifficulty = new ArrayList<>();
+  boolean[] isBestInCategory = new boolean[5];
+
   public void settings() {
     // size of screen
     size(800, 600);
@@ -165,6 +170,7 @@ public class Sketch extends PApplet {
     textSize(26);
     startButton = new Button(width / 2 - 80, height / 2, 200, 50, "Start Game");
     difficultyButton = new Button(width / 2 - 102, 360, 240, 50, "Change Difficulty");
+    highscoreButton = new Button(width / 2 - 102, 370, 240, 50, "Highscores");
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
@@ -224,6 +230,22 @@ public class Sketch extends PApplet {
     // initializing wooden plank image
     woodenPlank = loadImage("images/WoodenPlank.png");
     
+    // Initializing filler values for highscore
+    strHighScores.add("00h:00m:20s");
+    strHighScores.add("00h:00m:50s");
+    strHighScores.add("00h:00m:50s");
+    strHighScores.add("00h:01m:20s");
+    strHighScores.add("00h:02m:15s");
+    intHighScoreDifficulty.add(0);
+    intHighScoreDifficulty.add(0);
+    intHighScoreDifficulty.add(1);
+    intHighScoreDifficulty.add(2);
+    intHighScoreDifficulty.add(2);
+
+    for (int i = 0; i < 5; i++){
+      intHighScoreDifficulty.add(-1);
+      isBestInCategory[i] = false;
+    }
   }
   
   public void draw() {
@@ -289,6 +311,13 @@ public class Sketch extends PApplet {
     // difficulty toggle button
     difficultyButton.isOver = difficultyButton.isOver();
     difficultyButton.display();
+    // highscore button
+    highscoreButton.isOver = highscoreButton.isOver();
+    highscoreButton.display();
+    // shows highscore screen
+    if (showPopup) {
+      drawPopup();
+    }
   }
   // ----------------GAME SCREENS------------------------
   /**
@@ -597,14 +626,53 @@ public class Sketch extends PApplet {
    * Draws a popup window with scene-specific information to help guide the player
    */
    public void drawPopup() {
-    // draws padding rectangle
-    fill(0, 0, 0, 150);
-    rect(50, 50, width - 100, height - 100);
-    // displays title of pop-up screen
-    fill(255);
-    textAlign(CENTER);
-    textSize(24);
-    text("Information Popup", width / 2, 100);
+    if (intScreenNumber > 0){
+      // draws padding rectangle
+      fill(0, 0, 0, 150);
+      rect(50, 50, width - 100, height - 100);
+      // displays title of pop-up screen
+      fill(255);
+      textAlign(CENTER);
+      textSize(24);
+      text("Information Popup", width / 2, 100);
+    }
+    
+    // Intro Screen
+    if (intScreenNumber == 0){
+      // draws padding rectangle
+      fill(0, 0, 0, 220);
+      rect(50, 50, width - 100, height - 100);
+      fill(255);
+      textAlign(CENTER);
+      textSize(24);
+      text("TOP 5 ALL-TIME HIGH SCORES", width / 2, 100);
+      text("TIMES", 150, 200);
+      text("DIFFICULTY", 400, 200);
+      text("BEST IN", 650, 175);
+      text("CATEGORY?", 650, 200);
+      for (int i = 0; i < strHighScores.size(); i++){
+        checkIfBestInCategory();
+        text(strHighScores.get(i), 150, 260 + i * 50);
+        if (intHighScoreDifficulty.get(i) == -1){
+          text("FILLER", 400, 260 + i * 50);
+        }
+        else if (intHighScoreDifficulty.get(i) == 0){
+          text("EASY", 400, 260 + i * 50);
+        }
+        else if (intHighScoreDifficulty.get(i) == 1){
+          text("MEDIUM", 400, 260 + i * 50);
+        }
+        else if (intHighScoreDifficulty.get(i) == 2){
+          text("HARD", 400, 260 + i * 50);
+        }
+        if (isBestInCategory[i]){
+          text("YES!", 650, 260 + i * 50);
+        }
+        else if (!isBestInCategory[i]){
+          text("NAH :(", 650, 260 + i * 50);
+        }
+      }
+    }
     // Setting 1
     if (intScreenNumber == 1){
       text("Make your way to the shattered windows to ", width / 2, height / 2);
@@ -953,19 +1021,28 @@ public class Sketch extends PApplet {
     // Start game button (Intro screen)
     if (intScreenNumber == 0) {
       // brings player from intro screen to setting 1
-      if (startButton.isOver()) {
+      if (startButton.isOver() && !showPopup) {
         intStartTime = millis();
         intScreenNumber = 1; // Change to Setting1 
         resetSetting();
       } 
-      // toggles from easy, medium, and hard difficulty
-      if (difficultyButton.isOver()){
+      // Toggling between three different wordle difficulties (0 = easy, 1 = medium, 2 = hard)
+      if (difficultyButton.isOver() && !showPopup){
         if (intWordleDifficulty == 2){
           intWordleDifficulty = 0;
         }
         else{
           intWordleDifficulty++;
         }
+      }
+
+      // Upon clicking, will show screen-specific guiding information
+      if (highscoreButton.isOver()) {
+        showPopup = true;
+      } 
+      // Upon clicking back button of the pop-up, the extra info pop-up will stop displaying
+      else if (showPopup && backButton.isOver()) {
+        showPopup = false;
       }
     } 
     // Game 1
@@ -1075,6 +1152,7 @@ public class Sketch extends PApplet {
       if (playAgainButton.isOver){
         // go back to the intro screen
         intScreenNumber = 0;
+        addTime();
         restartGame();
       }
     }
@@ -1366,6 +1444,113 @@ public class Sketch extends PApplet {
     else{
       text("Elapsed Time: ", 10, 10);
       text(strTime, 10, 30);
+    }
+  }
+  /**
+   * Adds the time that the player took to finish the game to the highscore list; will not show if it is not better than pre-existing scores
+   */
+  public void addTime(){
+    // Initializing variables
+    int intNewTime = parseTimeToSeconds(strTime);
+    int intNewPos = -1;
+
+    // Check every value in the list to see if the new time is smaller than the rest
+    for(int i = 0; i < 5; i++){
+      if (intNewTime < parseTimeToSeconds(strHighScores.get(i))){
+        // Adds to the ranking of where the new time will be on the leaderboard
+        intNewPos++;
+      }
+    }
+    // inputs the new time into the highscore list if the new time is smaller than the ones already existing
+    if(intNewPos > -1){
+      intNewPos = 4 - intNewPos;
+      strHighScores.add(intNewPos, strTime);
+      strHighScores.remove(5);
+      intHighScoreDifficulty.add(intNewPos, intWordleDifficulty);
+      intHighScoreDifficulty.remove(5);
+    }
+  }
+  /**
+   * Takes the string of time in the format 00h:00m:00s to an integer amount of seconds
+   */
+  public int parseTimeToSeconds(String strTimer){
+    // Initialization
+    String[] strCurrentTime = strTimer.split(":");
+
+    // Removing the "h", "m", or "s"
+    for (int i = 0; i < strCurrentTime.length; i++){
+      strCurrentTime[i] = strCurrentTime[i].substring(0, 2);
+    }
+
+    // Parse the split strings into integers
+    int intcurrentHours = Integer.parseInt(strCurrentTime[0]);
+    int intcurrentMinutes = Integer.parseInt(strCurrentTime[1]);
+    int intcurrentSeconds = Integer.parseInt(strCurrentTime[2]);
+
+    // Return total number of seconds
+    return intcurrentHours * 3600 + intcurrentMinutes * 60 + intcurrentSeconds;
+  }
+
+  /**
+   * Check which values of the high score list are the best in the respective difficulty and changes boolean to be displayed
+   */
+  public void checkIfBestInCategory(){
+    // Initialization
+    ArrayList<Integer> intIndexEasy = new ArrayList<>();
+    ArrayList<Integer> intIndexMed = new ArrayList<>();
+    ArrayList<Integer> intIndexHard = new ArrayList<>();
+    int intLowestEasy = 999999999;
+    int intLowestMed = 999999999;
+    int intLowestHard = 999999999;
+    int intBestEasy = -1;
+    int intBestMed = -1;
+    int intBestHard = -1;
+    // Sorting the times by difficulty
+    for(int i = 0; i < 5; i++){
+      if (intHighScoreDifficulty.get(i) == 0){
+        intIndexEasy.add(i);
+      }
+      else if (intHighScoreDifficulty.get(i) == 1){
+        intIndexMed.add(i);
+      }
+      else if (intHighScoreDifficulty.get(i) == 2){
+        intIndexHard.add(i);
+      }
+    }
+    // Finding the smallest time in the easy difficulty
+    for (int i = 0; i < intIndexEasy.size(); i++){
+      if(intLowestEasy > parseTimeToSeconds(strHighScores.get(intIndexEasy.get(i)))){
+        intLowestEasy = parseTimeToSeconds(strHighScores.get(intIndexEasy.get(i)));
+        intBestEasy = intIndexEasy.get(i);
+      }
+    }
+// Finding the smallest time in the medium difficulty
+    for (int i = 0; i < intIndexMed.size(); i++){
+      if(intLowestMed > parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)))){
+        intLowestMed = parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)));
+        intBestMed = intIndexMed.get(i);
+      }
+    }
+    // Finding the smallest time in the hard difficulty
+    for (int i = 0; i < intIndexHard.size(); i++){
+      if(intLowestHard > parseTimeToSeconds(strHighScores.get(intIndexHard.get(i)))){
+        intLowestHard = parseTimeToSeconds(strHighScores.get(intIndexHard.get(i)));
+        intBestHard = intIndexHard.get(i);
+      }
+    }
+    // resetting the old data
+    for (int i = 0; i < 5; i++){
+      isBestInCategory[i] = false;
+    }
+    // assigning true to the shortest values of each respective difficulty
+    if (intBestEasy != -1){
+      isBestInCategory[intBestEasy] = true;
+    }
+    if (intBestMed != -1){
+      isBestInCategory[intBestMed] = true;
+    }
+    if (intBestHard != -1){
+      isBestInCategory[intBestHard] = true;
     }
   }
 }

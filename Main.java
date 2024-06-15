@@ -13,7 +13,7 @@ class Main {
 	// Sketch1 mySketch = new Sketch1();  // uncomment this to run this sketch file
 	// Sketch2 mySketch = new Sketch2();  // uncomment this to run this sketch file
 	  
-	PApplet.runSketch(processingArgs, new Sketch2());
+	PApplet.runSketch(processingArgs, new Sketch());
   }
   
 }
