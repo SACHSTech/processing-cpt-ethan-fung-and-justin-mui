@@ -1314,7 +1314,7 @@ public class Sketch extends PApplet {
     int intMinutes = (intElapsedTime / (1000 * 60)) % 60;
     int intHours = (intElapsedTime / (1000 * 60 * 60)) % 24;
   
-    // formats the time in 24 hour clock display
+    // formats the time in digital clock display
     strTime = nf(intHours, 2) + "h:" + nf(intMinutes, 2) + "m:" + nf(intSeconds, 2) + "s";
   
     // initializes formatting of the string display
@@ -1335,6 +1335,5 @@ public class Sketch extends PApplet {
       text("Elapsed Time: ", 10, 10);
       text(strTime, 10, 30);
     }
-    
   }
 }
