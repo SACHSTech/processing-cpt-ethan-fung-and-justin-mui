@@ -819,7 +819,7 @@ public class Sketch extends PApplet {
     // Writes the current message to the top of the screen
     textSize(20);
     fill(0);
-    text(message, 100, 30);
+    text(message, 30, 10);
 
     // Display lives
     textSize(20);
@@ -1049,6 +1049,7 @@ public class Sketch extends PApplet {
       if (playAgainButton.isOver){
         // go back to the intro screen
         intScreenNumber = 0;
+        restartGame();
       }
     }
   }
@@ -1157,6 +1158,16 @@ public class Sketch extends PApplet {
     // initializing text size
     textSize(32);
   }
+
+  public void restartGame(){
+    initializeGame2();
+    initializeGame3();
+    resetSetting();
+    plank1Show = true;
+    plank2Show = true;
+    plank3Show = true;
+  }
+  
   // ------------------------------PLAYER MOVEMENT & COLLISION METHODS-----------------------------
   /**
    * Player movement and sprite display
@@ -1324,7 +1335,7 @@ public class Sketch extends PApplet {
     // displays the time
     if (intScreenNumber == 7){
       text("Elapsed Time: ", 630, 380);
-      text(strTime, 630, 380);
+      text(strTime, 630, 410);
     }
     else{
       text("Elapsed Time: ", 10, 10);

@@ -31,6 +31,7 @@ The game features a timer system for speedrunning/scoring purposes. While it doe
 - Tiles do not move once solved
 - Will not remember previous guesses
 - Can keep losing lives on the same 4 selected words
+- Word set will not change on restart 
 
 ### Wordle Limitations
 - Does not display what letters have been used
