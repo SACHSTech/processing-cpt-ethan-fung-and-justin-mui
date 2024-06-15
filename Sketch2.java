@@ -50,9 +50,26 @@ public class Sketch2 extends PApplet {
       } else {
         fill(0, 102, 153); // Default color
       }
+      if (strLabel == "Change Difficulty"){
+        if (intWordleDifficulty == 0){
+          fill(0, 255, 0);
+        }
+        if (intWordleDifficulty == 1){
+          fill(255, 255, 0);
+        }
+        if (intWordleDifficulty == 2){
+          fill(255, 0, 0);
+        }
+      }
       // Drawing button rectangle
       rect(fltX, fltY, fltW, fltH);
-      fill(255);
+      if (strLabel == "Change Difficulty"){
+        fill(0);
+      }
+      else{
+        fill(255);
+      }
+      
 
       // Writing button text
       textAlign(CENTER, CENTER);
@@ -69,7 +86,7 @@ public class Sketch2 extends PApplet {
   }
   
   // INITIALIZING BUTTON AND POP UP VARIABLES
-  Button startButton, gameButton, infoButton, backButton;
+  Button difficultyButton, startButton, gameButton, infoButton, backButton, playAgainButton;
   int intScreenNumber = 0; // 0 = Intro Screen, 1 = Setting1, 2 = Game1, 3 = Setting2, 4 = Game2, 5 = Setting3, 6 = Game3, 7 = Ending Screen, 8 = Information screen
   boolean showPopup = false; // screen specific pop up info screen
   boolean showWinPopup = false;
@@ -83,12 +100,17 @@ public class Sketch2 extends PApplet {
   // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
   int intGridSizeY = 6;
-  String[] strWordList = {"STARK", "REESE", "CRACK", "NOSEY", "HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"};
+  String[][] strWordList = {
+    {"HITCH", "RURAL", "CRAIC", "ERGOT", "OUIJA"},
+    {"LYMPH", "WALTZ", "XYLEM", "GLYPH", "NYMPH"},
+    {"CRWTH", "SCHWA", "GLITZ", "ZEBEC", "PSYCH"}
+  };
   String strTargetWord;
   String[] strGuesses;
   int intCurrentRow;
   boolean isGameOver;
   boolean isGameVictory = false;
+  int intWordleDifficulty = 0;
 
   // INITIALIZING PLAYER CHARACTER GENERATION VARIABLES
   int intPlayerX, intPlayerY;
@@ -131,12 +153,13 @@ public class Sketch2 extends PApplet {
 
   public void setup() {
     // initializing UI buttons
-    textSize(50);
-    startButton = new Button(width / 2 - 80, height / 2 + 60, 200, 50, "Start Game");
     textSize(26);
+    startButton = new Button(width / 2 - 80, height / 2, 200, 50, "Start Game");
+    difficultyButton = new Button(width / 2 - 102, 360, 240, 50, "Change Difficulty");
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
+    playAgainButton = new Button(width / 2 - 120, height / 2 + 130, 200, 60, "Play Again!");
 
     // initializing player images
     playerForward = loadImage("images/NerdFace.png"); 
@@ -165,6 +188,7 @@ public class Sketch2 extends PApplet {
     
     // HOME SCREEN
     if (intScreenNumber == 0) {
+      textSize(26);
       introScreen();
     } 
     // SETTING 1 SCREEN
@@ -219,6 +243,10 @@ public class Sketch2 extends PApplet {
     // start game button
     startButton.isOver = startButton.isOver();
     startButton.display();
+    
+    
+    difficultyButton.isOver = difficultyButton.isOver();
+    difficultyButton.display();
   }
   /**
    * Displays Game 1 Screen (Walk the Plank)
@@ -493,6 +521,8 @@ public class Sketch2 extends PApplet {
     text("contracted to go to work tomorrow.", width / 2, height / 2 - 20);
     text("Don't be late!", width / 2, height / 2 + 30);
     // Play Again button
+    playAgainButton.isOver = playAgainButton.isOver();
+    playAgainButton.display();
 
   }
   /**
@@ -654,6 +684,15 @@ public class Sketch2 extends PApplet {
         intScreenNumber = 1; // Change to Setting1 
         resetSetting();
       } 
+      // Toggling between three different wordle difficulties (0 = easy, 1 = medium, 2 = hard)
+      if (difficultyButton.isOver()){
+        if (intWordleDifficulty == 2){
+          intWordleDifficulty = 0;
+        }
+        else{
+          intWordleDifficulty++;
+        }
+      }
     } 
 
     // Game 1
@@ -729,6 +768,12 @@ public class Sketch2 extends PApplet {
         showPopup = false;
       }
     } 
+    if (intScreenNumber == 9){
+      if (playAgainButton.isOver){
+        // go back to the intro screen
+        intScreenNumber = 0;
+      }
+    }
   }
 
   /**
@@ -815,8 +860,8 @@ public class Sketch2 extends PApplet {
     strGuesses = new String[intGridSizeY];
     intCurrentRow = 0;
     // Selects target answer randomly from string list
-    strTargetWord = strWordList[(int) (random(strWordList.length))]; // Randomly choose a target word
-    // println("Target Word: " + strTargetWord); // For debugging
+    strTargetWord = strWordList[intWordleDifficulty][(int) (random(strWordList[0].length))]; // Randomly choose a target word
+    println("Target Word: " + strTargetWord); // For debugging
     // resetting all pop-ups
     showLosePopup = false;
     showWinPopup = false;
