@@ -168,9 +168,9 @@ public class Sketch extends PApplet {
   public void setup() {
     // initializing UI buttons
     textSize(26);
-    startButton = new Button(width / 2 - 80, height / 2, 200, 50, "Start Game");
+    startButton = new Button(width / 2 - 80, height / 2 - 60, 200, 50, "Start Game");
     difficultyButton = new Button(width / 2 - 102, 360, 240, 50, "Change Difficulty");
-    highscoreButton = new Button(width / 2 - 102, 370, 240, 50, "Highscores");
+    highscoreButton = new Button(width / 2 - 102, 300, 240, 50, "Highscores");
     gameButton = new Button(width / 2 - 100, height / 2 + 90, 200, 50, "Play");
     infoButton = new Button(width - 100, 10, 80, 50, "INFO");
     backButton = new Button(630, height / 2 + 184, 100, 50, "Back");
