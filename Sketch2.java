@@ -190,13 +190,18 @@ public class Sketch2 extends PApplet {
     exclamationMark.resize(55, 55);
 
     // Initializing filler values for highscore
-    strHighScores.add("00h:00m:10s");
-    strHighScores.add("00h:00m:23s");
+    strHighScores.add("00h:00m:20s");
+    strHighScores.add("00h:00m:50s");
     strHighScores.add("00h:00m:50s");
     strHighScores.add("00h:01m:20s");
     strHighScores.add("00h:02m:15s");
+    intHighScoreDifficulty.add(0);
+    intHighScoreDifficulty.add(0);
+    intHighScoreDifficulty.add(1);
+    intHighScoreDifficulty.add(2);
+    intHighScoreDifficulty.add(2);
+
     for (int i = 0; i < 5; i++){
-      
       intHighScoreDifficulty.add(-1);
       isBestInCategory[i] = false;
     }
@@ -575,7 +580,7 @@ public class Sketch2 extends PApplet {
     }
     
     // Intro Screen
-    if (intScreenNumber >= 0){
+    if (intScreenNumber == 0){
       // draws padding rectangle
       fill(0, 0, 0, 220);
       rect(50, 50, width - 100, height - 100);
@@ -1143,40 +1148,52 @@ public class Sketch2 extends PApplet {
    * Adds the time that the player took to finish the game to the highscore list; will not show if it is not better than pre-existing scores
    */
   public void addTime(){
-    // Step 1: Split the string using regular expressions
+    // Initializing variables
     int intNewTime = parseTimeToSeconds(strTime);
-    int[] intComparedTime = new int[5];
     int intNewPos = -1;
 
+    // Check every value in the list to see if the new time is smaller than the rest
     for(int i = 0; i < 5; i++){
-      intComparedTime[i] = parseTimeToSeconds(strHighScores.get(i));
-      if (intNewTime < intComparedTime[i]){
+      if (intNewTime < parseTimeToSeconds(strHighScores.get(i))){
+        // Adds to the ranking of where the new time will be on the leaderboard
         intNewPos++;
       }
     }
+    // inputs the new time into the highscore list if the new time is smaller than the ones already existing
     if(intNewPos > -1){
+      intNewPos = 4 - intNewPos;
       strHighScores.add(intNewPos, strTime);
       strHighScores.remove(5);
       intHighScoreDifficulty.add(intNewPos, intWordleDifficulty);
       intHighScoreDifficulty.remove(5);
     }
   }
+  /**
+   * Takes the string of time in the format 00h:00m:00s to an integer amount of seconds
+   */
   public int parseTimeToSeconds(String strTimer){
+    // Initialization
     String[] strCurrentTime = strTimer.split(":");
 
+    // Removing the "h", "m", or "s"
     for (int i = 0; i < strCurrentTime.length; i++){
       strCurrentTime[i] = strCurrentTime[i].substring(0, 2);
     }
 
-    // Step 2: Parse the split strings into integers
+    // Parse the split strings into integers
     int intcurrentHours = Integer.parseInt(strCurrentTime[0]);
     int intcurrentMinutes = Integer.parseInt(strCurrentTime[1]);
     int intcurrentSeconds = Integer.parseInt(strCurrentTime[2]);
 
+    // Return total number of seconds
     return intcurrentHours * 3600 + intcurrentMinutes * 60 + intcurrentSeconds;
   }
 
+  /**
+   * Check which values of the high score list are the best in the respective difficulty and changes boolean to be displayed
+   */
   public void checkIfBestInCategory(){
+    // Initialization
     ArrayList<Integer> intIndexEasy = new ArrayList<>();
     ArrayList<Integer> intIndexMed = new ArrayList<>();
     ArrayList<Integer> intIndexHard = new ArrayList<>();
@@ -1186,7 +1203,7 @@ public class Sketch2 extends PApplet {
     int intBestEasy = -1;
     int intBestMed = -1;
     int intBestHard = -1;
-    
+    // Sorting the times by difficulty
     for(int i = 0; i < 5; i++){
       if (intHighScoreDifficulty.get(i) == 0){
         intIndexEasy.add(i);
@@ -1197,32 +1214,33 @@ public class Sketch2 extends PApplet {
       else if (intHighScoreDifficulty.get(i) == 2){
         intIndexHard.add(i);
       }
-      else{
-
-      }
     }
+    // Finding the smallest time in the easy difficulty
     for (int i = 0; i < intIndexEasy.size(); i++){
       if(intLowestEasy > parseTimeToSeconds(strHighScores.get(intIndexEasy.get(i)))){
         intLowestEasy = parseTimeToSeconds(strHighScores.get(intIndexEasy.get(i)));
         intBestEasy = intIndexEasy.get(i);
       }
     }
-
+// Finding the smallest time in the medium difficulty
     for (int i = 0; i < intIndexMed.size(); i++){
       if(intLowestMed > parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)))){
         intLowestMed = parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)));
         intBestMed = intIndexMed.get(i);
       }
     }
+    // Finding the smallest time in the hard difficulty
     for (int i = 0; i < intIndexHard.size(); i++){
       if(intLowestHard > parseTimeToSeconds(strHighScores.get(intIndexHard.get(i)))){
         intLowestHard = parseTimeToSeconds(strHighScores.get(intIndexHard.get(i)));
         intBestHard = intIndexHard.get(i);
       }
     }
+    // resetting the old data
     for (int i = 0; i < 5; i++){
       isBestInCategory[i] = false;
     }
+    // assigning true to the shortest values of each respective difficulty
     if (intBestEasy != -1){
       isBestInCategory[intBestEasy] = true;
     }
@@ -1232,6 +1250,5 @@ public class Sketch2 extends PApplet {
     if (intBestHard != -1){
       isBestInCategory[intBestHard] = true;
     }
-    
   }
 }
