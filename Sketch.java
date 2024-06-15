@@ -405,6 +405,13 @@ public class Sketch extends PApplet {
       playerMovement();
       displayExclamMark(intExclamationX, intExclamationY);
     }
+    // extra info button
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
+    // extra info pop-up
+    if (showPopup && !isSwitchButtonDisplayed) {
+      drawPopup();
+    }
     // Takes player to game on collision with desk
     if (isCollidingDesk && !isGameVictory){
       isSwitchButtonDisplayed = true;
@@ -418,13 +425,7 @@ public class Sketch extends PApplet {
       intScreenNumber = 6;
       resetSetting();
     }
-    // extra info button
-    infoButton.isOver = infoButton.isOver();
-    infoButton.display();
-    // extra info pop-up
-    if (showPopup && !isSwitchButtonDisplayed) {
-      drawPopup();
-    }
+    
   }
 
   /**
@@ -447,6 +448,13 @@ public class Sketch extends PApplet {
       playerMovement();
       displayExclamMark(intExclamationX, intExclamationY);
     }
+    // extra info button
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
+    // extra info pop-up
+    if (showPopup && !isSwitchButtonDisplayed) {
+      drawPopup();
+    }
     // Takes player to game on collision with desk
     if (isCollidingDesk && !isGameVictory){
       isSwitchButtonDisplayed = true;
@@ -460,13 +468,7 @@ public class Sketch extends PApplet {
       intScreenNumber = 8;
       resetSetting();
     }
-    // extra info button
-    infoButton.isOver = infoButton.isOver();
-    infoButton.display();
-    // extra info pop-up
-    if (showPopup && !isSwitchButtonDisplayed) {
-      drawPopup();
-    }
+    
   }
   // ----------------TRANSFER SCREENS------------------------
   /**
@@ -502,6 +504,13 @@ public class Sketch extends PApplet {
   public void transferScreen2() {
     // Transfer 2 background generation
     image(setting6, 0, 0);
+    // extra info button
+    infoButton.isOver = infoButton.isOver();
+    infoButton.display();
+    // extra info pop-up
+    if (showPopup) {
+      drawPopup();
+    }
     // Scene animation to next scene upon colliding with open elevator; player will also disappear 
     if (intPlayerY >= 500 && intPlayerX < (width / 2) + 40 && intPlayerX > (width / 2) - 40) {
       isElevatorOpen = true;
@@ -510,13 +519,6 @@ public class Sketch extends PApplet {
     else{
       // player movement is called here
       playerMovement();
-    }
-    // extra info button
-    infoButton.isOver = infoButton.isOver();
-    infoButton.display();
-    // extra info pop-up
-    if (showPopup) {
-      drawPopup();
     }
     // Changes scene when animation is finished playing
     if (isScreenFaded){
@@ -1326,8 +1328,8 @@ public class Sketch extends PApplet {
     textAlign(LEFT, TOP);
     // displays the time
     if (intScreenNumber == 7){
-      text("Elapsed Time: ", 630, 500);
-      text(strTime, 630, 530);
+      text("Elapsed Time: ", 630, 380);
+      text(strTime, 630, 380);
     }
     else{
       text("Elapsed Time: ", 10, 10);
