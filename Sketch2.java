@@ -1222,7 +1222,7 @@ public class Sketch2 extends PApplet {
         intBestEasy = intIndexEasy.get(i);
       }
     }
-// Finding the smallest time in the medium difficulty
+    // Finding the smallest time in the medium difficulty
     for (int i = 0; i < intIndexMed.size(); i++){
       if(intLowestMed > parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)))){
         intLowestMed = parseTimeToSeconds(strHighScores.get(intIndexMed.get(i)));
