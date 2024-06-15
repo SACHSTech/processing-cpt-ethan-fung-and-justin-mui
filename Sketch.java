@@ -836,7 +836,7 @@ public class Sketch extends PApplet {
       for (int j = 0; j < intGridSizeX; j++) {
         // draws grid of boxes for letters to be displayed in
         fill(200);
-        rect(j * 80 + (width - 380) /2, i * 80 + 100, 60, 60);
+        rect(j * 80 + (width - 380) / 2, i * 80 + 100, 60, 60);
         // Checks if the game is properly initialized
         if (strGuesses[i] != null && j < strGuesses[i].length()) {
           // Assigns colour to each inputted letter's box based on correctness to the target word
