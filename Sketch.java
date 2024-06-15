@@ -221,7 +221,6 @@ public class Sketch extends PApplet {
           {"RING", "STICK", "TENDER", "WING", "Fried Appetizer: Informally (EXTREMELY HARD)"}
       };
     }
-    
     // initializing wooden plank image
     woodenPlank = loadImage("images/WoodenPlank.png");
     
