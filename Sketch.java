@@ -95,6 +95,7 @@ public class Sketch extends PApplet {
   boolean isPlank2Show = true;
   boolean isPlank3Show = true;
   PImage woodenPlank;
+  float fltFallingAlpha = 0f;
 
   // INITIALIZING WORDLE GAME VARIABLES
   int intGridSizeX = 5;
@@ -342,6 +343,10 @@ public class Sketch extends PApplet {
     if (showPopup) {
       drawPopup();
     }
+
+    if (isScreenFaded){
+      resetSetting();
+    }
     // Plays scene change animation when player is in contact with skybridge door
     if (intPlayerY <= 50) {
       intScreenNumber = 3; // Transfer 1
@@ -439,6 +444,7 @@ public class Sketch extends PApplet {
       fadeOutElevator();
     } 
     if (isScreenFaded){
+      resetSetting();
       intScreenNumber = 2; // GAME 1
     }
   }
@@ -543,6 +549,7 @@ public class Sketch extends PApplet {
     currentPlayerState = playerForward;
     fltExclamAlpha = 0;
     fltElevatorAlpha = 0;
+    fltFallingAlpha = 0;
     isSwitchButtonDisplayed = false;
     isScreenFaded = false;
     isGameVictory = false;
@@ -680,7 +687,14 @@ public class Sketch extends PApplet {
     }
     // Game 1
     if (intScreenNumber == 2){
-      text("Make your away across the skybridge", width / 2, height / 2);
+      text("Introducing the skybridge...", width / 2, 160);
+      text("Well the soon to be skybridge, for now it's more ", width / 2, 200);
+      text("like a broken bridge.", width / 2, 240);
+      text("In this first puzzle, there are 3 pairs of wooden planks", width / 2, 280);
+      text("placed next to each ther. ", width / 2, 320);
+      text("In each pair of wooden planks, one is safe", width / 2, 360);
+      text("while the other plunges you to your death sending you back", width / 2, 400);
+      text("to the start of the bridge.", width / 2, 440);
     }
     // Transfer 1
     if (intScreenNumber == 3){
@@ -720,7 +734,7 @@ public class Sketch extends PApplet {
       text("To play, you will need to sort all 16 tiles into ", width / 2, 240);
       text("four groups of four such that the words in each group", width / 2, 280);
       text("belong to a specific category.", width / 2, 320);
-      text("To guess a group press ENTER", width / 2, 360);
+      text("Press ENTER to guess. A wrong guess will lose a life.", width / 2, 360);
       text("When a group is found, the category is revealed", width / 2, 400);
       text("and the words will no longer be selectable.", width / 2, 440);
       text("The categories range from easy to extremely hard.", width / 2, 480);
@@ -802,27 +816,28 @@ public class Sketch extends PApplet {
   public void playerMovementPlankWalk(){
     // Death barriers (Left block, right block, top death, middle death, bottom death)
     if ((intPlayerX <= 268 && intPlayerY <= 459)|| (intPlayerX >= width - 254 - 50 && intPlayerY <= 459) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 50  - 80 && intPlayerY <= 50 + 73) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 243 - 80 && intPlayerY <= 243 + 66) || (intPlayerX >= 374 - 50 && intPlayerX <= 374 + 66 && intPlayerY >= 425 - 80 && intPlayerY <= 425 + 63)) {
-      resetSetting();
+      fallingOffMap();
       return; // Exit the method to prevent further movement
     }
     // First Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 425  && intPlayerY <= 425 + 29){
       isPlank1Show = false;
-      resetSetting();
+      fallingOffMap();
       return;
     }
     // Second Dissapearing Plank
     if (intPlayerX >= 455 - 20 && intPlayerX <= 455 + 80 + 20 && intPlayerY >= 245  && intPlayerY <= 245 + 29){
       isPlank2Show = false;
-      resetSetting();
+      fallingOffMap();
       return;
     }
     // Third Dissapearing Plank
     if (intPlayerX >= 277 - 20 && intPlayerX <= 277 + 80 + 20 && intPlayerY >= 67  && intPlayerY <= 67 + 29){
       isPlank3Show = false;
-      resetSetting();
+      fallingOffMap();
       return;
     }
+
     // player movement is called here
     playerMovement();
   }
@@ -1405,6 +1420,20 @@ public class Sketch extends PApplet {
     if (fltElevatorAlpha < 255.0) {
       fltElevatorAlpha += 3.2f;
       fill(0, fltElevatorAlpha);
+      rect(0, 0, width, height);
+    }
+    else{
+      // Ensure the screen is fully black after 3 seconds
+      background(0); 
+      isScreenFaded = true;
+    }
+  }
+
+  public void fallingOffMap(){
+    // Increases opacity of the black screen over time until it is completely opaque
+    if (fltFallingAlpha < 255.0) {
+      fltFallingAlpha += 3.2f;
+      fill(0, fltFallingAlpha);
       rect(0, 0, width, height);
     }
     else{
