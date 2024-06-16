@@ -1429,6 +1429,10 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * When player falls off map in broken bridge
+   * Whole screen will fade to dark and bring the user back to the restart point
+   */
   public void fallingOffMap(){
     // Increases opacity of the black screen over time until it is completely opaque
     if (fltFallingAlpha < 255.0) {
